@@ -545,6 +545,8 @@ We define two sets of experiments for each baseline: pixel experiments, where mo
 
 Note that all baselines can be seen as maximizing the same multicontext imitation objective, differing only on the particular composition of data sources. Therefore, to perform a controlled comparison, we use the same imitation architecture (details in \sect{appendix_architecture}) across all baselines. See Appendix~\ref{sec:appendix_dataset} for a detailed description of all data sources.
 
+<!-- COREY ABOVE THIS LINE -->
+
 \section{``Ask Me Anything" Experiments}
 While one-off multitask evaluations \cite{yu2019meta, lynch2019play} are challenging and interesting, a realistic and significantly more difficult scenario is one in which a human gives a robot multiple instructions in a row over a \emph{long horizon}, for example: ``get the block from the shelf...now open the drawer...now sweep the block into the drawer...now close the drawer". Furthermore, agents should be able to accomplish any subtask in any order. This demands a training process that adequately covers transitions between arbitrary pairs of tasks. This setting of long-horizon human language conditioned robotic manipulation has not yet been explored in the literature to our knowledge. While difficult, we believe it aligns well with test-time expectations for a learning robot in everyday environments.
 
