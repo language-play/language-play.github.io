@@ -1,0 +1,5 @@
+pick up the object and drop it vertically
+knock the object
+pick up the object and drop it vertically
+knock the object
+pick up the object and drop it vertically

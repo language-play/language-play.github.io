@@ -1,0 +1,6 @@
+ouvre le tiroir
+mets l'objet dans le tiroir
+sors l'objet du tiroir
+ferme le tiroir
+attrape l'objet
+mets l'objet dans la corbeille

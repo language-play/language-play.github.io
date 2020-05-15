@@ -1,0 +1,19 @@
+open the drawer
+drag the object into the drawer
+close the drawer
+move the door right
+press the green button
+press the blue button
+push down on the red button
+move the door left
+open the drawer all the way
+pick up the object and put it on the table
+close the drawer
+move the door left
+put the object into the cabinet
+close the drawer
+put the object into the shelf
+close the drawer
+put the object into the shelf
+stoop
+reset
