@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://distill.pub/template.v2.js"></script>
-  <!-- <script src="lib/template.v2.js"></script> -->
+  <!-- <script src="https://distill.pub/template.v2.js"></script> -->
+  <script src="lib/template.v2.js"></script>
   <script src="lib/blazy.js"></script>
   <script>
     var bLazy = new Blazy({
@@ -18,6 +18,8 @@
         console.log("blazy image loaded: "+imageLoaded);
     }
   </script>
+
+
   <style>
   </style>
 </head>
@@ -230,7 +232,7 @@
 
 <!-- title section -->
 <d-title>
-  <h1>Grounding Language in Play</h1>
+  <h1>&nbsp; &nbsp; Grounding Language in Play</h1>
   <!-- <p>A scalable approach</p> -->
 
     <!-- menu on the left -->
@@ -318,18 +320,18 @@ Furthermore, language acquisition, at least in humans, is a highly \textit{socia
 
 \begin{figure}[htb]
   \includegraphics[width=\linewidth]{figs/acgc/multicontext_imitation4.pdf}
-  \caption{\textbf{Multicontext Imitation Learning.} 
+  \caption{\textbf{Multicontext Imitation Learning.}
   We introduce Multi-context Imitation Learning (MCIL), a simple generalization of contextual imitation learning to multiple heterogeneous contexts. An increasingly typical scenario in imitation learning is one where we have \textit{multiple} imitation datasets, each with a different task description (e.g. goal image, task id, natural language, video demonstration, etc.) and different cost of collection. MCIL trains 1) a single \textit{latent goal} conditioned policy over all datasets and 2) a set of encoders, one per dataset, each responsible for mapping a particular task description to the shared latent space.}
   \label{fig:acgc}
 \end{figure}
 
 
 Even simple instruction following, however, poses a notoriously difficult learning challenge, subsuming many long-term problems in AI \cite{hermann2017grounded, das2018embodied}.
-For example, a robot presented with the command ``sweep the block into the drawer” must be able to relate language to low-level perception (what does a block look like? what is a drawer?). It must perform visual reasoning (what does it mean for the block to be in the drawer?). Finally, it must solve a complex sequential decision problem (what commands do I send to my arm to ``sweep"?). We note these questions cover only a single task, whereas the generalist robot setting demands single agents that perform many. 
+For example, a robot presented with the command ``sweep the block into the drawer” must be able to relate language to low-level perception (what does a block look like? what is a drawer?). It must perform visual reasoning (what does it mean for the block to be in the drawer?). Finally, it must solve a complex sequential decision problem (what commands do I send to my arm to ``sweep"?). We note these questions cover only a single task, whereas the generalist robot setting demands single agents that perform many.
 
-In this work, we combine the setting of open-ended robotic manipulation with open-ended human language conditioning. There is a long history of work studying instruction following (survey \cite{luketina2019survey}). Prior work typically studies restricted observation spaces (e.g. games \cite{1903.02020}, 2D gridworlds \cite{yu2018interactive}), simplified actuators, (e.g. binary pick and place primitives \cite{hill2019emergent}), and synthetic language data \cite{hermann2017grounded}. We study the first combination, to our knowledge, of 1) human language instructions, 2) high-dimensional continuous sensory inputs and actuators, and 3) complex tasks like long-horizon robotic object manipulation. The test time scenario we consider is a single agent that can perform many tasks in a row, each specified by a human in natural language. For example, ``open the door all the way to the right...now pick up the block...now push the red button...now close the door". Furthermore, the agent should be able to perform any combination of subtasks in any order. We refer to this as the ``ask me anything" scenario (\fig{teaser}, step 3), which tests three important aspects of generality: general-purpose control, learning from onboard sensors, and general task specification. 
+In this work, we combine the setting of open-ended robotic manipulation with open-ended human language conditioning. There is a long history of work studying instruction following (survey \cite{luketina2019survey}). Prior work typically studies restricted observation spaces (e.g. games \cite{1903.02020}, 2D gridworlds \cite{yu2018interactive}), simplified actuators, (e.g. binary pick and place primitives \cite{hill2019emergent}), and synthetic language data \cite{hermann2017grounded}. We study the first combination, to our knowledge, of 1) human language instructions, 2) high-dimensional continuous sensory inputs and actuators, and 3) complex tasks like long-horizon robotic object manipulation. The test time scenario we consider is a single agent that can perform many tasks in a row, each specified by a human in natural language. For example, ``open the door all the way to the right...now pick up the block...now push the red button...now close the door". Furthermore, the agent should be able to perform any combination of subtasks in any order. We refer to this as the ``ask me anything" scenario (\fig{teaser}, step 3), which tests three important aspects of generality: general-purpose control, learning from onboard sensors, and general task specification.
 
-Prior work on Learning from Play (LfP) \cite{lynch2019play} provides a simple starting point for learning general-purpose skills from onboard sensors: first cover state space with teleoperated ``play" data, then use relabeled imitation learning to distill many reusable behaviors into a goal-directed policy. However, like other methods that combine relabeling with image observations, \cite{warde2018unsupervised, nair2018visual, pong2019skew, nair2019contextual, florensa2019self}, LfP requires that tasks be specified using a goal image to reach. While trivial in a simulator, this form of task specification is often impractical in open-world environments. 
+Prior work on Learning from Play (LfP) \cite{lynch2019play} provides a simple starting point for learning general-purpose skills from onboard sensors: first cover state space with teleoperated ``play" data, then use relabeled imitation learning to distill many reusable behaviors into a goal-directed policy. However, like other methods that combine relabeling with image observations, \cite{warde2018unsupervised, nair2018visual, pong2019skew, nair2019contextual, florensa2019self}, LfP requires that tasks be specified using a goal image to reach. While trivial in a simulator, this form of task specification is often impractical in open-world environments.
 
 In this work, we present a simple approach that extends LfP to the natural language conditioned setting. \fig{teaser} provides an overview, which has four main steps:
 \begin{enumerate}
@@ -340,12 +342,12 @@ In this work, we present a simple approach that extends LfP to the natural langu
     \item \textbf{Condition on human language at test time.} (\fig{teaser}, step 3) At test time, our experiments show that a single policy trained in this manner can perform many complex robotic manipulation skills in a row, directly from images, and specified entirely with natural language (see \href{\website/videos/live/playlang_20200326-193259_13tasks.webm}{video}).
 \end{enumerate}
 
-Finally, we study \textbf{transfer learning from unlabeled text corpora to robotic manipulation}. We introduce a simple transfer learning augmentation, applicable to any language conditioned policy. We find that this significantly improves downstream robotic manipulation. This is the first instance, to our knowledge, of this kind of transfer. Importantly, this same technique allows our agent to follow thousands of novel instructions in zero shot, across 16 different languages. 
+Finally, we study \textbf{transfer learning from unlabeled text corpora to robotic manipulation}. We introduce a simple transfer learning augmentation, applicable to any language conditioned policy. We find that this significantly improves downstream robotic manipulation. This is the first instance, to our knowledge, of this kind of transfer. Importantly, this same technique allows our agent to follow thousands of novel instructions in zero shot, across 16 different languages.
 This is the third contribution of this work.
 
 \section{Related Work}
-\textbf{Robotic learning from general sensors}. 
-In general, learning complex robotic skills from low-level sensors is possible, but requires substantial human supervision. 
+\textbf{Robotic learning from general sensors}.
+In general, learning complex robotic skills from low-level sensors is possible, but requires substantial human supervision.
 Two of the most successful approaches are imitation learning (IL) \cite{atkeson1997robot, argall2009survey} and reinforcement learning (RL) \cite{kober2013reinforcement,levine2016end,kalashnikov2018qt,haarnoja2018soft,andrychowicz2020learning}. IL typically requires many human demonstrations \cite{duan2017one,rajeswaran2017learning,rahmatizadeh2018vision,zhang2018deep} to drive supervised learning of a policy. In RL, supervision takes the form of a well-shaped \cite{popov2017data} hand-designed reward to drive autonomous trial and error learning. Designing reward functions in open-world environments is non-trivial, requiring either task-specific instrumentation \cite{gu2017deep} or learned perceptual rewards \cite{Sermanet2017Rewards,Sermanet2017TCN,singh2019end}. Additionally, RL agents face difficult exploration problems \cite{thrun1992efficient}, often requiring hand-designed exploration strategies \cite{kalashnikov2018qt,ebert2018visual} or even human demonstrations as well \cite{rajeswaran2017learning,hester2018deep}. Finally, conventional IL and RL only account for the training of a single task. Even under multitask formulations of RL \cite{teh2017distral} and IL \cite{rahmatizadeh2018vision}, each new task considered requires a corresponding and sizable human effort. RL additionally faces significant optimization challenges \cite{schaul2019ray} in the multitask setting, often leading to worse data efficiency than learning tasks individually \cite{parisotto2015actor}. This makes it difficult to scale either approach naively to the broad task setting of a generalist robot.
 
 \textbf{Task-agnostic control}. This paper builds on the setting of task-agnostic control, where a single agent must be able to reach any reachable goal state in its environment upon command \cite{kaelbling1993learning, schaul2015universal,warde2018unsupervised}. One way of acquiring this kind of control is to first learn a model of the environment through interaction \cite{oh2015action,hafner2018learning,ebert2018visual, ha2018world} then use it for planning. However, these approaches face the same intractable autonomous exploration problem that RL does, requiring either environments simple enough to explore fully with random actions or hand-scripted primitives to guide richer behavior. A powerful model-free strategy for task-agnostic control is goal relabeling \cite{kaelbling1993learning,andrychowicz2017hindsight}. This self-supervised technique trains goal conditioned policies to reach any previously visited state upon demand, with many recent examples in RL \cite{nair2018visual,pong2018temporal,gupta2019relay,pong2019skew,ghosh2019learning,eysenbach2020rewriting} and IL \cite{lynch2019play,ding2019goal}. However, when combined high dimensional observation spaces like images, relabeling results in policies that must be instructed with goal images at test time---a prohibitively expensive assumption in open world (non-simulator) environments. The present work builds heavily on relabeled imitation, but additionally equips policies with flexible natural language conditioning.
@@ -372,14 +374,14 @@ A convenient choice for a task descriptor is some goal state $g = s_g \in S$ to 
 \small
 \begin{gather}
   \begin{align}
-    \hspace*{-0.2cm} \mathcal{L}_{\operatorname{GCBC}} &= \mathbb{E}_{(\tau,\ s_g) \sim \mathcal{D}_R}\left[\sum ^{|\tau|}_{t=0}\operatorname{log} \pi _{\theta}\left( a_{t}| s_t, s_g\right)\right] 
+    \hspace*{-0.2cm} \mathcal{L}_{\operatorname{GCBC}} &= \mathbb{E}_{(\tau,\ s_g) \sim \mathcal{D}_R}\left[\sum ^{|\tau|}_{t=0}\operatorname{log} \pi _{\theta}\left( a_{t}| s_t, s_g\right)\right]
   \end{align}
 \end{gather}
 \label{eq:gcbc}
 \normalsize
 While relabeling automatically generates a large number of goal-directed demonstrations at training time, it cannot account for the \textit{diversity} of those demonstrations, which comes entirely from the underlying data. To be able to reach \textit{any} user-provided goal, this motivates data collection methods, upstream of relabeling, that fully cover state space.
 
-\subsection{Teleoperated play} 
+\subsection{Teleoperated play}
 Human teleoperated ``play" collection \cite{lynch2019play}  directly addresses the state space coverage problem. In this setting, an operator is no longer constrained to a set of predefined tasks, but rather engages in every available object manipulation in a scene (\href{\lfpvideos/play_data516x360.mp4}{example of play data}). The motivation is to fully cover state space using prior human knowledge of object affordances. During collection, the stream of onboard robot observations and actions are recorded, $\{(s_t, a_t)\}^{\infty}_{t=0}$, yielding an unsegmented dataset of unstructured but semantically meaningful behaviors, useful in a relabeled imitation learning context.
 
 \subsection{Learning from play}
@@ -406,7 +408,7 @@ From a statistical machine learning perspective, an obvious candidate for ground
 
 Concretely, our pairing process assumes access to $\DPLAY$, obtained using Algorithm~\ref{alg:collect_play} and a pool of non-expert human overseers. From $\DPLAY$, we create a new dataset $\DPLAYLANG = \{(\tau, l)_i\}^{\DPLAYLANG}_{i=0}$, consisting of short-horizon play sequences $\tau$ paired with $l \in L$ a human-provided hindsight instruction with no restrictions on vocabulary or grammar.
 
-This process is scalable because pairing happens after-the-fact, making it straightforward to parallelize via crowdsourcing. The language collected is also naturally rich, as it sits on top of play and is similarly not constrained by an upfront task definition. This results in instructions for functional behavior (e.g. ``open the drawer", ``press the green button"), as well as general non task-specific behavior (e.g. ``move your hand slightly to the left." or ``do nothing.") See more real examples in Table~\ref{tab:ex_train_lang} and video examples of our training data \href{\website/\#data}{here}. Crucially, we do not need pair every experience from play with language to learn to follow instructions. This is made possible with Multicontext Imitation Learning, described next. 
+This process is scalable because pairing happens after-the-fact, making it straightforward to parallelize via crowdsourcing. The language collected is also naturally rich, as it sits on top of play and is similarly not constrained by an upfront task definition. This results in instructions for functional behavior (e.g. ``open the drawer", ``press the green button"), as well as general non task-specific behavior (e.g. ``move your hand slightly to the left." or ``do nothing.") See more real examples in Table~\ref{tab:ex_train_lang} and video examples of our training data \href{\website/\#data}{here}. Crucially, we do not need pair every experience from play with language to learn to follow instructions. This is made possible with Multicontext Imitation Learning, described next.
 
 \begin{algorithm}[h]
   \caption{Multicontext imitation learning}
@@ -477,7 +479,7 @@ Being context-agnostic enables a highly efficient training scheme: learn the maj
 
 \subsection{LangLfP: learning to follow image and human language goals.}
 \label{sec:lang_lfp}
-We now have all the components to introduce \emph{LangLfP} (language conditioned learning from play). LangLfP is a special case of multicontext imitation learning (Section~\ref{sec:acgc}) applied to our problem setting. 
+We now have all the components to introduce \emph{LangLfP} (language conditioned learning from play). LangLfP is a special case of multicontext imitation learning (Section~\ref{sec:acgc}) applied to our problem setting.
 At a high level, LangLfP trains a single multicontext policy $\pi_\theta(a_t | s_t, z)$ over datasets $\mathcal{D} = \{\DPLAY, \DPLAYLANG\}$, consisting of hindsight goal image tasks and hindsight instruction tasks. We define $\mathcal{F} = \{\genc, \senc\}$, neural network encoders mapping from image goals and instructions respectively to the same latent \emph{visuo-lingual goal} space. LangLfP learns perception, natural language understanding, and control end-to-end with no auxiliary losses. We discuss the separate modules below.
 
 \textbf{Perception module}.
@@ -506,7 +508,7 @@ At the beginning of a test episode the agent receives as input its onboard obser
 % Motivate knowledge transfer.
 Large ``in the wild" natural language corpora reflect substantial human knowledge about the world \cite{zellers2018swag}. Many recent works have successfully transferred this knowledge to downstream tasks in NLP via pretrained embeddings \cite{devlin2018bert,radford2019language,raffel2019exploring,1901.05287}. Can we achieve similar knowledge transfer to \textit{robotic manipulation}?
 
-We hypothesize two benefits to this type of transfer. First, if there is a semantic match between the source corpora and the target environment, more structured inputs may act as a strong prior, shaping grounding or control \cite{luketina2019survey}. Second, language embeddings have been shown to encode similarity between large numbers of words and sentences. This may allow an agent to follow many novel instructions in zero shot, provided they are sufficiently ``close" to ones it has been trained to follow (Figure~\ref{fig:follow_ood}). 
+We hypothesize two benefits to this type of transfer. First, if there is a semantic match between the source corpora and the target environment, more structured inputs may act as a strong prior, shaping grounding or control \cite{luketina2019survey}. Second, language embeddings have been shown to encode similarity between large numbers of words and sentences. This may allow an agent to follow many novel instructions in zero shot, provided they are sufficiently ``close" to ones it has been trained to follow (Figure~\ref{fig:follow_ood}).
 Note, given the complexity of natural language, it is likely that robots in open-world environments will need to be able to follow synonym commands outside of a particular training set.
 
 To test these hypotheses, we introduce a simple transfer learning technique, generally applicable to any natural language conditioned agent. We assume access to a neural language model, pretrained on large unlabeled text corpora, capable of mapping full sentences $l$ to points in a semantic vector space $v \in \mathbb{R}^d$. Transfer is enabled simply by encoding language inputs $l$ to the policy at training and test time in $v$ before feeding to the rest of the network. We augment LangLfP in this way, which we refer to as \emph{TransferLangLfP}. See Appendix~\ref{sec:appendix_nlu} for details.
@@ -525,7 +527,7 @@ Our experiments aim to answer the following questions:
   \label{fig:env}
 \end{figure}
 
-\subsection{3D simulated environment} 
+\subsection{3D simulated environment}
 We conduct our experiments in the simulated 3D Playroom environment introduced in \cite{lynch2019play}, shown in Figure~\ref{fig:env}. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine \cite{TodorovET12}. Videos \href{\lfpvideos/play_data516x360.mp4}{here} of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See Appendix~\ref{sec:appendix_env} for details.
 
 \subsection{Methods}
@@ -578,11 +580,11 @@ TransferLangLfP (ours) & states & \textbf{play} & \textbf{text} & \textbf{90.5\%
 
 
 \subsection{Long Horizon Results}
-\textbf{Goal image conditioned comparison}. 
+\textbf{Goal image conditioned comparison}.
 In Table~\ref{tab:main_results}, we find that LangLfP matches the performance of LfP on all benchmarks within margin of error, but does so with entirely from natural language task specification. Notably, this is achieved with only $\thicksim$0.1\% of play requiring language pairing, with the majority of control still learned from self-supervised imitation. This is important because it shows our simple framework allows open-ended robotic manipulation to be combined with open-ended text conditioning with minimal additional human supervision. This was the main question of this work. We attribute these results to our multicontext learning setup, which allows statistical strength to be shared over multiple datasets, some plentiful and some scarce.
 
 \textbf{Conventional multitask imitation comparison}.
-We see in Table~\ref{tab:main_results} and \fig{long_horizon} that LangLfP outperforms LangBC on every benchmark. Notably, this result holds even when the play dataset is artificially restricted to the same size as the conventional demonstration dataset (Restricted LangLfP vs LangBC). This is important because it shows that models trained on top of relabeled play generalize much better than those trained on narrow predefined task demonstrations, especially in the most difficult long horizon setting. 
+We see in Table~\ref{tab:main_results} and \fig{long_horizon} that LangLfP outperforms LangBC on every benchmark. Notably, this result holds even when the play dataset is artificially restricted to the same size as the conventional demonstration dataset (Restricted LangLfP vs LangBC). This is important because it shows that models trained on top of relabeled play generalize much better than those trained on narrow predefined task demonstrations, especially in the most difficult long horizon setting.
 Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the training sources is striking. We find that play-trained policies can of transition well between tasks and recover from initial failures, while narrow demo-trained policies quickly encounter compounding imitation error and never recover. We believe this highlights the importance of training data that covers state space, including large numbers of tasks as well as non task-specific behavior like transitions.
 
 \textbf{Following 15 instructions in a row}. We present qualitative results (\href{\website/\#long-horizon}{video}) showing that our agent can follow 15 natural language instructions in a row provided by a human. We believe this offers strong encouragement that simple high capacity imitation learning can be competitive with more complicated long horizon reinforcement learning methods.
@@ -595,7 +597,7 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
 \vspace{-.2in}
 \end{figure}
 
-\textbf{Play scales with model capacity}. 
+\textbf{Play scales with model capacity}.
 In Figure~\ref{fig:sweep_capacity}, we consider task performance as a function of model size for models trained on play or conventional predefined demonstrations. For fair comparison, we compare
 LangBC to Restricted LangLfP, trained on the same amount of data. We study both models from state inputs to understand upper bound performance. As we see, performance steadily improves as model size is increased for models trained on play, but peaks and then declines for models trained on conventional demonstrations. Our interpretation is that larger capacity is effectively utilized to absorb the diversity in play, whereas additional capacity is wasted on equivalently sized datasets constrained to predefined behaviors. This suggests that the simple recipe of collecting large play datasets and scaling up model capacity to achieve higher performance is a valid one.
 
@@ -651,7 +653,7 @@ Simple maximum likelihood makes it easy to learn large capacity perception and c
 Robots that can learn to relate human language to their perception and actions would be especially useful in open-world environments.
 This work asks: provided real humans play a direct role in this learning process, what is the most efficient way to go about it?
 With this motivation, we introduced LangLfP, an extension of LfP trained both on relabeled goal image play and play paired with human language instructions. To reduce the cost of language pairing, we introduced Multicontext Imitation Learning, which allows a single policy to be trained over both goal image and language tasks, then use just language conditioning at test time.
-Crucially, this made it so that less than  1\% collected robot experience required language pairing to enable the new mode of conditioning. In experiments, we found that a single policy trained with LangLfP can solve many 3D robotic manipulation tasks over a long horizon, from onboard sensors, and specified only via human language. This represents a considerably more complex scenario than prior work in instruction following. Finally, we introduced a simple technique allowing for knowledge transfer from large unlabeled text corpora to robotic manipulation. We found that this significantly improved downstream visual control---the first instance to our knowledge of this kind of transfer. It also equipped our agent with the ability to follow thousands of instructions outside its training set in zero shot, in 16 different languages. 
+Crucially, this made it so that less than  1\% collected robot experience required language pairing to enable the new mode of conditioning. In experiments, we found that a single policy trained with LangLfP can solve many 3D robotic manipulation tasks over a long horizon, from onboard sensors, and specified only via human language. This represents a considerably more complex scenario than prior work in instruction following. Finally, we introduced a simple technique allowing for knowledge transfer from large unlabeled text corpora to robotic manipulation. We found that this significantly improved downstream visual control---the first instance to our knowledge of this kind of transfer. It also equipped our agent with the ability to follow thousands of instructions outside its training set in zero shot, in 16 different languages.
 
 \vspace{-.15in}
 \section*{Acknowledgments}
@@ -751,7 +753,7 @@ $\genc$ takes as input image goal observation $O_g$ and outputs latent goal $z$.
 \label{sec:appendix_nlu}
 \textbf{From scratch}. For LangLfP, our latent language goal encoder, $\senc$, is described in Figure~\ref{fig:perception_sentence_emb}. It maps raw text to a 32 dimensional embedding in goal space as follows: 1) apply subword tokenization, 2) retrieve learned 8-dim subword embeddings from a lookup table, 3) summarize the sequence of subword embeddings (we considered average pooling and RNN mechanisms for this, choosing average pooling based on validation), and 4) pass the summary through a 2 layer 2048 unit ReLU MLP. Out-of-distribution subwords are initialized as random embeddings at test time.
 
-\textbf{Transfer learning}. 
+\textbf{Transfer learning}.
 For our experiments, we chose Multilingual Universal Sentence Encoder described in \cite{yang2019multilingual}. MUSE is a multitask language architecture trained generic multilingual corpora (e.g. Wikipedia, mined question-answer pair datasets), and has a vocabulary of 200,000 subwords. MUSE maps sentences of any length to a 512-dim vector. We simply treat these embeddings as language observations and do not finetune the weights of the model. This vector is fed to a 2 layer 2048 unit ReLU MLP, projecting to latent goal space.
 
 We note there are many choices available for encoding raw text in a semantic pretrained vector space. MUSE showed results immediately and we moved onto different decisions. We look forward to experimenting with different choices of pretrained embedder in the future.
@@ -798,7 +800,7 @@ orientation of a movable block, and a continuous 1-d sensor describing: door ope
 button pushed amount, blue button pushed amount, green button pushed amount. In both experiments, the agent additionally observes the raw string value of a natural language text channel at each timestep.
 
 \subsection{Action space}
-We use the same action space as \cite{lynch2019play}: 8-DOF cartesian position, euler, and gripper angle of the end effector. Similarly, during training we quantize each action element into 256 bins. All stochastic policy outputs are represented as discretized logistic distributions over quantization bins \cite{1701.05517}. 
+We use the same action space as \cite{lynch2019play}: 8-DOF cartesian position, euler, and gripper angle of the end effector. Similarly, during training we quantize each action element into 256 bins. All stochastic policy outputs are represented as discretized logistic distributions over quantization bins \cite{1701.05517}.
 
 \section{Datasets}
 \label{sec:appendix_dataset}
@@ -835,7 +837,7 @@ Another collection consideration is the level of details in a sentence. For exam
 \begin{tabular}{l|l}
 \hline
 %\normalsize{
-\textbf{Task}      & \textbf{Natural language instructions}         
+\textbf{Task}      & \textbf{Natural language instructions}
 %}
 \\ \hline
 \begin{tabular}[c]{@{}l@{}}open sliding\\door\end{tabular}  & \begin{tabular}[c]{@{}l@{}}``move the door all the way to the right"\\ ``slide the door to the right"\\ ``move the sliding door all the way to the right\\and let go"\end{tabular} \\ \hline
@@ -881,10 +883,10 @@ Below we describe our various baselines and their training sources. Note that fo
         % \multicolumn{1}{|p{1cm}|}{\centering \s \\ \textbf{Method}} & \multicolumn{1}{|p{cm}|}{\centering \s \\ \textbf{Training Data}} & \multicolumn{1}{|p{2cm}|}{\centering \textbf{Task specification}} \\
         \hline
         LangBC & $\DDEMOLANG$ \\
-        LfP (goal image) & $\DPLAY$ \\ 
-        LangLfP Restricted & restricted $\DPLAY$, $\DPLAYLANG$ \\ 
-        LangLfP (ours) & $\DPLAY$, $\DPLAYLANG$ \\ 
-        TransferLangLfP (ours) & $\DPLAY$, $\DPLAYLANG$ \\ 
+        LfP (goal image) & $\DPLAY$ \\
+        LangLfP Restricted & restricted $\DPLAY$, $\DPLAYLANG$ \\
+        LangLfP (ours) & $\DPLAY$, $\DPLAYLANG$ \\
+        TransferLangLfP (ours) & $\DPLAY$, $\DPLAYLANG$ \\
     \end{tabular}
     \caption{Methods and their training data sources. All baselines are trained to maximize the same generalized contextual imitation objective MCIL.}
     \label{tab:methods}
@@ -892,16 +894,16 @@ Below we describe our various baselines and their training sources. Note that fo
 
 \section{Long Horizon Evaluation}
 \label{sec:appendix_eval}
-\textbf{Task construction}. 
+\textbf{Task construction}.
 We construct long-horizon evaluations by considering transitions between the 18 subtasks defined in \cite{lynch2019play}. These span multiple diverse families, e.g. opening and closing doors and drawers, pressing buttons, picking and placing a movable block, etc. For example, one of the 925 Chain-4 tasks may be ``open\_sliding, push\_blue, open\_drawer, sweep". We exclude as invalid any transitions that would result in instructions that would have necessarily already been satisfied, e.g. ``open\_drawer, press\_red, open\_drawer". To allow natural language conditioning we pair 20 test demonstrations of each subtask with human instructions using the same process as in Section~\ref{sec:hip} (example sentences in \tabl{ex_test_lang}).
 
-\textbf{Eval walkthrough}. 
+\textbf{Eval walkthrough}.
 The long horizon evaluation happens as follows. For each of the N-stage tasks in a given benchmark, we start by resetting the scene to a neutral state. This is discussed more in the next section.
 Next, we sample a natural language instruction for each task in the N-stage sequence from a test set. Next, for each subtask in a row, we condition the agent on the current subtask instruction and rollout the policy. If at any timestep the agent successfully completes the current subtask (according to the environment-defined reward), we transition to the next subtask in the sequence (after a half second delay). This attempts to mimic the qualitative scenario where a human provides one instruction after another, queuing up the next instruction, then entering it only once the human has deemed the current subtask solved. If the agent does not complete a given subtask in 8 seconds, the entire episode ends in a timeout.
 We score each multi-stage rollout by the percent of subtasks completed, averaging over all multi-stage tasks in the benchmark to arrive at the final N-stage number.
 
 \textbf{Neutrality in multitask evaluation}. When evaluating any context conditioned policy (goal-image, task id, natural language, etc.), a natural question that arises is: how much is the policy relying on the context to infer and solve the task? Previously in \citet{lynch2019play}, evaluation began by resetting the simulator to the first state of a test demonstration, ensuring that the commanded task was valid. We find that under this reset scheme, the initial pose of the agent can in some cases become correlated with the task, e.g. arm nearby the drawer for a drawer opening task. This is problematic, as
-it potentially reveals task information to the policy through the \textit{initial state}, rather than the context. 
+it potentially reveals task information to the policy through the \textit{initial state}, rather than the context.
 
 In this work, we instead reset the arm to a fixed neutral position at the beginning of every test episode. This ``neutral" initialization scheme is used to run all evaluations in this paper. We note this is a fairer, but significantly more difficult benchmark. Neutral initialization breaks correlation between initial state and task, forcing the agent to rely entirely on language to infer and solve the task.
 For completeness, we present evaluation curves for both LangLfP and LangBC under this and the prior possibly  ``correlated" initialization scheme in Figure~\ref{fig:chains_non_neutral}. We see that when LangBC is allowed to start from the exact first state of a demonstration (a rigid real world assumption), it does well on the first task, but fails to transition to the other tasks, with performance degrading quickly after the first instruction (Chain-2, Chain-3, Chain-4). Play-trained LangLfP on the other hand, is far more robust to change in starting position, experiencing only a minor degradation in performance when switching from the correlated initialization to neutral.
@@ -1331,8 +1333,832 @@ Figure n. [TODO]
 
   <d-footnote-list></d-footnote-list>
   <d-citation-list></d-citation-list>
+  
 </d-appendix>
 
-<d-bibliography src="bibliography.bib"></d-bibliography>
+<!-- <d-bibliography src="bibliography.bib"></d-bibliography> -->
+<d-bibliography>
+<script type="text/bibtex">
+
+
+@article{McGeer01041990,
+  author = {McGeer, Tad}, 
+  title = {\href{http://ijr.sagepub.com/content/9/2/62.abstract}{Passive Dynamic Walking}}, 
+  volume = {9}, 
+  number = {2}, 
+  pages = {62-82}, 
+  year = {1990}, 
+  doi = {10.1177/027836499000900206}, 
+  URL = {http://ijr.sagepub.com/content/9/2/62.abstract}, 
+  eprint = {http://ijr.sagepub.com/content/9/2/62.full.pdf+html}, 
+  journal = {The International Journal of Robotics Research}
+}
+
+@article{kalman1960new,
+  title={A new approach to linear filtering and prediction problems},
+  author={Kalman, R.E.},
+  journal={Journal of Basic Engineering},
+  volume={82},
+  number={1},
+  pages={35--45},
+  year={1960},
+  publisher={Citeseer}
+}
+
+@inproceedings{mooney2008learning,
+  title={Learning to Connect Language and Perception.},
+  author={Mooney, Raymond J},
+  booktitle={AAAI},
+  pages={1598--1601},
+  year={2008}
+}
+
+@article{lynch2019play,
+  title   = {Learning Latent Plans from Play},
+  author  = {Lynch, Corey and Khansari, Mohi and Xiao, Ted and Kumar, Vikash
+             and Tompson, Jonathan and Levine, Sergey and Sermanet, Pierre},
+  journal = {Conference on Robot Learning (CoRL)},
+  year    = {2019},
+  url     = {https://arxiv.org/abs/1903.01973},
+  pdf     = {https://arxiv.org/pdf/1903.01973.pdf},
+  biburl  = {https://github.com/sermanet/sermanet.github.io/blob/master/assets/bib/Lynch2019Play.bib},
+}
+
+@article{gupta2019relay,
+  title={Relay Policy Learning: Solving Long Horizon Tasks via Imitation and Reinforcement Learning},
+  author={Gupta, Abhishek and Kumar, Vikash and Lynch, Corey and Levine, Sergey and Hausman, Karol},
+  journal={Conference on Robot Learning (CoRL)},
+  year={2019}
+}
+
+@inproceedings{TodorovET12,
+  added-at = {2018-11-14T00:00:00.000+0100},
+  author = {Todorov, Emanuel and Erez, Tom and Tassa, Yuval},
+  biburl = {https://www.bibsonomy.org/bibtex/22218cb5d1a40b6e6c2b6077fdff08fbf/dblp},
+  booktitle = {IROS},
+  ee = {https://www.wikidata.org/entity/Q56812558},
+  interhash = {869ab290a52bafc47114756b66df3c25},
+  intrahash = {2218cb5d1a40b6e6c2b6077fdff08fbf},
+  isbn = {978-1-4673-1737-5},
+  keywords = {dblp},
+  pages = {5026-5033},
+  publisher = {IEEE},
+  timestamp = {2019-10-17T14:19:43.000+0200},
+  title = {MuJoCo: A physics engine for model-based control.},
+  url = {http://dblp.uni-trier.de/db/conf/iros/iros2012.html#TodorovET12},
+  year = {2012}
+}
+
+
+@inproceedings{ross2011reduction,
+  title={A reduction of imitation learning and structured prediction to no-regret online learning},
+  author={Ross, St{\'e}phane and Gordon, Geoffrey and Bagnell, Drew},
+  booktitle={Proceedings of the fourteenth international conference on artificial intelligence and statistics},
+  pages={627--635},
+  year={2011}
+}
+
+@article{smith2005development,
+  title={The development of embodied cognition: Six lessons from babies},
+  author={Smith, Linda and Gasser, Michael},
+  journal={Artificial life},
+  volume={11},
+  number={1-2},
+  pages={13--29},
+  year={2005},
+  publisher={MIT Press}
+}
+
+@article{harnad1990symbol,
+  title={The symbol grounding problem},
+  author={Harnad, Stevan},
+  journal={Physica D: Nonlinear Phenomena},
+  volume={42},
+  number={1-3},
+  pages={335--346},
+  year={1990},
+  publisher={Elsevier}
+}
+
+@article{clark1991grounding,
+  title={Grounding in communication.},
+  author={Clark, Herbert H and Brennan, Susan E},
+  year={1991},
+  publisher={American Psychological Association}
+}
+
+@article{baldwin2007inherently,
+  title={How inherently social is language?},
+  author={Baldwin, Dare and Meyer, Meredith},
+  year={2007},
+  publisher={Blackwell Publishing}
+}
+
+@article{demirezen1988behaviorist,
+  title={Behaviorist theory and language learning},
+  author={Demirezen, Mehmet},
+  journal={Hacettepe {\"U}niversitesi E{\u{g}}itim Fak{\"u}ltesi Dergisi},
+  volume={3},
+  number={3},
+  year={1988}
+}
+
+@article{verga2013relevant,
+  title={How relevant is social interaction in second language learning?},
+  author={Verga, Laura and Kotz, Sonja A},
+  journal={Frontiers in human neuroscience},
+  volume={7},
+  pages={550},
+  year={2013},
+  publisher={Frontiers}
+}
+
+@article{stemmer1973language,
+  title={Language acquisition and classical conditioning},
+  author={Stemmer, Nathan},
+  journal={Language and Speech},
+  volume={16},
+  number={3},
+  pages={279--282},
+  year={1973},
+  publisher={Sage Publications Sage CA: Thousand Oaks, CA}
+}
+
+@inproceedings{das2018embodied,
+  title={Embodied question answering},
+  author={Das, Abhishek and Datta, Samyak and Gkioxari, Georgia and Lee, Stefan and Parikh, Devi and Batra, Dhruv},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops},
+  pages={2054--2063},
+  year={2018}
+}
+
+@article{hermann2017grounded,
+  title={Grounded language learning in a simulated 3d world},
+  author={Hermann, Karl Moritz and Hill, Felix and Green, Simon and Wang, Fumin and Faulkner, Ryan and Soyer, Hubert and Szepesvari, David and Czarnecki, Wojciech Marian and Jaderberg, Max and Teplyashin, Denis and others},
+  journal={arXiv preprint arXiv:1706.06551},
+  year={2017}
+}
+
+@misc{2004.10151,
+Author = {Yonatan Bisk and Ari Holtzman and Jesse Thomason and Jacob Andreas and Yoshua Bengio and Joyce Chai and Mirella Lapata and Angeliki Lazaridou and Jonathan May and Aleksandr Nisnevich and Nicolas Pinto and Joseph Turian},
+Title = {Experience Grounds Language},
+Year = {2020},
+Eprint = {arXiv:2004.10151},
+}
+
+@article{sachs1981language,
+  title={Language learning with restricted input: Case studies of two hearing children of deaf parents},
+  author={Sachs, Jacqueline and Bard, Barbara and Johnson, Marie L},
+  journal={Applied Psycholinguistics},
+  volume={2},
+  number={1},
+  pages={33--54},
+  year={1981},
+  publisher={Cambridge University Press}
+}
+
+@book{o2005children,
+  title={How children learn language},
+  author={O\'grady, William},
+  year={2005},
+  publisher={Cambridge University Press}
+}
+
+@book{skinner1957verbal,
+  title={Verbal behavior},
+  author={Skinner, Burrhus Frederic},
+  year={1957},
+  publisher={New York: Appleton-Century-Crofts}
+}
+
+@inproceedings{nair2018visual,
+  title={Visual reinforcement learning with imagined goals},
+  author={Nair, Ashvin V and Pong, Vitchyr and Dalal, Murtaza and Bahl, Shikhar and Lin, Steven and Levine, Sergey},
+  booktitle={Advances in Neural Information Processing Systems},
+  pages={9191--9200},
+  year={2018}
+}
+
+@article{nair2019contextual,
+  title={Contextual Imagined Goals for Self-Supervised Robotic Learning},
+  author={Nair, Ashvin and Bahl, Shikhar and Khazatsky, Alexander and Pong, Vitchyr and Berseth, Glen and Levine, Sergey},
+  journal={arXiv preprint arXiv:1910.11670},
+  year={2019}
+}
+
+@article{pong2019skew,
+  title={Skew-fit: State-covering self-supervised reinforcement learning},
+  author={Pong, Vitchyr H and Dalal, Murtaza and Lin, Steven and Nair, Ashvin and Bahl, Shikhar and Levine, Sergey},
+  journal={arXiv preprint arXiv:1903.03698},
+  year={2019}
+}
+
+@article{warde2018unsupervised,
+  title={Unsupervised control through non-parametric discriminative rewards},
+  author={Warde-Farley, David and Van de Wiele, Tom and Kulkarni, Tejas and Ionescu, Catalin and Hansen, Steven and Mnih, Volodymyr},
+  journal={arXiv preprint arXiv:1811.11359},
+  year={2018}
+}
+
+@article{florensa2019self,
+  title={Self-supervised learning of image embedding for continuous control},
+  author={Florensa, Carlos and Degrave, Jonas and Heess, Nicolas and Springenberg, Jost Tobias and Riedmiller, Martin},
+  journal={arXiv preprint arXiv:1901.00943},
+  year={2019}
+}
+
+@article{ghosh2019learning,
+  title={Learning To Reach Goals Without Reinforcement Learning},
+  author={Ghosh, Dibya and Gupta, Abhishek and Fu, Justin and Reddy, Ashwin and Devine, Coline and Eysenbach, Benjamin and Levine, Sergey},
+  journal={arXiv preprint arXiv:1912.06088},
+  year={2019}
+}
+
+@article{eysenbach2020rewriting,
+  title={Rewriting History with Inverse RL: Hindsight Inference for Policy Improvement},
+  author={Eysenbach, Benjamin and Geng, Xinyang and Levine, Sergey and Salakhutdinov, Ruslan},
+  journal={arXiv preprint arXiv:2002.11089},
+  year={2020}
+}
+
+@inproceedings{kaelbling1993learning,
+  title={Learning to achieve goals},
+  author={Kaelbling, Leslie Pack},
+  booktitle={IJCAI},
+  pages={1094--1099},
+  year={1993},
+  organization={Citeseer}
+}
+
+@inproceedings{ding2019goal,
+  title={Goal-conditioned imitation learning},
+  author={Ding, Yiming and Florensa, Carlos and Abbeel, Pieter and Phielipp, Mariano},
+  booktitle={Advances in Neural Information Processing Systems},
+  pages={15298--15309},
+  year={2019}
+}
+
+@inproceedings{ALFRED20,
+  title ={{ALFRED: A Benchmark for Interpreting Grounded
+           Instructions for Everyday Tasks}},
+  author={Mohit Shridhar and Jesse Thomason and
+          Daniel Gordon and Yonatan Bisk and
+          Winson Han and Roozbeh Mottaghi and
+          Luke Zettlemoyer and Dieter Fox},
+  booktitle = {The IEEE Conference on Computer Vision
+              and Pattern Recognition (CVPR)},
+  year = {2020},
+  url  = {https://arxiv.org/abs/1912.01734}
+}
+
+@article{Sermanet2017TCN,
+  author    = {Pierre Sermanet and
+               Corey Lynch and
+               Yevgen Chebotar and
+               Jasmine Hsu and
+               Eric Jang and
+               Stefan Schaal and
+               Sergey Levine},
+  title     = {Time-Contrastive Networks: Self-Supervised Learning from Video},
+  journal   = {Proceedings of International Conference in Robotics and Automation (ICRA)},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1704.06888},
+  biburl    = {https://github.com/sermanet/sermanet.github.io/blob/master/assets/bib/Sermanet2017TCN.bib},
+}
+
+@article{Sermanet2017Rewards,
+  author    = {Pierre Sermanet and
+               Kelvin Xu and
+               Sergey Levine},
+  title     = {Unsupervised Perceptual Rewards for Imitation Learning},
+  journal   = {Proceedings of Robotics: Science and Systems (RSS)},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1612.06699},
+  biburl    = {https://github.com/sermanet/sermanet.github.io/blob/master/assets/bib/Sermanet2017Rewards.bib},
+}
+
+@article{kalashnikov2018qt,
+  title={Qt-opt: Scalable deep reinforcement learning for vision-based robotic manipulation},
+  author={Kalashnikov, Dmitry and Irpan, Alex and Pastor, Peter and Ibarz, Julian and Herzog, Alexander and Jang, Eric and Quillen, Deirdre and Holly, Ethan and Kalakrishnan, Mrinal and Vanhoucke, Vincent and others},
+  journal={arXiv preprint arXiv:1806.10293},
+  year={2018}
+}
+
+@article{lee2019efficient,
+  title={Efficient exploration via state marginal matching},
+  author={Lee, Lisa and Eysenbach, Benjamin and Parisotto, Emilio and Xing, Eric and Levine, Sergey and Salakhutdinov, Ruslan},
+  journal={arXiv preprint arXiv:1906.05274},
+  year={2019}
+}
+
+@article{macmahon2006walk,
+  title={Walk the talk: Connecting language, knowledge, and action in route instructions},
+  author={MacMahon, Matt and Stankiewicz, Brian and Kuipers, Benjamin},
+  journal={Def},
+  volume={2},
+  number={6},
+  pages={4},
+  year={2006}
+}
+
+@article{yu2018interactive,
+  title={Interactive grounded language acquisition and generalization in a 2d world},
+  author={Yu, Haonan and Zhang, Haichao and Xu, Wei},
+  journal={arXiv preprint arXiv:1802.01433},
+  year={2018}
+}
+
+@inproceedings{oh2017zero,
+  title={Zero-shot task generalization with multi-task deep reinforcement learning},
+  author={Oh, Junhyuk and Singh, Satinder and Lee, Honglak and Kohli, Pushmeet},
+  booktitle={Proceedings of the 34th International Conference on Machine Learning-Volume 70},
+  pages={2661--2670},
+  year={2017},
+  organization={JMLR. org}
+}
+
+@article{raffel2019exploring,
+  title={Exploring the limits of transfer learning with a unified text-to-text transformer},
+  author={Raffel, Colin and Shazeer, Noam and Roberts, Adam and Lee, Katherine and Narang, Sharan and Matena, Michael and Zhou, Yanqi and Li, Wei and Liu, Peter J},
+  journal={arXiv preprint arXiv:1910.10683},
+  year={2019}
+}
+
+@article{radford2019language,
+  title={Language models are unsupervised multitask learners},
+  author={Radford, Alec and Wu, Jeffrey and Child, Rewon and Luan, David and Amodei, Dario and Sutskever, Ilya},
+  journal={OpenAI Blog},
+  volume={1},
+  number={8},
+  pages={9},
+  year={2019}
+}
+
+@article{devlin2018bert,
+  title={Bert: Pre-training of deep bidirectional transformers for language understanding},
+  author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  journal={arXiv preprint arXiv:1810.04805},
+  year={2018}
+}
+
+@article{yang2019multilingual,
+  title={Multilingual universal sentence encoder for semantic retrieval},
+  author={Yang, Yinfei and Cer, Daniel and Ahmad, Amin and Guo, Mandy and Law, Jax and Constant, Noah and Abrego, Gustavo Hernandez and Yuan, Steve and Tar, Chris and Sung, Yun-Hsuan and others},
+  journal={arXiv preprint arXiv:1907.04307},
+  year={2019}
+}
+
+@inproceedings{rahmatizadeh2018vision,
+  title={Vision-based multi-task manipulation for inexpensive robots using end-to-end learning from demonstration},
+  author={Rahmatizadeh, Rouhollah and Abolghasemi, Pooya and B{\"o}l{\"o}ni, Ladislau and Levine, Sergey},
+  booktitle={2018 IEEE International Conference on Robotics and Automation (ICRA)},
+  pages={3758--3765},
+  year={2018},
+  organization={IEEE}
+}
+
+@article{caruana1997multitask,
+  title={Multitask learning},
+  author={Caruana, Rich},
+  journal={Machine learning},
+  volume={28},
+  number={1},
+  pages={41--75},
+  year={1997},
+  publisher={Springer}
+}
+
+@inproceedings{schaul2015universal,
+  title={Universal value function approximators},
+  author={Schaul, Tom and Horgan, Daniel and Gregor, Karol and Silver, David},
+  booktitle={International conference on machine learning},
+  pages={1312--1320},
+  year={2015}
+}
+
+@article{yu2019meta,
+  title={Meta-world: A benchmark and evaluation for multi-task and meta reinforcement learning},
+  author={Yu, Tianhe and Quillen, Deirdre and He, Zhanpeng and Julian, Ryan and Hausman, Karol and Finn, Chelsea and Levine, Sergey},
+  journal={arXiv preprint arXiv:1910.10897},
+  year={2019}
+}
+
+@inproceedings{atkeson1997robot,
+  title={Robot learning from demonstration},
+  author={Atkeson, Christopher G and Schaal, Stefan},
+  booktitle={ICML},
+  volume={97},
+  pages={12--20},
+  year={1997},
+  organization={Citeseer}
+}
+
+@article{argall2009survey,
+  title={A survey of robot learning from demonstration},
+  author={Argall, Brenna D and Chernova, Sonia and Veloso, Manuela and Browning, Brett},
+  journal={Robotics and autonomous systems},
+  volume={57},
+  number={5},
+  pages={469--483},
+  year={2009},
+  publisher={Elsevier}
+}
+
+@inproceedings{zhang2018deep,
+  title={Deep imitation learning for complex manipulation tasks from virtual reality teleoperation},
+  author={Zhang, Tianhao and McCarthy, Zoe and Jow, Owen and Lee, Dennis and Chen, Xi and Goldberg, Ken and Abbeel, Pieter},
+  booktitle={2018 IEEE International Conference on Robotics and Automation (ICRA)},
+  pages={1--8},
+  year={2018},
+  organization={IEEE}
+}
+
+@article{rajeswaran2017learning,
+  title={Learning complex dexterous manipulation with deep reinforcement learning and demonstrations},
+  author={Rajeswaran, Aravind and Kumar, Vikash and Gupta, Abhishek and Vezzani, Giulia and Schulman, John and Todorov, Emanuel and Levine, Sergey},
+  journal={arXiv preprint arXiv:1709.10087},
+  year={2017}
+}
+
+@inproceedings{duan2017one,
+  title={One-shot imitation learning},
+  author={Duan, Yan and Andrychowicz, Marcin and Stadie, Bradly and Ho, OpenAI Jonathan and Schneider, Jonas and Sutskever, Ilya and Abbeel, Pieter and Zaremba, Wojciech},
+  booktitle={Advances in neural information processing systems},
+  pages={1087--1098},
+  year={2017}
+}
+
+@article{andrychowicz2020learning,
+  title={Learning dexterous in-hand manipulation},
+  author={Andrychowicz, OpenAI: Marcin and Baker, Bowen and Chociej, Maciek and Jozefowicz, Rafal and McGrew, Bob and Pachocki, Jakub and Petron, Arthur and Plappert, Matthias and Powell, Glenn and Ray, Alex and others},
+  journal={The International Journal of Robotics Research},
+  volume={39},
+  number={1},
+  pages={3--20},
+  year={2020},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+
+
+@article{haarnoja2018soft,
+  title={Soft actor-critic algorithms and applications},
+  author={Haarnoja, Tuomas and Zhou, Aurick and Hartikainen, Kristian and Tucker, George and Ha, Sehoon and Tan, Jie and Kumar, Vikash and Zhu, Henry and Gupta, Abhishek and Abbeel, Pieter and others},
+  journal={arXiv preprint arXiv:1812.05905},
+  year={2018}
+}
+
+@article{levine2016end,
+  title={End-to-end training of deep visuomotor policies},
+  author={Levine, Sergey and Finn, Chelsea and Darrell, Trevor and Abbeel, Pieter},
+  journal={The Journal of Machine Learning Research},
+  volume={17},
+  number={1},
+  pages={1334--1373},
+  year={2016},
+  publisher={JMLR. org}
+}
+
+@article{kober2013reinforcement,
+  title={Reinforcement learning in robotics: A survey},
+  author={Kober, Jens and Bagnell, J Andrew and Peters, Jan},
+  journal={The International Journal of Robotics Research},
+  volume={32},
+  number={11},
+  pages={1238--1274},
+  year={2013},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+
+@article{popov2017data,
+  title={Data-efficient deep reinforcement learning for dexterous manipulation},
+  author={Popov, Ivaylo and Heess, Nicolas and Lillicrap, Timothy and Hafner, Roland and Barth-Maron, Gabriel and Vecerik, Matej and Lampe, Thomas and Tassa, Yuval and Erez, Tom and Riedmiller, Martin},
+  journal={arXiv preprint arXiv:1704.03073},
+  year={2017}
+}
+
+@article{singh2019end,
+  title={End-to-end robotic reinforcement learning without reward engineering},
+  author={Singh, Avi and Yang, Larry and Hartikainen, Kristian and Finn, Chelsea and Levine, Sergey},
+  journal={arXiv preprint arXiv:1904.07854},
+  year={2019}
+}
+
+@article{thrun1992efficient,
+  title={Efficient exploration in reinforcement learning},
+  author={Thrun, Sebastian B},
+  year={1992},
+  publisher={Citeseer}
+}
+
+@article{ebert2018visual,
+  title={Visual foresight: Model-based deep reinforcement learning for vision-based robotic control},
+  author={Ebert, Frederik and Finn, Chelsea and Dasari, Sudeep and Xie, Annie and Lee, Alex and Levine, Sergey},
+  journal={arXiv preprint arXiv:1812.00568},
+  year={2018}
+}
+
+@inproceedings{hester2018deep,
+  title={Deep q-learning from demonstrations},
+  author={Hester, Todd and Vecerik, Matej and Pietquin, Olivier and Lanctot, Marc and Schaul, Tom and Piot, Bilal and Horgan, Dan and Quan, John and Sendonaris, Andrew and Osband, Ian and others},
+  booktitle={Thirty-Second AAAI Conference on Artificial Intelligence},
+  year={2018}
+}
+
+@inproceedings{teh2017distral,
+  title={Distral: Robust multitask reinforcement learning},
+  author={Teh, Yee and Bapst, Victor and Czarnecki, Wojciech M and Quan, John and Kirkpatrick, James and Hadsell, Raia and Heess, Nicolas and Pascanu, Razvan},
+  booktitle={Advances in Neural Information Processing Systems},
+  pages={4496--4506},
+  year={2017}
+}
+
+@article{ha2018world,
+  title={World models},
+  author={Ha, David and Schmidhuber, J{\"u}rgen},
+  journal={arXiv preprint arXiv:1803.10122},
+  year={2018}
+}
+
+@inproceedings{oh2015action,
+  title={Action-conditional video prediction using deep networks in atari games},
+  author={Oh, Junhyuk and Guo, Xiaoxiao and Lee, Honglak and Lewis, Richard L and Singh, Satinder},
+  booktitle={Advances in neural information processing systems},
+  pages={2863--2871},
+  year={2015}
+}
+
+@article{pong2018temporal,
+  title={Temporal difference models: Model-free deep rl for model-based control},
+  author={Pong, Vitchyr and Gu, Shixiang and Dalal, Murtaza and Levine, Sergey},
+  journal={arXiv preprint arXiv:1802.09081},
+  year={2018}
+}
+
+@inproceedings{andrychowicz2017hindsight,
+  title={Hindsight experience replay},
+  author={Andrychowicz, Marcin and Wolski, Filip and Ray, Alex and Schneider, Jonas and Fong, Rachel and Welinder, Peter and McGrew, Bob and Tobin, Josh and Abbeel, OpenAI Pieter and Zaremba, Wojciech},
+  booktitle={Advances in neural information processing systems},
+  pages={5048--5058},
+  year={2017}
+}
+
+@inproceedings{kolter2009near,
+  title={Near-Bayesian exploration in polynomial time},
+  author={Kolter, J Zico and Ng, Andrew Y},
+  booktitle={Proceedings of the 26th annual international conference on machine learning},
+  pages={513--520},
+  year={2009}
+}
+
+@inproceedings{oudeyer2008can,
+  title={How can we define intrinsic motivation},
+  author={Oudeyer, Pierre-Yves and Kaplan, Frederic and others},
+  booktitle={Proc. of the 8th Conf. on Epigenetic Robotics},
+  volume={5},
+  pages={29--31},
+  year={2008}
+}
+
+@article{journals/tamd/Schmidhuber10,
+  added-at = {2018-11-14T00:00:00.000+0100},
+  author = {Schmidhuber, Jürgen},
+  biburl = {https://www.bibsonomy.org/bibtex/24c1e5293ff0e808b4167206ab2c87004/dblp},
+  ee = {https://www.wikidata.org/entity/Q55924369},
+  interhash = {cf1f71c67e2f9b734a048d0bfa69174d},
+  intrahash = {4c1e5293ff0e808b4167206ab2c87004},
+  journal = {IEEE Trans. Autonomous Mental Development},
+  keywords = {dblp},
+        number = {3},
+  pages = {230-247},
+  timestamp = {2018-11-15T12:27:38.000+0100},
+  title = {Formal Theory of Creativity, Fun, and Intrinsic Motivation (1990-2010).},
+  url = {http://dblp.uni-trier.de/db/journals/tamd/tamd2.html#Schmidhuber10},
+         volume = {2},
+         year = {2010}
+}
+
+@inproceedings{ozair2019wasserstein,
+  title={Wasserstein dependency measure for representation learning},
+  author={Ozair, Sherjil and Lynch, Corey and Bengio, Yoshua and Van den Oord, Aaron and Levine, Sergey and Sermanet, Pierre},
+  booktitle={Advances in Neural Information Processing Systems},
+  pages={15578--15588},
+  year={2019}
+}
+
+@article{oord2018representation,
+  title={Representation learning with contrastive predictive coding},
+  author={Oord, Aaron van den and Li, Yazhe and Vinyals, Oriol},
+  journal={arXiv preprint arXiv:1807.03748},
+  year={2018}
+}
+
+@article{handa2019dexpilot,
+  title={Dexpilot: Vision based teleoperation of dexterous robotic hand-arm system},
+  author={Handa, Ankur and Van Wyk, Karl and Yang, Wei and Liang, Jacky and Chao, Yu-Wei and Wan, Qian and Birchfield, Stan and Ratliff, Nathan and Fox, Dieter},
+  journal={arXiv preprint arXiv:1910.03135},
+  year={2019}
+}
+
+@article{singh2020scalable,
+  title={Scalable Multi-Task Imitation Learning with Autonomous Improvement},
+  author={Singh, Avi and Jang, Eric and Irpan, Alexander and Kappler, Daniel and Dalal, Murtaza and Levine, Sergey and Khansari, Mohi and Finn, Chelsea},
+  journal={arXiv preprint arXiv:2003.02636},
+  year={2020}
+}
+
+@article{pirk2019online,
+  title={Online Object Representations with Contrastive Learning},
+  author={Pirk, S{\"o}ren and Khansari, Mohi and Bai, Yunfei and Lynch, Corey and Sermanet, Pierre},
+  journal={arXiv preprint arXiv:1906.04312},
+  year={2019}
+}
+
+@article{winograd1972understanding,
+  title={Understanding natural language},
+  author={Winograd, Terry},
+  journal={Cognitive psychology},
+  volume={3},
+  number={1},
+  pages={1--191},
+  year={1972},
+  publisher={Elsevier}
+}
+
+@article{luketina2019survey,
+  title={A survey of reinforcement learning informed by natural language},
+  author={Luketina, Jelena and Nardelli, Nantas and Farquhar, Gregory and Foerster, Jakob and Andreas, Jacob and Grefenstette, Edward and Whiteson, Shimon and Rockt{\"a}schel, Tim},
+  journal={arXiv preprint arXiv:1906.03926},
+  year={2019}
+}
+
+@article{hafner2018learning,
+  title={Learning latent dynamics for planning from pixels},
+  author={Hafner, Danijar and Lillicrap, Timothy and Fischer, Ian and Villegas, Ruben and Ha, David and Lee, Honglak and Davidson, James},
+  journal={arXiv preprint arXiv:1811.04551},
+  year={2018}
+}
+
+@inproceedings{pathak2017curiosity,
+  title={Curiosity-driven exploration by self-supervised prediction},
+  author={Pathak, Deepak and Agrawal, Pulkit and Efros, Alexei A and Darrell, Trevor},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops},
+  pages={16--17},
+  year={2017}
+}
+
+@inproceedings{kollar2010toward,
+  title={Toward understanding natural language directions},
+  author={Kollar, Thomas and Tellex, Stefanie and Roy, Deb and Roy, Nicholas},
+  booktitle={2010 5th ACM/IEEE International Conference on Human-Robot Interaction (HRI)},
+  pages={259--266},
+  year={2010},
+  organization={IEEE}
+}
+
+@article{misra2017mapping,
+  title={Mapping instructions and visual observations to actions with reinforcement learning},
+  author={Misra, Dipendra and Langford, John and Artzi, Yoav},
+  journal={arXiv preprint arXiv:1704.08795},
+  year={2017}
+}
+
+@article{yu2017deep,
+  title={A deep compositional framework for human-like language acquisition in virtual environment},
+  author={Yu, Haonan and Zhang, Haichao and Xu, Wei},
+  journal={arXiv preprint arXiv:1703.09831},
+  year={2017}
+}
+
+@inproceedings{wang2019reinforced,
+  title={Reinforced cross-modal matching and self-supervised imitation learning for vision-language navigation},
+  author={Wang, Xin and Huang, Qiuyuan and Celikyilmaz, Asli and Gao, Jianfeng and Shen, Dinghan and Wang, Yuan-Fang and Wang, William Yang and Zhang, Lei},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={6629--6638},
+  year={2019}
+}
+
+@article{hill2019emergent,
+  title={Emergent systematic generalization in a situated agent},
+  author={Hill, Felix and Lampinen, Andrew and Schneider, Rosalia and Clark, Stephen and Botvinick, Matthew and McClelland, James L and Santoro, Adam},
+  journal={arXiv preprint arXiv:1910.00571},
+  year={2019}
+}
+
+@inproceedings{chaplot2018gated,
+  title={Gated-attention architectures for task-oriented language grounding},
+  author={Chaplot, Devendra Singh and Sathyendra, Kanthashree Mysore and Pasumarthi, Rama Kumar and Rajagopal, Dheeraj and Salakhutdinov, Ruslan},
+  booktitle={Thirty-Second AAAI Conference on Artificial Intelligence},
+  year={2018}
+}
+
+@misc{1903.02020,
+Author = {Prasoon Goyal and Scott Niekum and Raymond J. Mooney},
+Title = {Using Natural Language for Reward Shaping in Reinforcement Learning},
+Year = {2019},
+Eprint = {arXiv:1903.02020},
+}
+
+@misc{1611.01796,
+Author = {Jacob Andreas and Dan Klein and Sergey Levine},
+Title = {Modular Multitask Reinforcement Learning with Policy Sketches},
+Year = {2016},
+Eprint = {arXiv:1611.01796},
+}
+
+@misc{1906.07343,
+Author = {Yiding Jiang and Shixiang Gu and Kevin Murphy and Chelsea Finn},
+Title = {Language as an Abstraction for Hierarchical Deep Reinforcement Learning},
+Year = {2019},
+Eprint = {arXiv:1906.07343},
+}
+
+@misc{1901.05287,
+Author = {Yoav Goldberg},
+Title = {Assessing BERT\'s Syntactic Abilities},
+Year = {2019},
+Eprint = {arXiv:1901.05287},
+}
+
+@misc{1801.06146,
+Author = {Jeremy Howard and Sebastian Ruder},
+Title = {Universal Language Model Fine-tuning for Text Classification},
+Year = {2018},
+Eprint = {arXiv:1801.06146},
+}
+
+@misc{1905.06316,
+Author = {Ian Tenney and Patrick Xia and Berlin Chen and Alex Wang and Adam Poliak and R Thomas McCoy and Najoung Kim and Benjamin Van Durme and Samuel R. Bowman and Dipanjan Das and Ellie Pavlick},
+Title = {What do you learn from context? Probing for sentence structure in contextualized word representations},
+Year = {2019},
+Eprint = {arXiv:1905.06316},
+}
+
+@article{zellers2018swag,
+  title={Swag: A large-scale adversarial dataset for grounded commonsense inference},
+  author={Zellers, Rowan and Bisk, Yonatan and Schwartz, Roy and Choi, Yejin},
+  journal={arXiv preprint arXiv:1808.05326},
+  year={2018}
+}
+
+@inproceedings{tan2018survey,
+  title={A survey on deep transfer learning},
+  author={Tan, Chuanqi and Sun, Fuchun and Kong, Tao and Zhang, Wenchang and Yang, Chao and Liu, Chunfang},
+  booktitle={International conference on artificial neural networks},
+  pages={270--279},
+  year={2018},
+  organization={Springer}
+}
+
+@article{1811.06711,
+Author = {Takayuki Osa and Joni Pajarinen and Gerhard Neumann and J. Andrew Bagnell and Pieter Abbeel and Jan Peters},
+Title = {An Algorithmic Perspective on Imitation Learning},
+Year = {2018},
+Eprint = {arXiv:1811.06711},
+Doi = {10.1561/2300000053},
+}
+
+@misc{1701.05517,
+Author = {Tim Salimans and Andrej Karpathy and Xi Chen and Diederik P. Kingma},
+Title = {PixelCNN++: Improving the PixelCNN with Discretized Logistic Mixture Likelihood and Other Modifications},
+Year = {2017},
+Eprint = {arXiv:1701.05517},
+}
+
+@inproceedings{gu2017deep,
+  title={Deep reinforcement learning for robotic manipulation with asynchronous off-policy updates},
+  author={Gu, Shixiang and Holly, Ethan and Lillicrap, Timothy and Levine, Sergey},
+  booktitle={2017 IEEE international conference on robotics and automation (ICRA)},
+  pages={3389--3396},
+  year={2017},
+  organization={IEEE}
+}
+
+@article{parisotto2015actor,
+  title={Actor-mimic: Deep multitask and transfer reinforcement learning},
+  author={Parisotto, Emilio and Ba, Jimmy Lei and Salakhutdinov, Ruslan},
+  journal={arXiv preprint arXiv:1511.06342},
+  year={2015}
+}
+
+@article{schaul2019ray,
+  title={Ray interference: a source of plateaus in deep reinforcement learning},
+  author={Schaul, Tom and Borsa, Diana and Modayil, Joseph and Pascanu, Razvan},
+  journal={arXiv preprint arXiv:1904.11455},
+  year={2019}
+}
+
+@article{sennrich2015neural,
+  title={Neural machine translation of rare words with subword units},
+  author={Sennrich, Rico and Haddow, Barry and Birch, Alexandra},
+  journal={arXiv preprint arXiv:1508.07909},
+  year={2015}
+}
+
+
+</script>
+
+
+</d-bibliography>
+
 
 </body>
