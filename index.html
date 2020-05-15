@@ -289,7 +289,6 @@
 
 <!-- starting article -->
 <p>
-
   <b>Abstract</b><br>
 Natural language is perhaps the most versatile and intuitive way for humans to communicate tasks to a robot.
 Prior work on <a href="https://learning-from-play.github.io/">Learning from Play</a> (LfP) <d-cite key="lynch2019play"></d-cite> provides a simple approach for learning a wide variety of robotic behaviors from general sensors. However, each task must be specified with a goal image---something that is not practical in open-world environments.
@@ -299,7 +298,7 @@ To make this efficient, we introduce <i>multicontext imitation</i>, which allows
 This reduces the cost of language pairing to less than 1% of collected robot experience, with the majority of control still learned via self-supervised imitation.
 At test time, a single agent trained in this manner can perform many different robotic manipulation skills in a row in a 3D environment, directly from images, and specified only with natural language (e.g. ``open the drawer...now pick up the block...now press the green button...") (<a href="#long-horizon">video</a>). Finally, we introduce a simple technique that transfers knowledge from large unlabeled text corpora to robotic learning.
 We find that transfer significantly improves downstream robotic manipulation. It also allows our agent to follow thousands of novel instructions at test time in zero shot, in 16 different languages. See videos of our experiments below.
-
+</p>
 
 <div class="l-page-outset" id="teaser">
 <figure>
@@ -311,8 +310,9 @@ We find that transfer significantly improves downstream robotic manipulation. It
 </div>
 
 <h3>Introduction</h3>
-
-A long-term motivation in robotic learning is the idea of a generalist robot---a single agent that can solve many tasks in everyday settings, using only general onboard sensors. A fundamental but less considered aspect, alongside task and observation space generality, is \textit{general task specification}: the ability for untrained users to direct agent behavior using the most intuitive and flexible mechanisms. Along these lines, it is hard to imagine a truly generalist robot without also imagining a robot that can follow instructions expressed in natural language.
+<p>
+A long-term motivation in robotic learning is the idea of a generalist robot---a single agent that can solve many tasks in everyday settings, using only general onboard sensors. A fundamental but less considered aspect, alongside task and observation space generality, is <i>general task specification</i>: the ability for untrained users to direct agent behavior using the most intuitive and flexible mechanisms. Along these lines, it is hard to imagine a truly generalist robot without also imagining a robot that can follow instructions expressed in natural language.
+</p>
 
 More broadly, children learn language in the context of a rich, relevant, sensorimotor experience \cite{sachs1981language, smith2005development}. This motivates the long-standing question in artificial intelligence of \textit{embodied language acquisition} \cite{harnad1990symbol,mooney2008learning}: how might intelligent agents ground language understanding in their own embodied perception? An ability to relate language to the physical world potentially allows robots and humans to communicate on common ground over shared sensory experience \cite{clark1991grounding, 2004.10151} ---something that could lead to much more meaningful forms of human-machine interaction.
 
