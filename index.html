@@ -913,7 +913,7 @@ Another collection consideration is the level of details in a sentence. For exam
 
 <h4>D.3 (Demo, language) dataset</h4>
 <p>
-To define $\DDEMOLANG$, we pair each of the 100 demonstrations of the 18 evaluation tasks from <d-cite key="lynch2019play"></d-cite> with hindsight instructions using the same process as in ~\ref{sec:hip}. We similarly pair the 20 test time demonstrations of each of the 18 tasks. See examples for each of the tasks in Table~\ref{tab:ex_test_lang}.
+To define $D_{\mathrm{(demo,lang)}}$, we pair each of the 100 demonstrations of the 18 evaluation tasks from <d-cite key="lynch2019play"></d-cite> with hindsight instructions using the same process as in ~\ref{sec:hip}. We similarly pair the 20 test time demonstrations of each of the 18 tasks. See examples for each of the tasks in <a href="#tab:ex_test_lang">Table 7</a>.
 74.3% of the natural language instructions in the test dataset appear at least once in $D_{\mathrm{play}}$.
 85.08% of the instructions in $D_{\mathrm{(play,lang)}}$ never never appear in the test set.
 </p>
@@ -940,7 +940,7 @@ Below we describe our various baselines and their training sources. Note that fo
 <h3 id="evaluation">F. Long Horizon Evaluation</h3>
 \label{sec:appendix_eval}
 <p><b>Task construction.</b>
-We construct long-horizon evaluations by considering transitions between the 18 subtasks defined in <d-cite key="lynch2019play"></d-cite>. These span multiple diverse families, e.g. opening and closing doors and drawers, pressing buttons, picking and placing a movable block, etc. For example, one of the 925 Chain-4 tasks may be "open\_sliding, push\_blue, open\_drawer, sweep". We exclude as invalid any transitions that would result in instructions that would have necessarily already been satisfied, e.g. "open\_drawer, press\_red, open\_drawer". To allow natural language conditioning we pair 20 test demonstrations of each subtask with human instructions using the same process as in Section~\ref{sec:hip} (example sentences in \tabl{ex_test_lang}).
+We construct long-horizon evaluations by considering transitions between the 18 subtasks defined in <d-cite key="lynch2019play"></d-cite>. These span multiple diverse families, e.g. opening and closing doors and drawers, pressing buttons, picking and placing a movable block, etc. For example, one of the 925 Chain-4 tasks may be "open\_sliding, push\_blue, open\_drawer, sweep". We exclude as invalid any transitions that would result in instructions that would have necessarily already been satisfied, e.g. "open\_drawer, press\_red, open\_drawer". To allow natural language conditioning we pair 20 test demonstrations of each subtask with human instructions using the same process as in Section~\ref{sec:hip} (example sentences in <a href="#tab:ex_test_lang">Table 7</a>).
 </p>
 <p><b>Eval walkthrough.</b>
 The long horizon evaluation happens as follows. For each of the N-stage tasks in a given benchmark, we start by resetting the scene to a neutral state. This is discussed more in the next section.
@@ -969,7 +969,9 @@ For completeness, we present evaluation curves for both LangLfP and LangBC under
 \label{sec:qualitative_examples}
 
 <h4>G.1 Composing new tasks with language</h4>
+<p>
 In this section, we show some difficult tasks that LangLfP can achieve by having the operator breaking them down into multiple instructions. These tasks are achieved in zero shot and are not included in the standard 18-task benchmark.
+</p>
 
 \begin{figure}[htb]
   \centering
@@ -988,7 +990,9 @@ In this section, we show some difficult tasks that LangLfP can achieve by having
 <h4>G.2 The Operator Can Help the Robot</h4>
 \label{sec:appendix:assistance}
 
+<p>
 In this section, we show an example of the human operator adapting its instructions if the robot gets stuck, and adding extra sub-steps to get out of trouble and fix the situation in order to achieve the initial instruction. In \fig{interaction}, the robot gets its end-effector stuck against the door on the way to pressing the red button. The operator then changing the command to move back, then opening the door more to the right so that it has better access to the red button, then pressing the red button.
+</p>
 
 \begin{figure*}[htb]
   \centering
@@ -999,7 +1003,9 @@ In this section, we show an example of the human operator adapting its instructi
 \end{figure*}
 
 <h3 id="ablation">H. Ablation: How much language is necessary?</h3>
+<p>
 We study how the performance of LangLfP scales with the number of collected language pairs. Figure~\ref{fig:lang_ablation} compares models trained from pixel inputs to models trained from state inputs as we sweep the amount of collected language pairs by factors of 2. Interestingly, for models trained from states, doubling the size of the language dataset from 5k to 10k has marginal benefit on performance. Models trained from pixels, on the other hand, have yet to converge and may benefit from even larger datasets. This suggests that the role of larger language pair datasets is primarily to address the complicated perceptual grounding problem.
+</p>
 
 \begin{figure}[htb]
   \includegraphics[width=\linewidth]{figs/results/play_lang_pairs.pdf}
