@@ -29,7 +29,7 @@
   <d-front-matter>
     <script type="text/json">{
       "title": "Grounding Language in Play",
-      "description": "Learning from language and play for robotics.",
+      "description": "Learning natural language conditioned control from play.",
       "authors": [
         {
           "author": "Corey Lynch*",
@@ -233,7 +233,8 @@
 <!-- title section -->
 <d-title>
   <h1>Grounding Language in Play</h1>
-  <!-- <p>A scalable approach</p> -->
+  <!-- <p>Combining open-ended robotic manipulation with open-ended human language conditioning</p> -->
+  <p>A scalable approach to learning human language conditioned visual control</p>
 
     <!-- menu on the left -->
   <d-contents>
@@ -289,261 +290,346 @@
 
 <!-- starting article -->
 <p>
-
   <b>Abstract</b><br>
 Natural language is perhaps the most versatile and intuitive way for humans to communicate tasks to a robot.
-Prior work on <a href="https://learning-from-play.github.io/">Learning from Play</a> (LfP) <d-cite key="lynch2019play"></d-cite> provides a simple approach for learning a wide variety of robotic behaviors from general sensors. However, each task must be specified with a goal image---something that is not practical in open-world environments.
+Prior work on <a href="https://learning-from-play.github.io/">Learning from Play</a> (LfP) <d-cite key="lynch2019play"></d-cite> provides a simple approach for learning a wide variety of robotic behaviors from general sensors. However, each task must be specified with a goal image&mdash;something that is not practical in open-world environments.
 In this work we present a simple and scalable way to condition policies on human language instead.
 We extend LfP by pairing short robot experiences from play with relevant human language after-the-fact.
 To make this efficient, we introduce <i>multicontext imitation</i>, which allows us to train a single agent to follow image or language goals, then use just language conditioning at test time.
 This reduces the cost of language pairing to less than 1% of collected robot experience, with the majority of control still learned via self-supervised imitation.
-At test time, a single agent trained in this manner can perform many different robotic manipulation skills in a row in a 3D environment, directly from images, and specified only with natural language (e.g. ``open the drawer...now pick up the block...now press the green button...") (<a href="#long-horizon">video</a>). Finally, we introduce a simple technique that transfers knowledge from large unlabeled text corpora to robotic learning.
+At test time, a single agent trained in this manner can perform many different robotic manipulation skills in a row in a 3D environment, directly from images, and specified only with natural language (e.g. "open the drawer...now pick up the block...now press the green button...") (<a href="#long-horizon">video</a>). Finally, we introduce a simple technique that transfers knowledge from large unlabeled text corpora to robotic learning.
 We find that transfer significantly improves downstream robotic manipulation. It also allows our agent to follow thousands of novel instructions at test time in zero shot, in 16 different languages. See videos of our experiments below.
-
+</p>
 
 <div class="l-page-outset" id="teaser">
 <figure>
-<img src="figs/teaser/teaser_mockup8.png" style="margin: 0; width: 200%;"/>
+<img id="fig:teaser" src="figs/teaser/teaser_mockup8.png" style="margin: 0; width: 200%;"/>
   <figcaption>
   <b>Figure 1. Learning to follow natural language instructions from play:</b> 1) First, relabel teleoperated play into many image goal examples. Next, pair a small amount of play with hindsight instructions, yielding language goal examples. 2) Multicontext imitation: train a single policy on both image and language goals. 3) Test time: A single agent performs many skills in a row, directly from images, specified only in natural language.
   </figcaption>
 </figure>
 </div>
 
-<h3>Introduction</h3>
+<h3>1. Introduction</h3>
+<p>
+A long-term motivation in robotic learning is the idea of a generalist robot&mdash;a single agent that can solve many tasks in everyday settings, using only general onboard sensors. A fundamental but less considered aspect, alongside task and observation space generality, is <i>general task specification</i>: the ability for untrained users to direct agent behavior using the most intuitive and flexible mechanisms. Along these lines, it is hard to imagine a truly generalist robot without also imagining a robot that can follow instructions expressed in natural language.
+</p>
 
-A long-term motivation in robotic learning is the idea of a generalist robot---a single agent that can solve many tasks in everyday settings, using only general onboard sensors. A fundamental but less considered aspect, alongside task and observation space generality, is \textit{general task specification}: the ability for untrained users to direct agent behavior using the most intuitive and flexible mechanisms. Along these lines, it is hard to imagine a truly generalist robot without also imagining a robot that can follow instructions expressed in natural language.
+<p>
+More broadly, children learn language in the context of a rich, relevant, sensorimotor experience <d-cite key="sachs1981language,smith2005development"></d-cite>. This motivates the long-standing question in artificial intelligence of <i>embodied language acquisition</i> <d-cite key="harnad1990symbol,mooney2008learning"></d-cite>: how might intelligent agents ground language understanding in their own embodied perception? An ability to relate language to the physical world potentially allows robots and humans to communicate on common ground over shared sensory experience<d-cite key="clark1991grounding, 2004.10151"></d-cite>&mdash;something that could lead to much more meaningful forms of human-machine interaction.
+</p>
 
-More broadly, children learn language in the context of a rich, relevant, sensorimotor experience \cite{sachs1981language, smith2005development}. This motivates the long-standing question in artificial intelligence of \textit{embodied language acquisition} \cite{harnad1990symbol,mooney2008learning}: how might intelligent agents ground language understanding in their own embodied perception? An ability to relate language to the physical world potentially allows robots and humans to communicate on common ground over shared sensory experience \cite{clark1991grounding, 2004.10151} ---something that could lead to much more meaningful forms of human-machine interaction.
+<p>
+Furthermore, language acquisition, at least in humans, is a highly <i>social</i> process<d-cite key="skinner1957verbal,baldwin2007inherently,verga2013relevant"></d-cite>. During their earliest interactions, infants contribute actions while caregivers contribute relevant words<d-cite key="clark1991grounding"></d-cite>. While we cannot speculate on the actual learning mechanism at play in humans, we are interested in what robots can learn from similar paired data. In this work, we ask: assuming real humans play a critical role in robot language acquisition, what is the most efficient way to go about it? How can we scalably pair robot experience with relevant human language to bootstrap instruction following?
+</p>
 
-Furthermore, language acquisition, at least in humans, is a highly \textit{social} process \cite{skinner1957verbal,baldwin2007inherently,verga2013relevant}. During their earliest interactions, infants contribute actions while caregivers contribute relevant words \cite{clark1991grounding}. While we cannot speculate on the actual learning mechanism at play in humans, we are interested in what robots can learn from similar paired data. In this work, we ask: assuming real humans play a critical role in robot language acquisition, what is the most efficient way to go about it? How can we scalably pair robot experience with relevant human language to bootstrap instruction following?
+<div class="l-page-outset" id="mcil">
+<figure>
+<img src="figs/mcil/mcil.png" style="margin: 0; width: 60%;"/>
+  <figcaption>
+  <b>Figure 2. Multicontext Imitation Learning:</b> 
+  We introduce Multi-context Imitation Learning (MCIL), a simple generalization of contextual imitation learning to multiple heterogeneous contexts. An increasingly typical scenario in imitation learning is one where we have <i>multiple</i> imitation datasets, each with a different task description (e.g. goal image, task id, natural language, video demonstration, etc.) and different cost of collection. MCIL trains: 1) a single <i>latent goal</i> conditioned policy over all datasets, and 2) a set of encoders, one per dataset, each responsible for mapping a particular task description to the shared latent space.
+  </figcaption>
+</figure>
+</div>
 
-\begin{figure}[htb]
-  \includegraphics[width=\linewidth]{figs/acgc/multicontext_imitation4.pdf}
-  \caption{\textbf{Multicontext Imitation Learning.}
-  We introduce Multi-context Imitation Learning (MCIL), a simple generalization of contextual imitation learning to multiple heterogeneous contexts. An increasingly typical scenario in imitation learning is one where we have \textit{multiple} imitation datasets, each with a different task description (e.g. goal image, task id, natural language, video demonstration, etc.) and different cost of collection. MCIL trains 1) a single \textit{latent goal} conditioned policy over all datasets and 2) a set of encoders, one per dataset, each responsible for mapping a particular task description to the shared latent space.}
-  \label{fig:acgc}
-\end{figure}
+<p>
+Even simple instruction following, however, poses a notoriously difficult learning challenge, subsuming many long-term problems in AI <d-cite key="hermann2017grounded,das2018embodied"></d-cite>.
+For example, a robot presented with the command "sweep the block into the drawer” must be able to relate language to low-level perception (what does a block look like? what is a drawer?). It must perform visual reasoning (what does it mean for the block to be in the drawer?). Finally, it must solve a complex sequential decision problem (what commands do I send to my arm to "sweep"?). We note these questions cover only a single task, whereas the generalist robot setting demands single agents that perform many.
+</p>
 
+<p>
+In this work, we combine the setting of open-ended robotic manipulation with open-ended human language conditioning. There is a long history of work studying instruction following (survey <d-cite key="luketina2019survey"></d-cite>). Prior work typically studies restricted observation spaces (e.g. games <d-cite key="1903.0202"></d-cite>, 2D gridworlds <d-cite key="yu2018interactive"></d-cite>), simplified actuators, (e.g. binary pick and place primitives <d-cite key="hill2019emergent"></d-cite>), and synthetic language data <d-cite key="hermann2017grounded"></d-cite>. We study the first combination, to our knowledge, of 1) human language instructions, 2) high-dimensional continuous sensory inputs and actuators, and 3) complex tasks like long-horizon robotic object manipulation. The test time scenario we consider is a single agent that can perform many tasks in a row, each specified by a human in natural language. For example, "open the door all the way to the right...now pick up the block...now push the red button...now close the door". Furthermore, the agent should be able to perform any combination of subtasks in any order. We refer to this as the "ask me anything" scenario (Figure 1, step 3), which tests three important aspects of generality: general-purpose control, learning from onboard sensors, and general task specification.
+</p>
 
-Even simple instruction following, however, poses a notoriously difficult learning challenge, subsuming many long-term problems in AI \cite{hermann2017grounded, das2018embodied}.
-For example, a robot presented with the command ``sweep the block into the drawer” must be able to relate language to low-level perception (what does a block look like? what is a drawer?). It must perform visual reasoning (what does it mean for the block to be in the drawer?). Finally, it must solve a complex sequential decision problem (what commands do I send to my arm to ``sweep"?). We note these questions cover only a single task, whereas the generalist robot setting demands single agents that perform many.
+<p>
+Prior work on <a href="https://learning-from-play.github.io/">Learning from Play</a> (LfP) <d-cite key="lynch2019play"></d-cite> provides a simple starting point for learning general-purpose skills from onboard sensors: first cover state space with teleoperated "play" data, then use relabeled imitation learning to distill many reusable behaviors into a goal-directed policy. However, like other methods that combine relabeling with image observations <d-cite key="warde2018unsupervised, nair2018visual, pong2019skew, nair2019contextual, florensa2019self"></d-cite>, LfP requires that tasks be specified using a goal image to reach. While trivial in a simulator, this form of task specification is often impractical in open-world environments.
+</p>
 
-In this work, we combine the setting of open-ended robotic manipulation with open-ended human language conditioning. There is a long history of work studying instruction following (survey \cite{luketina2019survey}). Prior work typically studies restricted observation spaces (e.g. games \cite{1903.02020}, 2D gridworlds \cite{yu2018interactive}), simplified actuators, (e.g. binary pick and place primitives \cite{hill2019emergent}), and synthetic language data \cite{hermann2017grounded}. We study the first combination, to our knowledge, of 1) human language instructions, 2) high-dimensional continuous sensory inputs and actuators, and 3) complex tasks like long-horizon robotic object manipulation. The test time scenario we consider is a single agent that can perform many tasks in a row, each specified by a human in natural language. For example, ``open the door all the way to the right...now pick up the block...now push the red button...now close the door". Furthermore, the agent should be able to perform any combination of subtasks in any order. We refer to this as the ``ask me anything" scenario (\fig{teaser}, step 3), which tests three important aspects of generality: general-purpose control, learning from onboard sensors, and general task specification.
+<p>
+In this work, we present a simple approach that extends LfP to the natural language conditioned setting. <a href="#fig:teaser">Figure 1</a> provides an overview, which has four main steps:
+<ol>
+  <li>
+    <b>Cover the space with teleoperated play</b> (Figure 1, step 1): Collect a teleoperated <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360.mp4">"play"</a> dataset. These long temporal state-action logs are automatically relabeled into many short-horizon demonstrations, solving for image goals.
+  </li>
+  <li>
+    <b>Pair play with human language</b> (Figure 1, step 1): Typical setups pair instructions with optimal behavior. Instead, we pair any behavior from play after-the-fact with optimal <i>instructions</i>, a process we call Hindsight Instruction Pairing. This collection method is the first contribution of this paper. It yields a dataset of demonstrations, solving for human language goals.
+  </li>
+  <li>
+    <b>Multicontext imitation learning</b> (Figure 1, step 2): We train a single policy to solve image or language goals, then use only language conditioning at test time. To make this possible, we introduce Multicontext Imitation Learning (Figure 2). This is the second contribution of this paper. This approach is highly data efficient. It reduces the cost of language pairing to less than 1% of collected robot experience to enable language conditioning, with the majority of control still learned via self-supervised imitation.
+  </li>
+  <li>
+    <b>Condition on human language at test time</b> (Figure 1, step 3): At test time, our experiments show that a single policy trained in this manner can perform many complex robotic manipulation skills in a row, directly from images, and specified entirely with natural language (see <a href="#long-horizon">video</a>)
+  </li>
+</ol>
+</p>
 
-Prior work on Learning from Play (LfP) \cite{lynch2019play} provides a simple starting point for learning general-purpose skills from onboard sensors: first cover state space with teleoperated ``play" data, then use relabeled imitation learning to distill many reusable behaviors into a goal-directed policy. However, like other methods that combine relabeling with image observations, \cite{warde2018unsupervised, nair2018visual, pong2019skew, nair2019contextual, florensa2019self}, LfP requires that tasks be specified using a goal image to reach. While trivial in a simulator, this form of task specification is often impractical in open-world environments.
+<p>
+Finally, we study <b>transfer learning from unlabeled text corpora to robotic manipulation</b>. We introduce a simple transfer learning augmentation, applicable to any language conditioned policy. We find that this significantly improves downstream robotic manipulation. This is the first instance, to our knowledge, of this kind of transfer. Importantly, this same technique allows our agent to follow thousands of novel instructions in zero shot, across 16 different languages. This is the third contribution of this work.
+</p>
 
-In this work, we present a simple approach that extends LfP to the natural language conditioned setting. \fig{teaser} provides an overview, which has four main steps:
-\begin{enumerate}
-    \item \textbf{Cover the space with teleoperated play} (\fig{teaser}, step 1) Collect a teleoperated \href{\lfpvideos/play_data516x360.mp4}{``play"} dataset. These long temporal state-action logs are automatically relabeled into many short-horizon demonstrations, solving for image goals.
-    \item \textbf{Pair play with human language} (\fig{teaser}, step 1).
-    Typical setups pair instructions with optimal behavior. Instead, we pair any behavior from play after-the-fact with optimal \textit{instructions}, a process we call Hindsight Instruction Pairing. This collection method is the first contribution of this paper. It yields a dataset of demonstrations, solving for human language goals.
-    \item \textbf{Multicontext imitation learning} (\fig{teaser}, step 2): We train a single policy to solve image or language goals, then use only language conditioning at test time. To make this possible, we introduce Multicontext Imitation Learning (\fig{acgc}). This is the second contribution of this paper. This approach is highly data efficient. It reduces the cost of language pairing to less than 1\% of collected robot experience to enable language conditioning, with the majority of control still learned via self-supervised imitation.
-    \item \textbf{Condition on human language at test time.} (\fig{teaser}, step 3) At test time, our experiments show that a single policy trained in this manner can perform many complex robotic manipulation skills in a row, directly from images, and specified entirely with natural language (see \href{\website/videos/live/playlang_20200326-193259_13tasks.webm}{video}).
-\end{enumerate}
+<h3>2. Related Work</h3>
+<p>
+<b>Robotic learning from general sensors</b>.
+In general, learning complex robotic skills from low-level sensors is possible, but requires substantial human supervision. Two of the most successful approaches are imitation learning (IL) <d-cite key="atkeson1997robot, argall2009survey"></d-cite> and reinforcement learning (RL) <d-cite key="kober2013reinforcement,levine2016end,kalashnikov2018qt,haarnoja2018soft,andrychowicz2020learning"></d-cite>. IL typically requires many human demonstrations <d-cite key="duan2017one,rajeswaran2017learning,rahmatizadeh2018vision,zhang2018deep"></d-cite> to drive supervised learning of a policy. In RL, supervision takes the form of a well-shaped <d-cite key="popov2017data"></d-cite> hand-designed reward to drive autonomous trial and error learning. Designing reward functions in open-world environments is non-trivial, requiring either task-specific instrumentation <d-cite key="gu2017deep"></d-cite> or learned perceptual rewards <d-cite key="Sermanet2017Rewards,Sermanet2017TCN,singh2019end"></d-cite>. Additionally, RL agents face difficult exploration problems <d-cite key="thrun1992efficient"></d-cite>, often requiring hand-designed exploration strategies <d-cite key="kalashnikov2018qt,ebert2018visual"></d-cite> or even human demonstrations as well <d-cite key="rajeswaran2017learning,hester2018deep"></d-cite>. Finally, conventional IL and RL only account for the training of a single task. Even under multitask formulations of RL <d-cite key="teh2017distral"></d-cite> and IL <d-cite key="rahmatizadeh2018vision"></d-cite>, each new task considered requires a corresponding and sizable human effort. RL additionally faces significant optimization challenges <d-cite key="schaul2019ray"></d-cite> in the multitask setting, often leading to worse data efficiency than learning tasks individually <d-cite key="parisotto2015actor"></d-cite>. This makes it difficult to scale either approach naively to the broad task setting of a generalist robot.
+</p>
 
-Finally, we study \textbf{transfer learning from unlabeled text corpora to robotic manipulation}. We introduce a simple transfer learning augmentation, applicable to any language conditioned policy. We find that this significantly improves downstream robotic manipulation. This is the first instance, to our knowledge, of this kind of transfer. Importantly, this same technique allows our agent to follow thousands of novel instructions in zero shot, across 16 different languages.
-This is the third contribution of this work.
+<p>
+<b>Task-agnostic control</b>. This paper builds on the setting of task-agnostic control, where a single agent must be able to reach any reachable goal state in its environment upon command <d-cite key="kaelbling1993learning, schaul2015universal,warde2018unsupervised"></d-cite>. One way of acquiring this kind of control is to first learn a model of the environment through interaction <d-cite key="oh2015action,hafner2018learning,ebert2018visual,ha2018world"></d-cite> then use it for planning. However, these approaches face the same intractable autonomous exploration problem that RL does, requiring either environments simple enough to explore fully with random actions or hand-scripted primitives to guide richer behavior. A powerful model-free strategy for task-agnostic control is goal relabeling <d-cite key="kaelbling1993learning,andrychowicz2017hindsight"></d-cite>. This self-supervised technique trains goal conditioned policies to reach any previously visited state upon demand, with many recent examples in RL <d-cite key="nair2018visual,pong2018temporal,gupta2019relay,pong2019skew,ghosh2019learning,eysenbach2020rewriting} and IL \cite{lynch2019play,ding2019goal"></d-cite>. However, when combined high dimensional observation spaces like images, relabeling results in policies that must be instructed with goal images at test time&mdash;a prohibitively expensive assumption in open world (non-simulator) environments. The present work builds heavily on relabeled imitation, but additionally equips policies with flexible natural language conditioning.
+</p>
 
-\section{Related Work}
-\textbf{Robotic learning from general sensors}.
-In general, learning complex robotic skills from low-level sensors is possible, but requires substantial human supervision.
-Two of the most successful approaches are imitation learning (IL) \cite{atkeson1997robot, argall2009survey} and reinforcement learning (RL) \cite{kober2013reinforcement,levine2016end,kalashnikov2018qt,haarnoja2018soft,andrychowicz2020learning}. IL typically requires many human demonstrations \cite{duan2017one,rajeswaran2017learning,rahmatizadeh2018vision,zhang2018deep} to drive supervised learning of a policy. In RL, supervision takes the form of a well-shaped \cite{popov2017data} hand-designed reward to drive autonomous trial and error learning. Designing reward functions in open-world environments is non-trivial, requiring either task-specific instrumentation \cite{gu2017deep} or learned perceptual rewards \cite{Sermanet2017Rewards,Sermanet2017TCN,singh2019end}. Additionally, RL agents face difficult exploration problems \cite{thrun1992efficient}, often requiring hand-designed exploration strategies \cite{kalashnikov2018qt,ebert2018visual} or even human demonstrations as well \cite{rajeswaran2017learning,hester2018deep}. Finally, conventional IL and RL only account for the training of a single task. Even under multitask formulations of RL \cite{teh2017distral} and IL \cite{rahmatizadeh2018vision}, each new task considered requires a corresponding and sizable human effort. RL additionally faces significant optimization challenges \cite{schaul2019ray} in the multitask setting, often leading to worse data efficiency than learning tasks individually \cite{parisotto2015actor}. This makes it difficult to scale either approach naively to the broad task setting of a generalist robot.
+<p>
+<b>Covering state space</b>.
+Learning generally requires exposure to diverse training data. While relabeling allows for goal-directed learning from any experience, it cannot account for the <i>diversity</i> of that experience, which comes entirely from the underlying data. In task agnostic control, where agents must be prepared to reach any user-proposed goal state at test time, an effective data collection strategy is one that visits as many states as possible during training <d-cite key="pong2019skew"></d-cite>. Obtaining this sort of state space coverage autonomously is a long-standing problem <d-cite key="thrun1992efficient"></d-cite> motivating work on tractable heuristics <d-cite key="kolter2009near"></d-cite>, intrinsic motivation <d-cite key="oudeyer2008can,journals/tamd/Schmidhuber10"></d-cite>, and more recent information-theoretic approaches <d-cite key="pong2019skew,lee2019efficient"></d-cite>
+. Success so far has been limited to restricted environments <d-cite key="pathak2017curiosity"></d-cite>, as automatic exploration quickly becomes intractable in complex settings like object manipulation, where even knowing which states are valid presents a major challenge <d-cite key="pong2019skew"></d-cite>. Teleoperated play data <d-cite key="lynch2019play"></d-cite> sidesteps this exploration problem entirely, using prior human knowledge of object affordances to cover state space. This type of data stands in contrast to conventional teleoperated multitask demonstrations <d-cite key="zhang2018deep,handa2019dexpilot,singh2020scalable"></d-cite>, whose diversity is necessarily constrained by an upfront task definition. Play data has served as the basis for relabeled IL <d-cite key="lynch2019play"></d-cite> and relabeled hierarchical RL <d-cite key="gupta2019relay"></d-cite>. Play combined with relabeled IL is a central component of this work.
+</p>
 
-\textbf{Task-agnostic control}. This paper builds on the setting of task-agnostic control, where a single agent must be able to reach any reachable goal state in its environment upon command \cite{kaelbling1993learning, schaul2015universal,warde2018unsupervised}. One way of acquiring this kind of control is to first learn a model of the environment through interaction \cite{oh2015action,hafner2018learning,ebert2018visual, ha2018world} then use it for planning. However, these approaches face the same intractable autonomous exploration problem that RL does, requiring either environments simple enough to explore fully with random actions or hand-scripted primitives to guide richer behavior. A powerful model-free strategy for task-agnostic control is goal relabeling \cite{kaelbling1993learning,andrychowicz2017hindsight}. This self-supervised technique trains goal conditioned policies to reach any previously visited state upon demand, with many recent examples in RL \cite{nair2018visual,pong2018temporal,gupta2019relay,pong2019skew,ghosh2019learning,eysenbach2020rewriting} and IL \cite{lynch2019play,ding2019goal}. However, when combined high dimensional observation spaces like images, relabeling results in policies that must be instructed with goal images at test time---a prohibitively expensive assumption in open world (non-simulator) environments. The present work builds heavily on relabeled imitation, but additionally equips policies with flexible natural language conditioning.
+<p>
+<b>Multicontext learning</b>. A number of previous methods have focused on generalizing across tasks <d-cite key="caruana1997multitask"></d-cite>, or generalizing across goals <d-cite key="schaul2015universal"></d-cite>. We introduce multicontext learning, a framework for generalizing across heterogeneous task and goal <i>descriptions</i>, e.g. goal image and natural language. When one of the training sources is plentiful and the other scarce, multicontext learning can be seen as transfer learning <d-cite key="tan2018survey"></d-cite> through a shared goal space. Multicontext imitation is a central component of our method, as it reduces the cost of human language supervision to the point where it can be practically applied to learn open-ended instruction following.
+</p>
 
-\textbf{Covering state space}.
-Learning generally requires exposure to diverse training data. While relabeling allows for goal-directed learning from any experience, it cannot account for the \textit{diversity} of that experience, which comes entirely from the underlying data. In task agnostic control, where agents must be prepared to reach any user-proposed goal state at test time, an effective data collection strategy is one that visits as many states as possible during training \cite{pong2019skew}. Obtaining this sort of state space coverage autonomously is a long-standing problem \cite{thrun1992efficient} motivating work on tractable heuristics \cite{kolter2009near}, intrinsic motivation \cite{oudeyer2008can,journals/tamd/Schmidhuber10}, and more recent information-theoretic approaches \cite{pong2019skew,lee2019efficient}. Success so far has been limited to restricted environments \cite{pathak2017curiosity}, as automatic exploration quickly becomes intractable in complex settings like object manipulation, where even knowing which states are valid presents a major challenge \cite{pong2019skew}. Teleoperated play data \cite{lynch2019play} sidesteps this exploration problem entirely, using prior human knowledge of object affordances to cover state space. This type of data stands in contrast to conventional teleoperated multitask demonstrations \cite{zhang2018deep,handa2019dexpilot,singh2020scalable}, whose diversity is necessarily constrained by an upfront task definition. Play data has served as the basis for relabeled IL \cite{lynch2019play} and relabeled hierarchical RL \cite{gupta2019relay}. Play combined with relabeled IL is a central component of this work.
-
-\textbf{Multicontext learning}. A number of previous methods have focused on generalizing across tasks \cite{caruana1997multitask}, or generalizing across goals \cite{schaul2015universal}. We introduce a framework for generalizing across heterogeneous task and goal \textit{descriptions}, e.g. goal image and natural language. When one of the training sources is plentiful and the other scarce, multicontext learning can be seen as transfer learning \cite{tan2018survey} through a shared goal space. Multicontext imitation is a central component of our method, as it reduces the cost of human language supervision to the point where it can be practically applied to learn open-ended instruction following.
-
-\textbf{Instruction following}. There is a long history of research into agents that not only learn a grounded language understanding \cite{winograd1972understanding,mooney2008learning}, but demonstrate that understanding by following instructions \cite{luketina2019survey}. Recently, authors have had success using deep learning to directly map raw input and text instructions to actions. However, prior work often studies restricted environments \cite{macmahon2006walk,kollar2010toward,1611.01796,oh2017zero,misra2017mapping,yu2017deep,yu2018interactive} and simplified actuators \cite{wang2019reinforced,hill2019emergent,chaplot2018gated,1903.02020,ALFRED20}. Additionally, learning to follow \textit{natural} language is still not the standard in instruction-following research \cite{luketina2019survey}, with typical implementations instead assuming access to simulator-provided instructions drawn from a restricted vocabulary and grammar \cite{hermann2017grounded,1906.07343}.
+<p>
+<b>Instruction following</b>. There is a long history of research into agents that not only learn a grounded language understanding <d-cite key="winograd1972understanding,mooney2008learning"></d-cite>, but demonstrate that understanding by following instructions <d-cite key="luketina2019survey"></d-cite>. Recently, authors have had success using deep learning to directly map raw input and text instructions to actions. However, prior work often studies restricted environments <d-cite key="macmahon2006walk,kollar2010toward,1611.01796,oh2017zero,misra2017mapping,yu2017deep,yu2018interactive"></d-cite> and simplified actuators <d-cite key="wang2019reinforced,hill2019emergent,chaplot2018gated,1903.02020,ALFRED20"></d-cite>. Additionally, learning to follow <i>natural</i> language is still not the standard in instruction-following research <d-cite key="luketina2019survey"></d-cite>, with typical implementations instead assuming access to simulator-provided instructions drawn from a restricted vocabulary and grammar <d-cite key="hermann2017grounded,1906.07343"></d-cite>.
 This work, in contrast, studies 1) natural language instructions, 2) high-dimensional continuous sensory inputs and actuators, and 3) complex tasks like long-horizon 3D robotic object manipulation. Furthermore, unlike existing RL approaches to instruction following, our IL method is highly sample efficient, requires no reward definition, and trivially scales to the multitask setting.
+</p>
 
-\textbf{Transfer learning from generic text corpora}. Transfer learning from large ``in the wild" text corpora, e.g. Wikipedia, to downstream tasks is prevalent in NLP \cite{devlin2018bert,1801.06146,radford2019language, raffel2019exploring,1901.05287,1905.06316}, but has been relatively unexplored for language-guided control. An identified reason for this gap \cite{luketina2019survey} is that tasks studied so far use small synthetic language corpora and are typically too artificial to benefit from transfer from real-world textual corpora. Like \cite{ALFRED20}, we study instruction following in a simulated 3D home with real-world semantics, but expand the setting further to robotic object manipulation under realistic physics. This allows us to show the first example, to our knowledge, of positive transfer from ``in the wild" text corpora to instruction following, making our agent better at language-guided manipulation and allowing it to follow many instructions outside its training set.
+<p>
+<b>Transfer learning from generic text corpora</b>. Transfer learning from large "in the wild" text corpora, e.g. Wikipedia, to downstream tasks is prevalent in NLP <d-cite key="devlin2018bert,1801.06146,radford2019language, raffel2019exploring,1901.05287,1905.06316"></d-cite>, but has been relatively unexplored for language-guided control. An identified reason for this gap <d-cite key="luketina2019survey"></d-cite> is that tasks studied so far use small synthetic language corpora and are typically too artificial to benefit from transfer from real-world textual corpora. Like <d-cite key="ALFRED20"></d-cite>, we study instruction following in a simulated 3D home with real-world semantics, but expand the setting further to robotic object manipulation under realistic physics. This allows us to show the first example, to our knowledge, of positive transfer from "in the wild" text corpora to instruction following, making our agent better at language-guided manipulation and allowing it to follow many instructions outside its training set.
+</p>
 
-\section{Preliminaries}
+<h3>3. Preliminaries</h3>
 We first review the prior settings of relabeled imitation learning and LfP, then introduce LangLfP, our natural language extension of LfP which builds on these components.
 
-\subsection{Relabeled imitation learning}
-Goal conditioned learning \cite{kaelbling1993learning} trains a single agent to reach any goal. This is formalized as a goal conditioned policy $\pi_{\theta}(a | s, g)$, which outputs next action $a \in A$, conditioned on current state $s \in S$ and a task descriptor $g \in G$. Imitation approaches learn this mapping using supervised learning over a dataset $\mathcal{D} = \{(\tau,g)_i\}^N_i$, of expert state-action trajectories $\tau = \{(s_0, a_0), ... \}$ solving for a paired task descriptor (typically a one-hot task encoding \cite{rahmatizadeh2018vision}).
-A convenient choice for a task descriptor is some goal state $g = s_g \in S$ to reach. This allows any state visited during collection to be \textit{relabeled} \cite{kaelbling1993learning,andrychowicz2017hindsight} as a ``reached goal state", with the preceding states and actions treated as optimal behavior for reaching that goal. Applied to some original dataset $\mathcal{D}$, this yields a much larger dataset of relabeled examples $\mathcal{D}_R = \{(\tau, s_g)_i\}^{N_{R}}_i$, $N_{R} >> N$, providing the inputs to a simple maximum likelihood objective for goal directed control: relabeled goal conditioned behavioral cloning (GCBC) \cite{lynch2019play, ding2019goal}:
+<h4>3.1 Relabeled imitation learning</h4>
+<p>
+Goal conditioned learning <d-cite key="kaelbling1993learning"></d-cite> trains a single agent to reach any goal. This is formalized as a goal conditioned policy $\pi_{\theta}(a | s, g)$, which outputs next action $a \in A$, conditioned on current state $s \in S$ and a task descriptor $g \in G$. Imitation approaches learn this mapping using supervised learning over a dataset $\mathcal{D} = \{(\tau,g)_i\}^N_i$, of expert state-action trajectories $\tau = \{(s_0, a_0), ... \}$ solving for a paired task descriptor (typically a one-hot task encoding <d-cite key="rahmatizadeh2018vision"></d-cite>).
+A convenient choice for a task descriptor is some goal state $g = s_g \in S$ to reach. This allows any state visited during collection to be <i>relabeled</i> <d-cite key="kaelbling1993learning,andrychowicz2017hindsight"></d-cite> as a "reached goal state", with the preceding states and actions treated as optimal behavior for reaching that goal. Applied to some original dataset $\mathcal{D}$, this yields a much larger dataset of relabeled examples $\mathcal{D}_R = \{(\tau, s_g)_i\}^{N_{R}}_i$, $N_{R} >> N$, providing the inputs to a simple maximum likelihood objective for goal directed control: relabeled goal conditioned behavioral cloning (GCBC) <d-cite key="lynch2019play, ding2019goal"></d-cite>:
+</p>
 
-\setlength{\abovedisplayskip}{8pt}
-\setlength{\belowdisplayskip}{8pt}
-\small
-\begin{gather}
-  \begin{align}
-    \hspace*{-0.2cm} \mathcal{L}_{\operatorname{GCBC}} &= \mathbb{E}_{(\tau,\ s_g) \sim \mathcal{D}_R}\left[\sum ^{|\tau|}_{t=0}\operatorname{log} \pi _{\theta}\left( a_{t}| s_t, s_g\right)\right]
-  \end{align}
-\end{gather}
-\label{eq:gcbc}
-\normalsize
-While relabeling automatically generates a large number of goal-directed demonstrations at training time, it cannot account for the \textit{diversity} of those demonstrations, which comes entirely from the underlying data. To be able to reach \textit{any} user-provided goal, this motivates data collection methods, upstream of relabeling, that fully cover state space.
+<div class="l-page-outset" id="gcbc">
+<figure>
+<img id="eq:gcbc" src="eqs/gcbc.png" style="margin: 0; width: 50%;"/>
+</figure>
+</div>
 
-\subsection{Teleoperated play}
-Human teleoperated ``play" collection \cite{lynch2019play}  directly addresses the state space coverage problem. In this setting, an operator is no longer constrained to a set of predefined tasks, but rather engages in every available object manipulation in a scene (\href{\lfpvideos/play_data516x360.mp4}{example of play data}). The motivation is to fully cover state space using prior human knowledge of object affordances. During collection, the stream of onboard robot observations and actions are recorded, $\{(s_t, a_t)\}^{\infty}_{t=0}$, yielding an unsegmented dataset of unstructured but semantically meaningful behaviors, useful in a relabeled imitation learning context.
+<p>
+While relabeling automatically generates a large number of goal-directed demonstrations at training time, it cannot account for the <i>diversity</i> of those demonstrations, which comes entirely from the underlying data. To be able to reach <i>any</i> user-provided goal, this motivates data collection methods, upstream of relabeling, that fully cover state space.
+</p>
 
-\subsection{Learning from play}
-\label{sec:prelim_lfp}
-LfP \cite{lynch2019play} combines relabeled imitation learning with teleoperated play. First, unsegmented play logs are relabeled using Algorithm~\ref{alg:collect_play}. This yields a training set $\DPLAY = \{(\tau, s_g)_i\}^{\DPLAY}_{i=0}$, holding many diverse, short-horizon examples. These can be fed to a standard maximum likelihood goal conditioned imitation objective:
-% \small
-\vspace{-5pt}
-\setlength{\abovedisplayskip}{8pt}
-\setlength{\belowdisplayskip}{8pt}
-\begin{gather}
-  \begin{align}
-    \hspace*{-0.2cm} \mathcal{L}_{\operatorname{LfP}} &= \mathbb{E}_{(\tau,\ s_g) \sim \DPLAY}\left[\sum ^{|\tau|}_{t=0}\operatorname{log} \pi _{\theta}\left( a_{t}| s_t, s_g\right)\right]
-  \end{align}
-\end{gather}
-\label{eq:im_lfp}
+<h4>3.2 Teleoperated play</h4>
+<p>
+Human teleoperated "play" collection <d-cite key="lynch2019play"></d-cite>  directly addresses the state space coverage problem. In this setting, an operator is no longer constrained to a set of predefined tasks, but rather engages in every available object manipulation in a scene <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360.mp4">(example of play data)</a>. The motivation is to fully cover state space using prior human knowledge of object affordances. During collection, the stream of onboard robot observations and actions are recorded, $\{(s_t, a_t)\}^{\infty}_{t=0}$, yielding an unsegmented dataset of unstructured but semantically meaningful behaviors, useful in a relabeled imitation learning context.
+</p>
 
-\section{Learning Human Language Conditioned Control from Play}
-\label{sec:main_method}
-A limitation of LfP---and other approaches that combine relabeling with image state spaces---is that behavior must be conditioned on a goal image $s_g$ at test time. In this work, we focus on a more flexible mode of conditioning: humans describing tasks in natural language. Succeeding at this requires solving a complicated grounding problem. To address this, we introduce Hindsight Instruction Pairing (Section~\ref{sec:hip}), a method for pairing large amounts of diverse robot sensor data with relevant human language. To leverage both image goal and language goal datasets, we introduce Multicontext Imitation Learning (Section~\ref{sec:acgc}). In Section~\ref{sec:lang_lfp}, we describe LangLfP which ties together these components to learn a single policy that follows many human instructions over a long horizon.
+<h4>3.3 Learning from play</h4>
+<p>
+LfP <d-cite key="lynch2019play"></d-cite> combines relabeled imitation learning with teleoperated play. First, unsegmented play logs are relabeled using <a href="#alg2">Algorithm 2</a>. This yields a training set $D_{\mathrm{play}} = \{(\tau, s_g)_i\}^{D_{\mathrm{play}}}_{i=0}$, holding many diverse, short-horizon examples. These can be fed to a standard maximum likelihood goal conditioned imitation objective:
+</p>
 
-\subsection{Pairing play with human language}
-\label{sec:hip}
-From a statistical machine learning perspective, an obvious candidate for grounding human language in robot sensor data is a large corpora of robot sensor data paired with relevant language. One way to collect this data is to choose an instruction, then collect optimal behavior. Instead we sample any robot behavior from play, then collect an optimal instruction. We call this Hindsight Instruction Pairing (Algorithm~\ref{alg:collect_play_lang}, part 1 of Figure~\ref{fig:teaser}). Just like how a hindsight goal image is an after-the-fact answer to the question ``which goal state makes this trajectory optimal?", a \textit{hindsight instruction} is an after-the-fact answer to the question ``which language instruction makes this trajectory optimal?". We obtain these pairs by showing humans onboard robot sensor videos, then asking them ``what instruction would you give the agent to get from first frame to last frame"?
+<div class="l-page-outset" id="teaser">
+<figure>
+<img id="fig:teaser" src="eqs/lfp.png" style="margin: 0; width: 50%;"/>
+</figure>
+</div>
 
-Concretely, our pairing process assumes access to $\DPLAY$, obtained using Algorithm~\ref{alg:collect_play} and a pool of non-expert human overseers. From $\DPLAY$, we create a new dataset $\DPLAYLANG = \{(\tau, l)_i\}^{\DPLAYLANG}_{i=0}$, consisting of short-horizon play sequences $\tau$ paired with $l \in L$ a human-provided hindsight instruction with no restrictions on vocabulary or grammar.
+<h3>4. Learning Human Language Conditioned Control from Play</h3>
+<p>
+A limitation of LfP&mdash;and other approaches that combine relabeling with image state spaces&mdash;is that behavior must be conditioned on a goal image $s_g$ at test time. In this work, we focus on a more flexible mode of conditioning: humans describing tasks in natural language. Succeeding at this requires solving a complicated grounding problem. To address this, we introduce Hindsight Instruction Pairing (<a href="#sec:hip">Section 4.1</a>), a method for pairing large amounts of diverse robot sensor data with relevant human language. To leverage both image goal and language goal datasets, we introduce multicontext imitation learning (<a href="#sec:mcil">Section 4.2</a>). In (<a href="#sec:lang_lfp">Section 4.3</a>), we describe LangLfP which ties together these components to learn a single policy that follows many human instructions over a long horizon.
+</p>
 
-This process is scalable because pairing happens after-the-fact, making it straightforward to parallelize via crowdsourcing. The language collected is also naturally rich, as it sits on top of play and is similarly not constrained by an upfront task definition. This results in instructions for functional behavior (e.g. ``open the drawer", ``press the green button"), as well as general non task-specific behavior (e.g. ``move your hand slightly to the left." or ``do nothing.") See more real examples in Table~\ref{tab:ex_train_lang} and video examples of our training data \href{\website/\#data}{here}. Crucially, we do not need pair every experience from play with language to learn to follow instructions. This is made possible with Multicontext Imitation Learning, described next.
+<div class="l-page-outset" id="alg2">
+<figure>
+<img id="alg2" src="algs/alg2.png" style="margin: 0; width: 50%;"/>
+  <figcaption>
+  <b>Algorithm 2: Relabeling play into many goal image demonstrations.</b>
+  </figcaption>
+</figure>
+</div>
 
-\begin{algorithm}[h]
-  \caption{Multicontext imitation learning}
-  \label{alg:train_acgc}
-  \begin{algorithmic}[1]
-    \STATE {\bfseries Input:} $\mathcal{D} = \{D^0, ...,\ D^K\}, D^k = \{(\tau^{k}_i, c_{i}^k)\}^{D^k}_{i=0}$, One dataset per context type (e.g. goal image, language instruction, task id), each holding pairs of (demonstration, context).
-    \STATE {\bfseries Input:} $\mathcal{F} = \{f_{\theta}^0, ...,\ f_{\theta}^K\}$, One encoder per context type, mapping context to shared latent goal space, e.g. $z = f_{\theta}^k(c^k)$.
-    \STATE {\bfseries Input:} $\pi_{\theta}(a_t | s_t, z)$, Single latent goal conditioned policy.
-    \STATE {\bfseries Input:} Randomly initialize parameters $\theta = \{\theta_{\pi},\ \theta_{f^0},\ ...,\ \theta_{f^K}\}$
-    \WHILE{True}
-      \STATE $\mathcal{L}_{\operatorname{MCIL}} \xleftarrow{} 0$
-      \STATE {\color{gray} \# Loop over datasets.}
-      \FOR {$k=0 ... K $}
-        \STATE {\color{gray} \# Sample a (demonstration, context) batch from this dataset.}
-        \STATE $(\tau^k, c^k) \thicksim D^k$
-        \STATE {\color{gray} \# Encode context in shared latent goal space.}
-        \STATE $z = f_{\theta}^k(c^k)$
-        \STATE {\color{gray} \# Accumulate imitation loss.}
-        \STATE $\mathcal{L}_{\operatorname{MCIL}} \mathrel{{+}{=}} \sum^{|\tau^k|}_{t=0}\operatorname{log} \pi _{\theta}\left( a_{t}| s_t, z\right)$
-      \ENDFOR
-      \STATE {\color{gray} \# Average gradients over context types.}
-      \STATE $\mathcal{L}_{\operatorname{MCIL}} \mathrel{{*}{=}} \dfrac{1}{|\mathcal{D}|}$
-      \STATE {\color{gray} \# Train policy and all encoders end-to-end.}
-      \STATE Update $\theta$ by taking a gradient step w.r.t. $\mathcal{L}_{\operatorname{MCIL}}$
-    \ENDWHILE
-  \end{algorithmic}
-\end{algorithm}
+<div class="l-page-outset" id="alg3">
+<figure>
+<img id="alg3" src="algs/alg3.png" style="margin: 0; width: 50%;"/>
+  <figcaption>
+  <b>Algorithm 3: Scalably pairing robot experience with relevant human language.</b>
+  </figcaption>
+</figure>
+</div>
 
-\subsection{Multicontext Imitation Learning}
-\label{sec:acgc}
-So far, we have described a way to create two contextual imitation datasets: $\DPLAY$ holding hindsight goal image examples and $\DPLAYLANG$, holding hindsight instruction examples. Ideally, we could train a single policy that is agnostic to either task description. This would allow us to share statistical strength over multiple datasets during training, then free us to use just language specification at test time.
+<h4 id="sec:hip">4.1 Pairing play with human language</h4>
+<p>
+From a statistical machine learning perspective, an obvious candidate for grounding human language in robot sensor data is a large corpora of robot sensor data paired with relevant language. One way to collect this data is to choose an instruction, then collect optimal behavior. Instead we sample any robot behavior from play, then collect an optimal instruction. We call this Hindsight Instruction Pairing (<a href="#alg2">Algorithm 3</a>, part 1 of <a href="#teaser">Figure 1</a>). Just like how a hindsight goal image is an after-the-fact answer to the question "which goal state makes this trajectory optimal?", a <i>hindsight instruction</i> is an after-the-fact answer to the question "which language instruction makes this trajectory optimal?". We obtain these pairs by showing humans onboard robot sensor videos, then asking them "what instruction would you give the agent to get from first frame to last frame"?
+</p>
 
-With this motivation, we introduce \emph{multicontext imitation learning} (MCIL), a simple and universally applicable generalization of contextual imitation to multiple heterogeneous contexts. The main idea is to represent a large set of policies by a single, unified function approximator that generalises over states, tasks, and \textit{task descriptions}. Concretely, MCIL assumes access to multiple imitation learning datasets $\mathcal{D} = \{D^0, ...,\ D^K\}$, each with a different way of describing tasks. Each $D^k = \{(\tau^{k}_i, c_{i}^k)\}^{D^k}_{i=0}$ holds pairs of state-action trajectories $\tau$ paired with some context $c \in C$. For example, $D^0$ might contain demonstrations paired with one-hot task ids (a conventional multitask imitation learning dataset), $D^1$ might contain image goal demonstrations, and $D^2$ might contain language goal demonstrations.
+<p>
+Concretely, our pairing process assumes access to $D_{\mathrm{play}}$, obtained using Algorithm 2 and a pool of non-expert human overseers. From $D_{\mathrm{play}}$, we create a new dataset $D_{\mathrm{(play,lang)}} = \{(\tau, l)_i\}^{D_{\mathrm{(play,lang)}}}_{i=0}$, consisting of short-horizon play sequences $\tau$ paired with $l \in L$, a human-provided hindsight instruction with no restrictions on vocabulary or grammar.
+</p>
 
-Rather than train one policy per dataset, MCIL instead trains a single \emph{latent goal} conditioned policy $\pi_{\theta}(a_t | s_t, z)$ over \textit{all} datasets simultaneously, learning to map each task description type to the same latent goal space $z \in \mathbb{R}^d$. See Figure~\ref{fig:acgc}. This latent space can be seen as a common abstract goal representation shared across many imitation learning problems. To make this possible, MCIL assumes a set of parameterized encoders $\mathcal{F} = \{f_{\theta}^0, ..., f_{\theta}^K\}$, one per dataset, each responsible for mapping task descriptions of a particular type to the common latent goal space, i.e. $z = f_{\theta}^k(c^k)$. For instance these could be a task id embedding lookup, an image encoder, and a language encoder respectively.
+<p>
+This process is scalable because pairing happens after-the-fact, making it straightforward to parallelize via crowdsourcing. The language collected is also naturally rich, as it sits on top of play and is similarly not constrained by an upfront task definition. This results in instructions for functional behavior (e.g. "open the drawer", "press the green button"), as well as general non task-specific behavior (e.g. "move your hand slightly to the left." or "do nothing.") See more real examples in Table~\ref{tab:ex_train_lang} and video examples of our paired training data <a href="#sec:training_data">here</a>. Crucially, we do not need pair every experience from play with language to learn to follow instructions. This is made possible with multicontext imitation learning, described next.
+</p>
 
+<div class="l-page-outset" id="alg1">
+<figure>
+<img id="alg1" src="algs/alg1.png" style="margin: 0; width: 50%;"/>
+  <figcaption>
+  <b>Algorithm 1: Multicontext Imitation Learning.</b>
+  </figcaption>
+</figure>
+</div>
+
+<h4 id="sec:mcil">4.2 Multicontext Imitation Learning</h4>
+<p>
+So far, we have described a way to create two contextual imitation datasets: $D_{\mathrm{play}}$ holding hindsight goal image examples and $D_{\mathrm{(play,lang)}}$, holding hindsight instruction examples. Ideally, we could train a single policy that is agnostic to either task description. This would allow us to share statistical strength over multiple datasets during training, then free us to use just language specification at test time.
+</p>
+
+<p>
+With this motivation, we introduce <i>multicontext imitation learning</i> (MCIL), a simple and universally applicable generalization of contextual imitation to multiple heterogeneous contexts. The main idea is to represent a large set of policies by a single, unified function approximator that generalises over states, tasks, and <i>task descriptions</i>. Concretely, MCIL assumes access to multiple imitation learning datasets $\mathcal{D} = \{D^0, ...,\ D^K\}$, each with a different way of describing tasks. Each $D^k = \{(\tau^{k}_i, c_{i}^k)\}^{D^k}_{i=0}$ holds pairs of state-action trajectories $\tau$ paired with some context $c \in C$. For example, $D^0$ might contain demonstrations paired with one-hot task ids (a conventional multitask imitation learning dataset), $D^1$ might contain image goal demonstrations, and $D^2$ might contain language goal demonstrations.
+</p>
+
+<p>
+Rather than train one policy per dataset, MCIL instead trains a single \emph{latent goal} conditioned policy $\pi_{\theta}(a_t | s_t, z)$ over \textit{all} datasets simultaneously, learning to map each task description type to the same latent goal space $z \in \mathbb{R}^d$. See <a href="#mcil">Figure 2</a>. This latent space can be seen as a common abstract goal representation shared across many imitation learning problems. To make this possible, MCIL assumes a set of parameterized encoders $\mathcal{F} = \{f_{\theta}^0, ..., f_{\theta}^K\}$, one per dataset, each responsible for mapping task descriptions of a particular type to the common latent goal space, i.e. $z = f_{\theta}^k(c^k)$. For instance these could be a task id embedding lookup, an image encoder, and a language encoder respectively.
+</p>
+
+<p>
 MCIL has a simple training procedure: At each training step, for each dataset $D^k$ in $\mathcal{D}$, sample a minibatch of trajectory-context pairs $(\tau^k, c^k) \thicksim D^k$, encode the contexts in latent goal space $z = f_{\theta}^k(c^k)$, then compute a simple maximum likelihood contextual imitation objective:
-\setlength{\abovedisplayskip}{8pt}
-\setlength{\belowdisplayskip}{8pt}
-\small
-\begin{gather}
-  \begin{align}
-    \hspace*{-0.2cm} \mathcal{L}_{\operatorname{context}}(D, h) &= \mathbb{E}_{(\tau,\ c) \sim D}\left[\sum ^{|\tau|}_{t=0}\operatorname{log} \pi _{\theta}\left( a_{t}| s_t, f_{\theta}(c)\right)\right]
-  \end{align}
-\end{gather}
-\normalsize
+</p>
+<div class="l-page-outset" id="mcil1">
+<figure>
+<img id="mcil1" src="eqs/mcil1.png" style="margin: 0; width: 50%;"/>
+</figure>
+</div>
+<p>
 The full MCIL objective averages this per-dataset objective over all datasets at each training step,
-\setlength{\abovedisplayskip}{8pt}
-\setlength{\belowdisplayskip}{8pt}
-\small
-\begin{gather}
-  \begin{align}
-    \hspace*{-0.2cm} \mathcal{L}_{\operatorname{MCIL}} &= \dfrac{1}{|\mathcal{D}|} \sum^{|\mathcal{D}|}_k \mathcal{L}_{\operatorname{context}}(D_k, h_k)
-  \end{align}
-\end{gather}
-\normalsize
-and the policy and all goal encoders are trained end to end to maximize $\mathcal{L}_{\operatorname{MCIL}}$.  See Algorithm~\ref{alg:train_acgc} for full minibatch training pseudocode.
+</p>
+<div class="l-page-outset" id="mcil2">
+<figure>
+<img id="mcil2" src="eqs/mcil2.png" style="margin: 0; width: 50%;"/>
+</figure>
+</div>
+<p>
+and the policy and all goal encoders are trained end to end to maximize $\mathcal{L}_{\operatorname{MCIL}}$.  See <a href="#alg1">Algorithm 1</a> for full minibatch training pseudocode.
+<p/>
+<p>
+Multicontext learning has properties that make it broadly useful beyond this paper. While we set $\mathcal{D}  = \{D_{\mathrm{play}}, D_{\mathrm{(play,lang)}}\}$ in this paper, this approach allows more generally for training over any set of imitation datasets with different descriptions&mdash;e.g. task id, language, human video demonstration, speech, etc.
+Being context-agnostic enables a highly efficient training scheme: learn the majority of control from the cheapest data source, while learning the most general form of task conditioning from a small number of labeled examples. In this way, multicontext learning can be interpreted as transfer learning through a shared goal space. We exploit this strategy in this work. Crucially, this can reduce the cost of human oversight to the point where it can be practically applied. Multicontext learning allows us to train an agent to follow human instructions with less than 1% of collected robot experience requiring paired language, with the majority of control learned instead from relabeled goal image data.
+<p/>
 
-Multicontext learning has properties that make it broadly useful beyond this paper. While we set $\mathcal{D}  = \{\DPLAY, \DPLAYLANG\}$ in this paper, this approach allows more generally for training over any set of imitation datasets with different descriptions---e.g. task id, language, human video demonstration, speech, etc.
-Being context-agnostic enables a highly efficient training scheme: learn the majority of control from the cheapest data source, while learning the most general form of task conditioning from a small number of labeled examples. In this way, multicontext learning can be interpreted as transfer learning through a shared goal space. We exploit this strategy in this work. Crucially, this can reduce the cost of human oversight to the point where it can be practically applied. Multicontext learning allows us to train an agent to follow human instructions with less than 1\% of collected robot experience requiring paired language, with the majority of control learned instead from relabeled goal image data.
+<div class="l-page-outset" id="lfp_vs_langlfp">
+<figure>
+<img id="fig:lfp_vs_langlfp" src="figs/training/lfp_vs_langlfp.png" style="margin: 0; width: 200%;"/>
+  <figcaption>
+  <b>Figure 3: Comparing original goal image conditioned LfP (left) to goal image or natural language conditioned LangLfP (right)</b>: Both are trained on top of teleoperated play, relabeled into millions of goal image conditioned imitation examples. LangLfP is additionally trained on play windows paired with hindsight instructions. This multicontext training allows for the majority of control to be learned from self-supervision (>99% relabeled play), with <1% of play windows requiring language pairing.
+  </figcaption>
+</figure>
+</div>
 
-\begin{figure*}[htb]
-  \centering
-  \includegraphics[width=.9\linewidth]{figs/training/lfp_vs_langlfp_training4.pdf}
-  \caption{\textbf{Comparing original goal image conditioned LfP (left) to goal image or natural language conditioned LangLfP (right)}. Both are trained on top of teleoperated play, relabeled into millions of goal image conditioned imitation examples. LangLfP is additionally trained on play windows paired with hindsight instructions. This multicontext training allows for the majority of control to be learned from self-supervision ($>$99\% relabeled play), with $<$1\% of play windows requiring language pairing.}
-  \label{fig:comparing_lfp_to_langlfp}
-\end{figure*}
+<h4 id="sec:lang_lfp">4.3 LangLfP: learning to follow image and human language goals.</h4>
+<p>
+We now have all the components to introduce <i>LangLfP</i> (language conditioned learning from play). LangLfP is a special case of multicontext imitation learning <a href="#sec:mcil">(Section 4.2)</a> applied to our problem setting.
+At a high level, LangLfP trains a single multicontext policy $\pi_\theta(a_t | s_t, z)$ over datasets $\mathcal{D} = \{\DPLAY, \DPLAYLANG\}$, consisting of hindsight goal image tasks and hindsight instruction tasks. We define $\mathcal{F} = \{\genc, \senc\}$, neural network encoders mapping from image goals and instructions respectively to the same latent <i>visuo-lingual goal</i> space. LangLfP learns perception, natural language understanding, and control end-to-end with no auxiliary losses. We discuss the separate modules below.
+</p>
 
-\subsection{LangLfP: learning to follow image and human language goals.}
-\label{sec:lang_lfp}
-We now have all the components to introduce \emph{LangLfP} (language conditioned learning from play). LangLfP is a special case of multicontext imitation learning (Section~\ref{sec:acgc}) applied to our problem setting.
-At a high level, LangLfP trains a single multicontext policy $\pi_\theta(a_t | s_t, z)$ over datasets $\mathcal{D} = \{\DPLAY, \DPLAYLANG\}$, consisting of hindsight goal image tasks and hindsight instruction tasks. We define $\mathcal{F} = \{\genc, \senc\}$, neural network encoders mapping from image goals and instructions respectively to the same latent \emph{visuo-lingual goal} space. LangLfP learns perception, natural language understanding, and control end-to-end with no auxiliary losses. We discuss the separate modules below.
+<p>
+<b>Perception module</b>. In our experiments, $\tau$ in each example consists of $\{(O_t, a_t)\}_t^{|\tau|}$, a sequence of onboard observations $O_t$ and actions. Each observation contains a high-dimensional image and internal proprioceptive sensor reading. A learned perception module $P_{\theta}$ maps each observation tuple to a low-dimensional embedding, e.g. $s_t = P_{\theta}(O_t)$, fed to the rest of the network. See Appendix~\ref{sec:appendix_perception} for details on our perception architecture. This perception module is shared with $\genc$, which defines an additional network on top to map encoded goal observation $s_g$ to a point in $z$ space. See Appendix~\ref{sec:appendix_genc} for details.
+</p>
 
-\textbf{Perception module}.
-In our experiments, $\tau$ in each example consists of $\{(O_t, a_t)\}_t^{|\tau|}$, a sequence of onboard observations $O_t$ and actions. Each observation contains a high-dimensional image and internal proprioceptive sensor reading. A learned perception module $P_{\theta}$ maps each observation tuple to a low-dimensional embedding, e.g. $s_t = P_{\theta}(O_t)$, fed to the rest of the network. See Appendix~\ref{sec:appendix_perception} for details on our perception architecture. This perception module is shared with $\genc$, which defines an additional network on top to map encoded goal observation $s_g$ to a point in $z$ space. See Appendix~\ref{sec:appendix_genc} for details.
+<p>
+<b>Language module</b>.
+Our language goal encoder $\senc$ tokenizes raw text $l$ into subwords <d-cite key="sennrich2015neural"></d-cite>, retrieves subword embeddings from a lookup table, then summarizes embeddings into a point in $z$ space. Subword embeddings are randomly initialized at the beginning of training and learned end-to-end by the final imitation loss. See Appendix~\ref{sec:appendix_nlu} for $\senc$ implementation details.
+</p>
 
-\textbf{Language module}.
-Our language goal encoder $\senc$ tokenizes raw text $l$ into subwords \cite{sennrich2015neural}, retrieves subword embeddings from a lookup table, then summarizes embeddings into a point in $z$ space. Subword embeddings are randomly initialized at the beginning of training and learned end-to-end by the final imitation loss. See Appendix~\ref{sec:appendix_nlu} for $\senc$ implementation details.
+<p>
+<b>Control module</b>.
+While we could in principle use any architecture to implement the multicontext policy $\pi_\theta(a_t | s_t, z)$, we use Latent Motor Plans (LMP) <d-cite key="lynch2019play"></d-cite>. LMP is a goal-directed imitation architecture that uses latent variables to model the large amount of multimodality inherent to freeform imitation datasets. Concretely, it is a sequence-to-sequence conditional variational autoencoder (seq2seq CVAE) autoencoding contextual demonstrations through a latent "plan" space. The decoder is a goal conditioned policy. As a CVAE, LMP lower bounds maximum likelihood contextual imitation (<a href="#eq:gcbc">Equation 1</a>), and is easily adapted to our multicontext setting. See Appendix~\ref{sec:appendix_control} for details on this module.
+</p>
 
-\textbf{Control module}.
-While we could in principle use any architecture to implement the multicontext policy $\pi_\theta(a_t | s_t, z)$, we use Latent Motor Plans (LMP) \cite{lynch2019play}. LMP is a goal-directed imitation architecture that uses latent variables to model the large amount of multimodality inherent to freeform imitation datasets. Concretely, it is a sequence-to-sequence conditional variational autoencoder (seq2seq CVAE) autoencoding contextual demonstrations through a latent ``plan" space. The decoder is a goal conditioned policy. As a CVAE, LMP lower bounds maximum likelihood contextual imitation (Equation~\ref{eq:gcbc}), and is easily adapted to our multicontext setting. See Appendix~\ref{sec:appendix_control} for details on this module.
+<p>
+<b>LangLfP training</b>.
+<a href="#fig:lfp_vs_langlfp">Figure 3</a> compares LangLfP training to original LfP training. At each training step we sample a batch of image goal tasks from $D_{\mathrm{play}}$ and a batch of language goal tasks from $D_{\mathrm{(play,lang)}}$. Observations are encoded into state space using the perception module $P_{\theta}$. Image and language goals are encoded into latent goal space $z$ using encoders $\genc$ and $\senc$. We then use $\pi_\theta(a_t | s_t, z)$ to compute the multicontext imitation objective, averaged over both task descriptions. We take a combined gradient step with respect to all modules&mdash;perception, language, and control&mdash;optimizing the whole architecture end-to-end as a single neural network. See a details in Appendix~\ref{sec:appendix_training}.
+</p>
 
-\textbf{LangLfP training}.
-Figure~\ref{fig:comparing_lfp_to_langlfp} compares LangLfP training to original LfP training. At each training step we sample a batch of image goal tasks from $\DPLAY$ and a batch of language goal tasks from $\DPLAYLANG$. Observations are encoded into state space using the perception module $P_{\theta}$. Image and language goals are encoded into latent goal space $z$ using encoders $\genc$ and $\senc$. We then use $\pi_\theta(a_t | s_t, z)$ to compute the multicontext imitation objective, averaged over both task descriptions. We take a combined gradient step with respect to all modules---perception, language, and control---optimizing the whole architecture end-to-end as a single neural network. See a details in Appendix~\ref{sec:appendix_training}.
+<p>
+<b>Following human instructions at test time</b>.
+At the beginning of a test episode the agent receives as input its onboard observation $O_t$ and a human-specified natural language goal $l$. The agent encodes $l$ in latent goal space $z$ using the trained sentence encoder $\senc$. The agent then solves for the goal in closed loop, repeatedly feeding the current observation and goal to the learned policy $\pi_{\theta}(a|s_t, z)$, sampling actions, and executing them in the environment. The human operator can type a new language goal $l$ at any time. See picture in part 3 of <a href="#teaser">Figure 1</a>.
+</p>
 
-\textbf{Following human instructions at test time}.
-At the beginning of a test episode the agent receives as input its onboard observation $O_t$ and a human-specified natural language goal $l$. The agent encodes $l$ in latent goal space $z$ using the trained sentence encoder $\senc$. The agent then solves for the goal in closed loop, repeatedly feeding the current observation and goal to the learned policy $\pi_{\theta}(a|s_t, z)$, sampling actions, and executing them in the environment. The human operator can type a new language goal $l$ at any time. See picture in part 3 of Figure~\ref{fig:teaser}.
+<div class="l-page-outset" id="transfer">
+<figure>
+<img id="fig:transfer" src="figs/transfer/transfer.png" style="margin: 0; width: 60%;"/>
+  <figcaption>
+  <b>Figure 4. Following novel instructions at test time in zero shot using transfer learning:</b> Simply by training on top of pretrained language embeddings, we can give a language conditioned policy the ability to follow out of distribution instructions in zero shot at test time. The pretrained embedding space is responsible for relating novel instructions (green) to ones the agent has been trained to follow (black).
+  </figcaption>
+</figure>
+</div>
 
-\begin{figure}[htb]
-  \includegraphics[width=\linewidth]{figs/transfer/lang_lfpt_motivation4.pdf}
-  \caption{\textbf{Following novel instructions at test time in zero shot using transfer learning}. Simply by training on top of pretrained language embeddings, we can give a language conditioned policy the ability to follow out of distribution instructions in zero shot at test time. The pretrained embedding space is responsible for relating novel instructions (green) to ones the agent has been trained to follow (black).}
-  \label{fig:follow_ood}
-\end{figure}
+<h4 id="sec:transfer_lang_lfp">4.4 Transferring knowledge from generic text corpora.</h4>
+<p>
+Large "in the wild" natural language corpora reflect substantial human knowledge about the world <d-cite key="zellers2018swag"></d-cite>. Many recent works have successfully transferred this knowledge to downstream tasks in NLP via pretrained embeddings <d-cite key="devlin2018bert,radford2019language,raffel2019exploring,1901.05287"></d-cite>. Can we achieve similar knowledge transfer to <i>robotic manipulation</i>?
+</p>
 
-\subsection{Transferring knowledge from generic text corpora}
-\label{sec:transfer}
-% Motivate knowledge transfer.
-Large ``in the wild" natural language corpora reflect substantial human knowledge about the world \cite{zellers2018swag}. Many recent works have successfully transferred this knowledge to downstream tasks in NLP via pretrained embeddings \cite{devlin2018bert,radford2019language,raffel2019exploring,1901.05287}. Can we achieve similar knowledge transfer to \textit{robotic manipulation}?
-
-We hypothesize two benefits to this type of transfer. First, if there is a semantic match between the source corpora and the target environment, more structured inputs may act as a strong prior, shaping grounding or control \cite{luketina2019survey}. Second, language embeddings have been shown to encode similarity between large numbers of words and sentences. This may allow an agent to follow many novel instructions in zero shot, provided they are sufficiently ``close" to ones it has been trained to follow (Figure~\ref{fig:follow_ood}).
+<p>
+We hypothesize two benefits to this type of transfer. First, if there is a semantic match between the source corpora and the target environment, more structured inputs may act as a strong prior, shaping grounding or control <d-cite key="luketina2019survey"></d-cite>. Second, language embeddings have been shown to encode similarity between large numbers of words and sentences. This may allow an agent to follow many novel instructions in zero shot, provided they are sufficiently "close" to ones it has been trained to follow (<a href="#fig:transfer">Figure 4</a>).
 Note, given the complexity of natural language, it is likely that robots in open-world environments will need to be able to follow synonym commands outside of a particular training set.
+</p>
 
-To test these hypotheses, we introduce a simple transfer learning technique, generally applicable to any natural language conditioned agent. We assume access to a neural language model, pretrained on large unlabeled text corpora, capable of mapping full sentences $l$ to points in a semantic vector space $v \in \mathbb{R}^d$. Transfer is enabled simply by encoding language inputs $l$ to the policy at training and test time in $v$ before feeding to the rest of the network. We augment LangLfP in this way, which we refer to as \emph{TransferLangLfP}. See Appendix~\ref{sec:appendix_nlu} for details.
+<p>
+To test these hypotheses, we introduce a simple transfer learning technique, generally applicable to any natural language conditioned agent. We assume access to a neural language model, pretrained on large unlabeled text corpora, capable of mapping full sentences $l$ to points in a semantic vector space $v \in \mathbb{R}^d$. Transfer is enabled simply by encoding language inputs $l$ to the policy at training and test time in $v$ before feeding to the rest of the network. We augment LangLfP in this way, which we refer to as <i>TransferLangLfP</i>. See Appendix~\ref{sec:appendix_nlu} for details.
+</p>
 
-\section{Experimental Setup}
+<h3>5. Experimental Setup</h3>
 Our experiments aim to answer the following questions:
-\begin{enumerate}
-    \item ``Ask me anything" scenario: Can LangLfP train a single agent to solve many human language conditioned robotic manipulation tasks in a row? How does LangLfP compare to prior goal image conditioned LfP, which has less practical task specification? How does our model, trained on unlabeled play, compare to an identical architecture trained on conventional labeled multitask demonstrations?
-    \item Transfer from unlabeled text corpora: Can knowledge be transferred from text to downstream robotic manipulation? Does our transfer learning technique allow a policy to follow novel instructions in zero shot?
-\end{enumerate}
+<ol>
+  <li>"Ask me anything" scenario: Can LangLfP train a single agent to solve many human language conditioned robotic manipulation tasks in a row? How does LangLfP compare to prior goal image conditioned LfP, which has less practical task specification? How does our model, trained on unlabeled play, compare to an identical architecture trained on conventional labeled multitask demonstrations?
+  </li>
+  <li>Transfer from unlabeled text corpora: Can knowledge be transferred from text to downstream robotic manipulation? Does our transfer learning technique allow a policy to follow novel instructions in zero shot?
+  </li>
+</ol>
 
-\begin{figure}[htb!]
-  \centering
-  \includegraphics[width=1\linewidth]{figs/data/env.png}
-  \caption{\textbf{Playroom environment:} A situated robot in a 3D Mujoco environment.}
-  \label{fig:env}
-\end{figure}
+<div class="l-page-outset" id="env">
+<figure>
+<img id="fig:env" src="figs/data/env.png" style="margin: 0; width: 50%;"/>
+  <figcaption>
+  <b>Figure 5. Playroom environment:</b> A situated robot in a 3D Mujoco environment.
+  </figcaption>
+</figure>
+</div>
 
-\subsection{3D simulated environment}
-We conduct our experiments in the simulated 3D Playroom environment introduced in \cite{lynch2019play}, shown in Figure~\ref{fig:env}. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine \cite{TodorovET12}. Videos \href{\lfpvideos/play_data516x360.mp4}{here} of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See Appendix~\ref{sec:appendix_env} for details.
+<h4>5.1 3D simulated environment</h4>
+<p>
+We conduct our experiments in the simulated 3D Playroom environment introduced in <d-cite key="lynch2019play"></d-cite>, shown in <a href="#fig:env">Figure 5</a>. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine <d-cite key="TodorovET12"></d-cite>. Videos <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360.mp4">here</a> of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See Appendix~\ref{sec:appendix_env} for details.
+</p>
 
-\subsection{Methods}
+<h4>5.2 Methods</h4>
+<p>
 In our experiments, we compare the following methods (more details in Appendix~\ref{sec:appendix_models}):
-\begin{itemize}
-\item \textbf{LangBC} (``language, but no play"): a baseline natural language conditioned multitask imitation policy \cite{rahmatizadeh2018vision}, trained on $\DDEMOLANG$, 100 expert demonstrations for each of the 18 evaluation tasks paired with hindsight instructions.
-\item \textbf{LfP} (``play, but no language"): a baseline LfP model trained on $\DPLAY$, conditioned on goal images at test time.
-\item \textbf{LangLfP (ours)} (``play and language"):
-Multicontext imitation trained on $\DPLAY$ and play paired with language $\DPLAYLANG$. Tasks are specified at test time using only natural language.
-\item \textbf{Restricted LangLfP}: To make a controlled comparison to LangBC, we train a baseline of LangLfP on ``restricted $\DPLAY$", a play dataset restricted to be the same size as $\DDEMOLANG$. This restriction is artificial, as more unsegmented play can be collected with the same budget of time. This helps answer ``for the same exact amount of data, which kind of data leads to better generalization: conventional multitask demonstrations, or relabeled play?".
-\item \textbf{TransferLangLfP (ours)}: transfer learning augmented LangLfP, identical except instruction inputs are replaced with pretrained language embeddings.
-\end{itemize}
+<ul>
+  <li>
+    <b>LangBC</b> ("language, but no play"): a baseline natural language conditioned multitask imitation policy <d-cite key="rahmatizadeh2018vision"></d-cite>, trained on $D_{\mathrm{(play,lang)}}$, 100 expert demonstrations for each of the 18 evaluation tasks paired with hindsight instructions.
+  </li>
+  <li>
+    <b>LfP</b>  ("play, but no language"): a baseline LfP model trained on $D_{\mathrm{play}}$, conditioned on goal images at test time.
+  </li>
+  <li>
+    <b>LangLfP (ours)</b>  ("play and language"): Multicontext imitation trained on $D_{\mathrm{play}}$ and play paired with language $D_{\mathrm{(play,lang)}}$. Tasks are specified at test time using only natural language.
+  </li>
+  <li>
+    <b>Restricted LangLfP</b>  To make a controlled comparison to LangBC, we train a baseline of LangLfP on "restricted $D_{\mathrm{play}}$", a play dataset restricted to be the same size as $D_{\mathrm{(play,lang)}}$. This restriction is artificial, as more unsegmented play can be collected with the same budget of time. This helps answer "for the same exact amount of data, which kind of data leads to better generalization: conventional multitask demonstrations, or relabeled play?".
+  </li>
+  <li>
+    <b>TransferLangLfP (ours)</b>: transfer learning augmented LangLfP, identical except instruction inputs are replaced with pretrained language embeddings.
+  </li>
+</ul>
+</p>
 
-We define two sets of experiments for each baseline: pixel experiments, where models receive high-dimensional image observations and must learn perception end-to-end, and state experiments, where models instead receive the ground truth simulator state consisting of positions and orientations for all objects in the scene. The latter provides an upper bound on how all well the various methods can learn language conditioned control, independent of a difficult perception problem (which may be improved upon independently with self-supervised representation learning methods (e.g. \citet{Sermanet2017TCN,oord2018representation,ozair2019wasserstein,pirk2019online}).
+<p>
+We define two sets of experiments for each baseline: pixel experiments, where models receive high-dimensional image observations and must learn perception end-to-end, and state experiments, where models instead receive the ground truth simulator state consisting of positions and orientations for all objects in the scene. The latter provides an upper bound on how all well the various methods can learn language conditioned control, independent of a difficult perception problem (which may be improved upon independently with self-supervised representation learning methods (e.g. <d-cite key="{Sermanet2017TCN,oord2018representation,ozair2019wasserstein,pirk2019online"></d-cite>).
+</p>
 
+<p>
 Note that all baselines can be seen as maximizing the same multicontext imitation objective, differing only on the particular composition of data sources. Therefore, to perform a controlled comparison, we use the same imitation architecture (details in \sect{appendix_architecture}) across all baselines. See Appendix~\ref{sec:appendix_dataset} for a detailed description of all data sources.
+</p>
+
+<!-- COREY ABOVE THIS LINE -->
 
 \section{``Ask Me Anything" Experiments}
 While one-off multitask evaluations \cite{yu2019meta, lynch2019play} are challenging and interesting, a realistic and significantly more difficult scenario is one in which a human gives a robot multiple instructions in a row over a \emph{long horizon}, for example: ``get the block from the shelf...now open the drawer...now sweep the block into the drawer...now close the drawer". Furthermore, agents should be able to accomplish any subtask in any order. This demands a training process that adequately covers transitions between arbitrary pairs of tasks. This setting of long-horizon human language conditioned robotic manipulation has not yet been explored in the literature to our knowledge. While difficult, we believe it aligns well with test-time expectations for a learning robot in everyday environments.
@@ -970,7 +1056,7 @@ We study how the performance of LangLfP scales with the number of collected lang
 \end{figure*}
 
 
-<h2 id="data">Training Data</h2>
+<h2 id="sec:training_data">Training Data</h2>
 
 
 Examples of random play episodes of 1~2 seconds to which a sentence is added in hindsight:
