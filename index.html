@@ -313,6 +313,9 @@
       <li><a href="#sec:appendix_models">E. Models</a></li>
       <li><a href="#sec:appendix_eval">F. Long Horizon Evaluation</a></li>
       <li><a href="#sec:qualitative_examples">G. Qualitative Examples</a></li>
+      <ul>
+        <li><a href="#ood_tasks"><u>Videos:</u>Tasks not present in the 18-task benchmark</a></li>
+      </ul>
       <li><a href="#ablation">H. Ablation: How much language is necessary?</a></li>
     </ul>
     <div><a href="#acknowledgments">Acknowledgments</a></div>
@@ -1073,21 +1076,31 @@ For completeness, we present evaluation curves for both LangLfP and LangBC under
 In this section, we show some difficult tasks that LangLfP can achieve by having the operator breaking them down into multiple instructions. These tasks are achieved in zero shot and are not included in the standard 18-task benchmark.
 </p>
 
-TODO
+<h3 id="ood_tasks">Tasks not present in the 18-task benchmark</h3>
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=.8\linewidth]{figs/rollouts/trash.png}
-  \caption{\textbf{Putting the object in the trash:} An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object in the trash"}
-  \label{fig:trash}
-\end{figure}
+<p>
+Here we demonstrate tasks that do not belong in the 18-task benchmark: putting the object in the bin (<a href="#fig:trash">Video N (TODO)</a>) and putting the object on top of the cabinet (<a href="#fig:top_of_shelf">Video N (TODO)</a>).
+Note that the operator helps the robot by breaking down the task into subtasks.
+</p>
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=.8\linewidth]{figs/rollouts/top_of_shelf.png}
-  \caption{\textbf{Putting the object on top of the shelf:} An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object on top of the shelf"}
-  \label{fig:top_of_shelf}
-\end{figure}
+<div class="l-page-outset" id="ood_tasks_table">
+<table border="0" cellpadding="5" style="text-align: center">
+  <tr>
+    <td>
+      <figure>
+      <video id="fig:trash" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash.webm" type="video/webm"></video>
+      <figcaption><b>Video N (TODO). Putting the object in the trash:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object in the trash".</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+      <video id="fig:top_of_shelf" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf.webm" type="video/webm"></video>
+      <figcaption><b>Video N (TODO). Putting the object on top of the shelf:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object on top of the shelf".</figcaption>
+      </figure>
+    </td>
+  </tr>
+</table>
+</div>
 
 <h3 id="ablation">H. Ablation: How much language is necessary?</h3>
 <p>
@@ -1323,30 +1336,6 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
       </figure>
     </td>
     <td>
-    </td>
-  </tr>
-</table>
-</div>
-
-<h3 id="ood_tasks">Tasks not present in the 18-task benchmark</h3>
-
-Here we demonstrate tasks that do not belong in the 18-task benchmark: putting the object in the bin and putting the object on top of the cabinet.
-Note that the operator helps the robot by breaking down the task into subtasks.
-
-<div class="l-page-outset" id="ood_tasks_table">
-<table border="0" cellpadding="5" style="text-align: center">
-  <tr>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash.webm" type="video/webm"></video>
-      <figcaption>Putting the object in the trash.</figcaption>
-      </figure>
-    </td>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf.webm" type="video/webm"></video>
-      <figcaption>Putting the object on top of the shelf.</figcaption>
-      </figure>
     </td>
   </tr>
 </table>
