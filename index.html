@@ -239,11 +239,8 @@
     <!-- menu on the left -->
   <d-contents>
   <nav class="l-text toc figcaption">
-    <div><a href="paper.html">pdf</a></div>
-    <div><a href="#experiment-1">bibtex</a></div>
-    <div><a href="#experiment-1">code</a></div>
-    <div><a href="#experiment-1">data</a></div>
-    <div><a href="#experiment-1">benchmark</a></div>
+    <div><a href="https://arxiv.org/pdf/2005.TODO.pdf">pdf</a></div>
+    <div><a href="#citation">bibtex</a></div>
   </nav>
   </d-contents>
 
@@ -658,7 +655,7 @@ While one-off multitask evaluations <d-cite key="yu2019meta, lynch2019play"></d-
 
 <h4>6.1 Long-Horizon Evaluation</h4>
 <p>
-We define a long horizon evaluation by significantly expanding upon the previous 18-task evaluation in <d-cite key="lynch2019play"></d-cite>, Multi-18. We construct many multi-stage evaluations by treating the original 18 tasks as subtasks, then consider all valid N-stage transitions between them. This results in 2-stage, 3-stage, and 4-stage long horizon manipulation benchmarks, referred to here as Chain-2, Chain-3, and Chain-4. Note that the number of unique tasks increases rapidly with N: there are 63 Chain-2 tasks, 254 Chain-3 tasks, and 925 Chain-4 tasks. Also note this multi-stage scenario subsumes the original Multi-18, which can be seen as just testing the first stage. This allows for direct comparison to prior work. See Appendix~\ref{sec:appendix_eval} for details on benchmark construction and evaluation walkthrough. We evaluate all methods on these long-horizon benchmarks and present the results in <a href="#tab:main_results">Table 1</a> and <a href="#fig:long_horizon">Figure 6</a>, discussing our findings below. Success is reported with confidence intervals over 3 seeded training runs.
+We define a long horizon evaluation by significantly expanding upon the previous 18-task evaluation in <d-cite key="lynch2019play"></d-cite>, Multi-18. We construct many multi-stage evaluations by treating the original 18 tasks as subtasks, then consider all valid N-stage transitions between them. This results in 2-stage, 3-stage, and 4-stage long horizon manipulation benchmarks, referred to here as Chain-2, Chain-3, and Chain-4. Note that the number of unique tasks increases rapidly with N: there are 63 Chain-2 tasks, 254 Chain-3 tasks, and 925 Chain-4 tasks. Also note this multi-stage scenario subsumes the original Multi-18, which can be seen as just testing the first stage. This allows for direct comparison to prior work. See <a href="#sec:appendix_eval">Appendix F</a> for details on benchmark construction and evaluation walkthrough. We evaluate all methods on these long-horizon benchmarks and present the results in <a href="#tab:main_results">Table 1</a> and <a href="#fig:long_horizon">Figure 6</a>, discussing our findings below. Success is reported with confidence intervals over 3 seeded training runs.
 </p>
 
 <div class="l-body-outset" id="env">
@@ -689,8 +686,17 @@ In <a href="#tab:main_results">Table 1</a>, we find that LangLfP matches the per
 We see in <a href="#tab:main_results">Table 1</a> and <a href="#fig:long_horizon">Figure 6</a> that LangLfP outperforms LangBC on every benchmark. Notably, this result holds even when the play dataset is artificially restricted to the same size as the conventional demonstration dataset (Restricted LangLfP vs LangBC). This is important because it shows that models trained on top of relabeled play generalize much better than those trained on narrow predefined task demonstrations, especially in the most difficult long horizon setting.
 Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the training sources is striking. We find that play-trained policies can of transition well between tasks and recover from initial failures, while narrow demo-trained policies quickly encounter compounding imitation error and never recover. We believe this highlights the importance of training data that covers state space, including large numbers of tasks as well as non task-specific behavior like transitions.
 </p>
-<p><b>Following 15 instructions in a row.</b> We present qualitative results (\href{\website/\#long-horizon}{video}) showing that our agent can follow 15 natural language instructions in a row provided by a human. We believe this offers strong encouragement that simple high capacity imitation learning can be competitive with more complicated long horizon reinforcement learning methods.
+<p><b>Following 15 instructions in a row.</b> We present qualitative results in <a href="#long-horizon">Video N (TODO)</a> showing that our agent can follow 15 natural language instructions in a row provided by a human. We believe this offers strong encouragement that simple high capacity imitation learning can be competitive with more complicated long horizon reinforcement learning methods.
 </p>
+
+<figure>
+  <video id="long-horizon" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/long/chain15_iter52001_chain_demo0_lang-en_trial4_success1.0.mp4_frames.webm" type="video/webm">
+      Your browser does not support the video tag.
+  </video>
+  <figcaption>
+  <b>Video N (TODO). 15 tasks in a row.</b>
+  </figcaption>
+</figure>
 
 <div class="l-body" id="env">
 <figure>
@@ -706,7 +712,7 @@ In <a href="#fig:sweep_capacity">Figure 7</a>, we consider task performance as a
 LangBC to Restricted LangLfP, trained on the same amount of data. We study both models from state inputs to understand upper bound performance. As we see, performance steadily improves as model size is increased for models trained on play, but peaks and then declines for models trained on conventional demonstrations. Our interpretation is that larger capacity is effectively utilized to absorb the diversity in play, whereas additional capacity is wasted on equivalently sized datasets constrained to predefined behaviors. This suggests that the simple recipe of collecting large play datasets and scaling up model capacity to achieve higher performance is a valid one.
 </p>
 <p><b>Language unlocks human assistance.</b>
-Natural language conditioned control allows for new modes of interactive test time behavior, allowing humans to give guidance to agents at test time that would be impractical to give via goal image or task id conditioned control. See \href{\website/\#interactive}{this video} and \sect{appendix:assistance} for a concrete example. During the long horizon evaluation, the arm of the agent becomes stuck on top of the desk shelf. The operator is able to quickly specify a new subtask "pull your arm back", which the agent completes, leaving it in a much better initialization to complete the original task. This rapid interactive guidance would have required having a corresponding goal image on hand for "pull your arm back" in the image conditioned scenario or would have required learning an entire separate task using demonstrations in the task id conditioned scenario. Section~\ref{sec:qualitative_examples} additionally shows how humans can quickly compose new tasks not in the 18-task benchmark with language, like "put the block in the trash bin".
+Natural language conditioned control allows for new modes of interactive test time behavior, allowing humans to give guidance to agents at test time that would be impractical to give via goal image or task id conditioned control. See \href{\website/\#interactive}{this video} and \sect{appendix:assistance} for a concrete example. During the long horizon evaluation, the arm of the agent becomes stuck on top of the desk shelf. The operator is able to quickly specify a new subtask "pull your arm back", which the agent completes, leaving it in a much better initialization to complete the original task. This rapid interactive guidance would have required having a corresponding goal image on hand for "pull your arm back" in the image conditioned scenario or would have required learning an entire separate task using demonstrations in the task id conditioned scenario. <a href="#sec:qualitative_examples">Appendix G</a> additionally shows how humans can quickly compose new tasks not in the 18-task benchmark with language, like "put the block in the trash bin".
 </p>
 
 <div class="l-body" id="env">
@@ -742,6 +748,32 @@ In <a href="#tab:main_results">Table 1</a> and <a href="#fig:systematic_transfer
 <p><b>Following out of distribution instructions in 16 different languages.</b> Here we study a rather extreme case of out-of-distribution generalization: following instructions in languages not seen during training (e.g. French, Mandarin, German, etc.).
 To study this, we combine the original set of test instructions from Multi-18 with the expanded synonym instruction set OOD-syn, then translate both into 16 languages using the Google translate API. This results in $\thicksim$240k out-of-distribution instructions covering all 18 tasks. We evaluate the previous methods on this cross-lingual manipulation benchmark, OOD-16-lang, reporting success in <a href="#tab:ood">Table 2</a>. We see that when LangLfP receives instructions with no training overlap, it resorts to producing maximum likelihood play actions. This results in some spurious task success, but performance degrades materially. Remarkably, TransferLangLfP solves a substantial portion of these in zero shot, degrading only slightly from the english-only benchmark. See \href{\website/\#multilingual}{videos} of TransferLangLfP following instructions in 16 novel languages. These results show that simply training high capacity imitation policies on top of pretrained embedding spaces affords agents powerful zero shot generalization capabilities. While practically, one could imagine simply translating these instructions first into English before feeding them to our system, this demonstrates that a large portion of the necessary analogical reasoning can happen internal to the agent in a manner that is end-to-end differentiable. While in this paper we do not finetune the embeddings in this manner, an exciting direction for future work would be to see if grounding language embeddings in embodied imitation improves representation learning over text-only inputs.
 </p>
+<h3 id="multilingual">Multi-lingual inputs (16 languages)</h3>
+
+<div class="l-page-outset" id="lfpvsbc_table">
+<table border="0" cellpadding="5" style="text-align: center">
+  <tr>
+    <td>One model understands inputs in 16 different languages</td>
+    <td>Here is a live example with French inputs:</td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <figure>
+        <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/languages/multilingual.webm" type="video/webm"></video>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/languages/playlang_20200327-141234_fr_bin.webm" type="video/webm"></video>
+        <figcaption>
+          6 Inputs (translated from French):<br>open the drawer, put the object into the drawer, take the object out of the drawer,<br>close the drawer, grasp the object, put the object in the bin.
+        </figcaption>
+      </figure>
+    </td>
+  </tr>
+</table>
+</div>
+
 
 <h3 id="future">8. Limitations and Future Work</h3>
 <p>
@@ -781,10 +813,18 @@ Crucially, this made it so that less than  1% collected robot experience require
 Below we describe the networks we use for perception, natural language understanding, and control---all trained end-to-end as a single neural network to maximize our multicontext imitation objective. We stress that this is only one implementation of possibly many for LangLfP, which is a general high-level framework 1) combining relabeled play, 2) play paired with language, and 3) multicontext imitation.
 </p>
 
+<div class="l-body" id="env">
+<figure>
+<img id="fig:perception_sentence_emb" src="figs/appendix/fig9_perception_sentence_emb.png" style="margin: 0; width: 100%;"/>
+  <figcaption>
+  <b>Figure 9. Perception and language embedder modules.</b>
+  </figcaption>
+</figure>
+</div>
 
 <h4 id="sec:appendix_perception">B.1 Perception Module</h4>
 <p>
-We map raw observations (image and proprioception) to low dimensional perceptual embeddings that are fed to the rest of the network. To do this we use the perception module described in Figure~\ref{fig:perception_sentence_emb}. We pass the image through the network described in <a href="#tab:vision_net_hparams">Table 3</a>, obtaining a 64-dimensional visual embedding. We then concatenate this with the proprioception observation (normalized to zero mean, unit variance using training statistics). This results in a combined perceptual embedding of size 72.
+We map raw observations (image and proprioception) to low dimensional perceptual embeddings that are fed to the rest of the network. To do this we use the perception module described in <a href="#fig:perception_sentence_emb">Figure 9</a>. We pass the image through the network described in <a href="#tab:vision_net_hparams">Table 3</a>, obtaining a 64-dimensional visual embedding. We then concatenate this with the proprioception observation (normalized to zero mean, unit variance using training statistics). This results in a combined perceptual embedding of size 72.
 This perception module is trained end to end to maximize the final imitation loss. We do no photometric augmentation on the image inputs, but anticipate this may lead to better performance.
 </p>
 
@@ -800,12 +840,12 @@ This perception module is trained end to end to maximize the final imitation los
 <h4 id="sec:appendix_genc">B.2 Image goal encoder</h4>
 
 <p>
-$\genc$ takes as input image goal observation $O_g$ and outputs latent goal $z$. To implement this, we reuse the perception module $P_{\theta}$, described in Appendix~\ref{sec:appendix_perception}, which maps $O_g$ to $s_g$. We then pass $s_g$ through a 2 layer 2048 unit ReLU MLP to obtain $z$.
+$\genc$ takes as input image goal observation $O_g$ and outputs latent goal $z$. To implement this, we reuse the perception module $P_{\theta}$, described in <a href="#sec:appendix_perception">Appendix B.1</a>, which maps $O_g$ to $s_g$. We then pass $s_g$ through a 2 layer 2048 unit ReLU MLP to obtain $z$.
 </p>
 
 <h4 id="sec:appendix_nlu">B.3 Language understanding module</h4>
 
-<p><b>From scratch</b>. For LangLfP, our latent language goal encoder, $\senc$, is described in Figure~\ref{fig:perception_sentence_emb}. It maps raw text to a 32 dimensional embedding in goal space as follows: 1) apply subword tokenization, 2) retrieve learned 8-dim subword embeddings from a lookup table, 3) summarize the sequence of subword embeddings (we considered average pooling and RNN mechanisms for this, choosing average pooling based on validation), and 4) pass the summary through a 2 layer 2048 unit ReLU MLP. Out-of-distribution subwords are initialized as random embeddings at test time.
+<p><b>From scratch</b>. For LangLfP, our latent language goal encoder, $\senc$, is described in <a href="#fig:perception_sentence_emb">Figure 9</a>. It maps raw text to a 32 dimensional embedding in goal space as follows: 1) apply subword tokenization, 2) retrieve learned 8-dim subword embeddings from a lookup table, 3) summarize the sequence of subword embeddings (we considered average pooling and RNN mechanisms for this, choosing average pooling based on validation), and 4) pass the summary through a 2 layer 2048 unit ReLU MLP. Out-of-distribution subwords are initialized as random embeddings at test time.
 </p>
 <p><b>Transfer learning.</b>
 For our experiments, we chose Multilingual Universal Sentence Encoder described in <d-cite key="yang2019multilingual"></d-cite>. MUSE is a multitask language architecture trained generic multilingual corpora (e.g. Wikipedia, mined question-answer pair datasets), and has a vocabulary of 200,000 subwords. MUSE maps sentences of any length to a 512-dim vector. We simply treat these embeddings as language observations and do not finetune the weights of the model. This vector is fed to a 2 layer 2048 unit ReLU MLP, projecting to latent goal space.
@@ -821,15 +861,15 @@ We note there are many choices available for encoding raw text in a semantic pre
 As a conditional seq2seq VAE, original LMP trains 3 networks. 1) A posterior $q(z^p|\tau)$, mapping from full state-action demonstration $\tau$ to a distribution over recognized plans. 2) A learned prior $p(z^p|s_0, s_g)$, mapping from initial state in the demonstration and goal to a distribution over possible plans for reaching the goal. 3) A goal and plan conditioned policy $p(a_t|s_t, s_g, z^p)$, decoding the recognized plan with teacher forcing to reconstruct actions that reach the goal.
 </p>
 <p>
-To train multicontext LMP, we simply replace the goal conditioning on $s_g$ everywhere with conditioning on $z^g$, the latent goal output by multicontext encoders $\mathcal{F}= \{\genc,\senc\}$. In our experiments, $\genc$ is a 2 layer 2048 unit ReLU MLP, mapping from encoded goal image $s_g$ to a 32 dimensional latent goal embedding. $\senc$ is a subword embedding summarizer described in Section~\ref{sec:appendix_nlu}. Unless specified otherwise, the LMP implementation in this paper uses the same hyperparameters and network architecture as in <d-cite key="lynch2019play"></d-cite>. See appendix there for details on the posterior, conditional prior, and decoder architecture, consisting of a RNN, MLP, and RNN respectively.
+To train multicontext LMP, we simply replace the goal conditioning on $s_g$ everywhere with conditioning on $z^g$, the latent goal output by multicontext encoders $\mathcal{F}= \{\genc,\senc\}$. In our experiments, $\genc$ is a 2 layer 2048 unit ReLU MLP, mapping from encoded goal image $s_g$ to a 32 dimensional latent goal embedding. $\senc$ is a subword embedding summarizer described in <a href="#sec:appendix_nlu">Appendix B.3</a>. Unless specified otherwise, the LMP implementation in this paper uses the same hyperparameters and network architecture as in <d-cite key="lynch2019play"></d-cite>. See appendix there for details on the posterior, conditional prior, and decoder architecture, consisting of a RNN, MLP, and RNN respectively.
 </p>
 
 <h4 id="sec:appendix_training">B.5 Training Details</h4>
 <p>
-At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in Figure~\ref{fig:im_goal_lmp}. The language goal forward pass is described in Figure~\ref{fig:lang_goal_lmp}. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything---perception networks, $\genc$, $\senc$, posterior, prior, and policy---end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in Table~\ref{tab:training_hparams}.
+At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in <a href="#fig:im_goal_lmp">Figure 16</a>. The language goal forward pass is described in <a href="#fig:lang_goal_lmp">Figure 17</a>. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything---perception networks, TODO $\genc$, $\senc$, posterior, prior, and policy---end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in <a href="#tab:training_hparams">Table 4</a>.
 </p>
 
-<div class="l-body" id="env">
+<div class="l-body-outset" id="env">
 <figure>
 <img id="tab:training_hparams" src="figs/tables/table4_training_hparams.png" style="margin: 0; width: 100%;"/>
   <figcaption>
@@ -866,7 +906,7 @@ We use the same play logs collected in <d-cite key="lynch2019play"></d-cite> as 
 <h4>D.2 (Play, language) dataset</h4>
 
 <p>
-We pair 10K windows from $D_{\mathrm{play}}$ with natural language hindsight instructions using the interface shown in \fig{ui} to obtain $D_{\mathrm{(play,lang)}}$. See real examples below in Table~\ref{tab:ex_train_lang}. Note the language collected has significant diversity in length and content.
+We pair 10K windows from $D_{\mathrm{play}}$ with natural language hindsight instructions using the interface shown in <a href="#fig:ui">Figure 10</a> to obtain $D_{\mathrm{(play,lang)}}$. See real examples below in <a href="#tab:ex_train_lang">Table 5</a>. Note the language collected has significant diversity in length and content.
 </p>
 
 <div class="l-body" id="env">
@@ -880,10 +920,14 @@ We pair 10K windows from $D_{\mathrm{play}}$ with natural language hindsight ins
 
 
 <p>
-\fig{ui} demonstrates how hindsight instructions are collected. Overseers are presented with a webpage that contains a looping video clip of 1 to 2 seconds of play, along with the first and the last frames of that video, to help them identify the beginning and the end of the clip if necessary.
+<a href="#fig:ui">Figure 10</a> demonstrates how hindsight instructions are collected. Overseers are presented with a webpage that contains a looping video clip of 1 to 2 seconds of play, along with the first and the last frames of that video, to help them identify the beginning and the end of the clip if necessary.
 Overseers are asked to type in a text box the sentence that best answers the question "How do I go from start to finish?".
+</p><p>
 Several considerations can go into the design of this interface. First, we can ask overseers to type in multiple instructions that are as different from each other as possible, to increase generalization and diversity of the language dataset. After experimenting with one or multiple text boxes, we opted for using only one, while asking users to write as diverse sentences as possible throughout the collection process. A disadvantage of having multiple boxes is that it can sometimes be challenging to come up with diverse sentences when the observed action is very simple. It also leads to less video-language pairs for the same budget. Thus we decided one sentence per video was most beneficial in our case.
-Another collection consideration is the level of details in a sentence. For example, for a generalist robot application, it seems "open the drawer" is a more likely use case than "move your hand 10 cm to the right above the drawer handle, then grasp the drawer handle, then pull on the drawer handle". Similarly, an instruction geared toward a function such as "open the drawer" is more likely useful than one detached from it function, e.g. "put your fingers around the drawer handle, pull your hand back". Finally, given the temporal horizon of our video clips, multiple things can be happening within one clip. How many events should be described? For example it might be important to describe multiple motions such as "close the drawer then reach for the object". With all these observations in mind, we instructed the overseers to only describe the main actions, while asking themselves: “which instructions would I give to another human being so that they could produce a similar video if they were in that scene?”.
+</p><p>
+    Another collection consideration is the level of details in a sentence. For example, for a generalist robot application, it seems "open the drawer" is a more likely use case than "move your hand 10 cm to the right above the drawer handle, then grasp the drawer handle, then pull on the drawer handle". Similarly, an instruction geared toward a function such as "open the drawer" is more likely useful than one detached from it function, e.g. "put your fingers around the drawer handle, pull your hand back".
+</p><p>
+    Finally, given the temporal horizon of our video clips, multiple things can be happening within one clip. How many events should be described? For example it might be important to describe multiple motions such as "close the drawer then reach for the object". With all these observations in mind, we instructed the overseers to only describe the main actions, while asking themselves: “which instructions would I give to another human being so that they could produce a similar video if they were in that scene?”.
 </p>
 
 <div class="l-body" id="env">
@@ -908,7 +952,7 @@ Another collection consideration is the level of details in a sentence. For exam
 
 <h4>D.3 (Demo, language) dataset</h4>
 <p>
-To define $D_{\mathrm{(demo,lang)}}$, we pair each of the 100 demonstrations of the 18 evaluation tasks from <d-cite key="lynch2019play"></d-cite> with hindsight instructions using the same process as in ~\ref{sec:hip}. We similarly pair the 20 test time demonstrations of each of the 18 tasks. See examples for each of the tasks in <a href="#tab:ex_test_lang">Table 7</a>.
+To define $D_{\mathrm{(demo,lang)}}$, we pair each of the 100 demonstrations of the 18 evaluation tasks from <d-cite key="lynch2019play"></d-cite> with hindsight instructions using the same process as in <a href="#sec:hip">Section 4.1</a>. We similarly pair the 20 test time demonstrations of each of the 18 tasks. See examples for each of the tasks in <a href="#tab:ex_test_lang">Table 7</a>.
 74.3% of the natural language instructions in the test dataset appear at least once in $D_{\mathrm{play}}$.
 85.08% of the instructions in $D_{\mathrm{(play,lang)}}$ never never appear in the test set.
 </p>
@@ -920,7 +964,7 @@ For a controlled comparison between LangLfP and LangBC, we train on a play datas
 <h3 id="sec:appendix_models">E. Models</h3>
 
 <p>
-Below we describe our various baselines and their training sources. Note that for a controlled comparison, all methods are trained using the exact same architecture described in Section~\ref{sec:appendix_architecture}, differing only on the source of data.
+Below we describe our various baselines and their training sources. Note that for a controlled comparison, all methods are trained using the exact same architecture described in <a href="#sec:appendix_architecture">Appendix B</a>, differing only on the source of data.
 </p>
 
 <div class="l-body" id="env">
@@ -935,7 +979,7 @@ Below we describe our various baselines and their training sources. Note that fo
 <h3 id="sec:appendix_eval">F. Long Horizon Evaluation</h3>
 
 <p><b>Task construction.</b>
-We construct long-horizon evaluations by considering transitions between the 18 subtasks defined in <d-cite key="lynch2019play"></d-cite>. These span multiple diverse families, e.g. opening and closing doors and drawers, pressing buttons, picking and placing a movable block, etc. For example, one of the 925 Chain-4 tasks may be "open\_sliding, push\_blue, open\_drawer, sweep". We exclude as invalid any transitions that would result in instructions that would have necessarily already been satisfied, e.g. "open\_drawer, press\_red, open\_drawer". To allow natural language conditioning we pair 20 test demonstrations of each subtask with human instructions using the same process as in Section~\ref{sec:hip} (example sentences in <a href="#tab:ex_test_lang">Table 7</a>).
+We construct long-horizon evaluations by considering transitions between the 18 subtasks defined in <d-cite key="lynch2019play"></d-cite>. These span multiple diverse families, e.g. opening and closing doors and drawers, pressing buttons, picking and placing a movable block, etc. For example, one of the 925 Chain-4 tasks may be "open_sliding, push_blue, open_drawer, sweep". We exclude as invalid any transitions that would result in instructions that would have necessarily already been satisfied, e.g. "open_drawer, press_red, open_drawer". To allow natural language conditioning we pair 20 test demonstrations of each subtask with human instructions using the same process as in <a href="#sec:hip">Section 4.1</a> (example sentences in <a href="#tab:ex_test_lang">Table 7</a>).
 </p>
 <p><b>Eval walkthrough.</b>
 The long horizon evaluation happens as follows. For each of the N-stage tasks in a given benchmark, we start by resetting the scene to a neutral state. This is discussed more in the next section.
@@ -943,12 +987,12 @@ Next, we sample a natural language instruction for each task in the N-stage sequ
 We score each multi-stage rollout by the percent of subtasks completed, averaging over all multi-stage tasks in the benchmark to arrive at the final N-stage number.
   </p>
   
-<p><b>Neutrality in multitask evaluation</b>. When evaluating any context conditioned policy (goal-image, task id, natural language, etc.), a natural question that arises is: how much is the policy relying on the context to infer and solve the task? Previously in \citet{lynch2019play}, evaluation began by resetting the simulator to the first state of a test demonstration, ensuring that the commanded task was valid. We find that under this reset scheme, the initial pose of the agent can in some cases become correlated with the task, e.g. arm nearby the drawer for a drawer opening task. This is problematic, as it potentially reveals task information to the policy through the <i>initial state</i>, rather than the context.
+<p><b>Neutrality in multitask evaluation</b>. When evaluating any context conditioned policy (goal-image, task id, natural language, etc.), a natural question that arises is: how much is the policy relying on the context to infer and solve the task? Previously in <d-cite key="lynch2019play"></d-cite>, evaluation began by resetting the simulator to the first state of a test demonstration, ensuring that the commanded task was valid. We find that under this reset scheme, the initial pose of the agent can in some cases become correlated with the task, e.g. arm nearby the drawer for a drawer opening task. This is problematic, as it potentially reveals task information to the policy through the <i>initial state</i>, rather than the context.
 </p>
 
 <p>
 In this work, we instead reset the arm to a fixed neutral position at the beginning of every test episode. This "neutral" initialization scheme is used to run all evaluations in this paper. We note this is a fairer, but significantly more difficult benchmark. Neutral initialization breaks correlation between initial state and task, forcing the agent to rely entirely on language to infer and solve the task.
-For completeness, we present evaluation curves for both LangLfP and LangBC under this and the prior possibly  "correlated" initialization scheme in Figure~\ref{fig:chains_non_neutral}. We see that when LangBC is allowed to start from the exact first state of a demonstration (a rigid real world assumption), it does well on the first task, but fails to transition to the other tasks, with performance degrading quickly after the first instruction (Chain-2, Chain-3, Chain-4). Play-trained LangLfP on the other hand, is far more robust to change in starting position, experiencing only a minor degradation in performance when switching from the correlated initialization to neutral.
+For completeness, we present evaluation curves for both LangLfP and LangBC under this and the prior possibly  "correlated" initialization scheme in <a href="#fig:chains_non_neutral">Figure 11</a>. We see that when LangBC is allowed to start from the exact first state of a demonstration (a rigid real world assumption), it does well on the first task, but fails to transition to the other tasks, with performance degrading quickly after the first instruction (Chain-2, Chain-3, Chain-4). Play-trained LangLfP on the other hand, is far more robust to change in starting position, experiencing only a minor degradation in performance when switching from the correlated initialization to neutral.
 </p>
 
 <div class="l-body" id="env">
@@ -966,6 +1010,8 @@ For completeness, we present evaluation curves for both LangLfP and LangBC under
 <p>
 In this section, we show some difficult tasks that LangLfP can achieve by having the operator breaking them down into multiple instructions. These tasks are achieved in zero shot and are not included in the standard 18-task benchmark.
 </p>
+
+TODO
 
 \begin{figure}[htb]
   \centering
@@ -987,6 +1033,8 @@ In this section, we show some difficult tasks that LangLfP can achieve by having
 In this section, we show an example of the human operator adapting its instructions if the robot gets stuck, and adding extra sub-steps to get out of trouble and fix the situation in order to achieve the initial instruction. In \fig{interaction}, the robot gets its end-effector stuck against the door on the way to pressing the red button. The operator then changing the command to move back, then opening the door more to the right so that it has better access to the red button, then pressing the red button.
 </p>
 
+TODO
+
 \begin{figure*}[htb]
   \centering
   \includegraphics[width=\linewidth]{figs/results/human_assistance2.pdf}
@@ -997,21 +1045,25 @@ In this section, we show an example of the human operator adapting its instructi
 
 <h3 id="ablation">H. Ablation: How much language is necessary?</h3>
 <p>
-We study how the performance of LangLfP scales with the number of collected language pairs. Figure~\ref{fig:lang_ablation} compares models trained from pixel inputs to models trained from state inputs as we sweep the amount of collected language pairs by factors of 2. Interestingly, for models trained from states, doubling the size of the language dataset from 5k to 10k has marginal benefit on performance. Models trained from pixels, on the other hand, have yet to converge and may benefit from even larger datasets. This suggests that the role of larger language pair datasets is primarily to address the complicated perceptual grounding problem.
+We study how the performance of LangLfP scales with the number of collected language pairs. <a href="#fig:lang_ablation">Figure 15</a> compares models trained from pixel inputs to models trained from state inputs as we sweep the amount of collected language pairs by factors of 2. Interestingly, for models trained from states, doubling the size of the language dataset from 5k to 10k has marginal benefit on performance. Models trained from pixels, on the other hand, have yet to converge and may benefit from even larger datasets. This suggests that the role of larger language pair datasets is primarily to address the complicated perceptual grounding problem.
 </p>
 
-\begin{figure}[htb]
-  \includegraphics[width=\linewidth]{figs/results/play_lang_pairs.pdf}
-  \caption{\textbf{18-task success vs amount of human language pairs}}
-  \label{fig:lang_ablation}
-\end{figure}
+<div class="l-body" id="env">
+<figure>
+<img id="fig:lang_ablation" src="figs/appendix/fig15_success_vs_amount.png" style="margin: 0; width: 80%;"/>
+  <figcaption>
+  <b>Figure 15. 18-task success vs amount of human language pairs.</b>
+  </figcaption>
+</figure>
+</div>
+
 
 <div class="l-body-outset" id="env">
 <figure>
-<img id="im_goal_lmp" src="figs/appendix/fig16_imlfp.png" style="margin: 0; width: 100%;"/>
+<img id="fig:im_goal_lmp" src="figs/appendix/fig16_imlfp.png" style="margin: 0; width: 100%;"/>
   <figcaption>
-  <b>Figure 11. Latent image goal LMP:</b> This image goal conditioned forward pass of multicontext LMP.
-  1) Map sequence of raw observations $O_t$ to perceptual embeddings (see Figure~\ref{fig:perception_sentence_emb}). 2) Map image goal to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent image goal, and latent plan. Note perception net, posterior, prior, and policy are shared with language goal forward pass.
+  <b>Figure 16. Latent image goal LMP:</b> This image goal conditioned forward pass of multicontext LMP.
+  1) Map sequence of raw observations $O_t$ to perceptual embeddings (see <a href="#fig:perception_sentence_emb">Figure 9</a>). 2) Map image goal to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent image goal, and latent plan. Note perception net, posterior, prior, and policy are shared with language goal forward pass.
   </figcaption>
 </figure>
 </div>
@@ -1020,7 +1072,7 @@ We study how the performance of LangLfP scales with the number of collected lang
 <figure>
 <img id="fig:lang_goal_lmp" src="figs/appendix/fig17_langlfp.png" style="margin: 0; width: 100%;"/>
   <figcaption>
-  <b>Figure 17. Latent language goal LMP:</b> This describes the language goal conditioned forward pass of multicontext LMP. 1) Map sequence of raw observations $O_t$ to perceptual embeddings (see Figure~\ref{fig:perception_sentence_emb}). 2) Map language observation to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent language goal, and latent plan. Note perception net, posterior, prior, and policy are shared with image goal LMP.
+  <b>Figure 17. Latent language goal LMP:</b> This describes the language goal conditioned forward pass of multicontext LMP. 1) Map sequence of raw observations $O_t$ to perceptual embeddings (see <a href="#fig:perception_sentence_emb">Figure 9</a>). 2) Map language observation to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent language goal, and latent plan. Note perception net, posterior, prior, and policy are shared with image goal LMP.
   </figcaption>
 </figure>
 </div>
@@ -1031,37 +1083,29 @@ We study how the performance of LangLfP scales with the number of collected lang
 
 Examples of random play episodes of 1~2 seconds to which a sentence is added in hindsight:
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%;" data-src="videos/data/playground_all_32_sequences_6.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/data/playground_all_32_sequences_6.webm" type="video/webm"></video>
 </figure>
 
 <h2 id="videos">Results in videos</h2>
 
-<h3 id="long-horizon">15 tasks in a row</h3>
-
-<figure>
-  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%;" data-src="videos/long/chain15_iter52001_chain_demo0_lang-en_trial4_success1.0.mp4_frames.webm" type="video/webm">
-      Your browser does not support the video tag.
-  </video>
-</figure>
-
 ## Pixel videos (TODO: temp name / section)
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-grasp_lift-close_drawer_iter96001_chain_demo0_lang-en_trial16_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-grasp_lift-close_drawer_iter96001_chain_demo0_lang-en_trial16_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/long_chains/long_chains_put_in_shelf-pull_out_shelf-put_in_shelf-pull_out_shelf-grasp_flat_iter64001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_put_in_shelf-pull_out_shelf-put_in_shelf-pull_out_shelf-grasp_flat_iter64001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-close_drawer-sliding-push_green-push_blue-push_red-close_sliding-drawer-close_drawer-sliding-drawer_iter128001_chain_demo0_lang-en_trial29_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-close_drawer-sliding-push_green-push_blue-push_red-close_sliding-drawer-close_drawer-sliding-drawer_iter128001_chain_demo0_lang-en_trial29_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
@@ -1083,12 +1127,12 @@ We initialize the start position to the first state of a demonstration of the fi
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/chain4/chain4_lfp_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/chain4/chain4_bc_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
       </figure>
     </td>
   </tr>
@@ -1108,12 +1152,12 @@ We initialize the start position to the first state of a demonstration of the fi
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/chain4/chain4_lfp_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/chain4/chain4_bc_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
       </figure>
     </td>
   </tr>
@@ -1131,12 +1175,12 @@ We initialize the start position to the first state of a demonstration of the fi
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/chain4/chain4_lfp_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/chain4/chain4_bc_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
       </figure>
     </td>
   </tr>
@@ -1154,32 +1198,6 @@ We initialize the start position to the first state of a demonstration of the fi
 </table>
 </div>
 
-<h3 id="multilingual">Multi-lingual inputs (16 languages)</h3>
-
-<div class="l-page-outset" id="lfpvsbc_table">
-<table border="0" cellpadding="5" style="text-align: center">
-  <tr>
-    <td>One model understands inputs in 16 different languages</td>
-    <td>Here is a live example with French inputs:</td>
-  </tr>
-  <tr>
-    <td valign="top">
-      <figure>
-        <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/languages/multilingual.webm" type="video/webm"></video>
-      </figure>
-    </td>
-    <td>
-      <figure>
-        <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/languages/playlang_20200327-141234_fr_bin.webm" type="video/webm"></video>
-        <figcaption>
-          6 Inputs (translated from French):<br>open the drawer, put the object into the drawer, take the object out of the drawer,<br>close the drawer, grasp the object, put the object in the bin.
-        </figcaption>
-      </figure>
-    </td>
-  </tr>
-</table>
-</div>
-
 <h3 id="transfer">Knowledge transfer with language pretraining</h3>
 
 LangLfP-T is able to take in multiple languages as input thanks to knowledge transfer from multi-lingual text pretraining, while LangLfP is not as it was only trained on english sentences and does not use a pretrained language initialization. One could then expect LangLfP to not perform well on non-english input sentences. Table 3 (TODO) shows however that LangLfP reaches ~28% accuracy on non-english inputs. This performance can be attributed to the non-random behavior of goal-conditioned policies trained on play data, even when a goal input is not interpretable. To illustrate this phenomenon qualitatively, here we compare LangLfP-T (left) and LangLfP (right) policies on the same French and Japanese inputs and observe that LangLfP is still able to perform some of the tasks or do non-random behaviors even though it does not understand the input commands:
@@ -1193,12 +1211,12 @@ LangLfP-T is able to take in multiple languages as input thanks to knowledge tra
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-drawer-sweep-close_drawer_iter182001_chain_demo0_lang-fr_trial1_success1.0.mp4_frames.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-drawer-sweep-close_drawer_iter182001_chain_demo0_lang-fr_trial1_success1.0.mp4_frames.webm" type="video/webm"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-drawer-sweep-close_drawer_iter330001_chain_demo0_lang-fr_trial1_success0.0.mp4_frames.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-drawer-sweep-close_drawer_iter330001_chain_demo0_lang-fr_trial1_success0.0.mp4_frames.webm" type="video/webm"></video>
       </figure>
     </td>
   </tr>
@@ -1216,12 +1234,12 @@ LangLfP-T is able to take in multiple languages as input thanks to knowledge tra
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-sliding-push_green-close_sliding_iter182001_chain_demo0_lang-ja_trial2_success1.0.mp4_frames.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-sliding-push_green-close_sliding_iter182001_chain_demo0_lang-ja_trial2_success1.0.mp4_frames.webm" type="video/webm"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-sliding-push_green-close_sliding_iter330001_chain_demo0_lang-ja_trial3_success0.2.mp4_frames.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-sliding-push_green-close_sliding_iter330001_chain_demo0_lang-ja_trial3_success0.2.mp4_frames.webm" type="video/webm"></video>
       </figure>
     </td>
   </tr>
@@ -1248,13 +1266,13 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/live/playlang_20200326-114030_knock2.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-114030_knock2.webm" type="video/webm"></video>
       <figcaption>(upright object, knock object) x 2</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/live/playlang_20200326-184425_open-close-drawer-3x.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-184425_open-close-drawer-3x.webm" type="video/webm"></video>
       <figcaption>(open drawer, close drawer) x 3</figcaption>
       </figure>
     </td>
@@ -1262,7 +1280,7 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/repeat/reapeat_iter52001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/repeat/reapeat_iter52001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
       <figcaption>object (in, out) of shelf x 2</figcaption>
       </figure>
     </td>
@@ -1282,13 +1300,13 @@ Note that the operator helps the robot by breaking down the task into subtasks.
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/live/playlang_20200325-154140_trash.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash.webm" type="video/webm"></video>
       <figcaption>Putting the object in the trash.</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%;" data-src="videos/live/playlang_20200325-162306_top_shelf.webm" type="video/webm"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf.webm" type="video/webm"></video>
       <figcaption>Putting the object on top of the shelf.</figcaption>
       </figure>
     </td>
@@ -1300,7 +1318,7 @@ Note that the operator helps the robot by breaking down the task into subtasks.
 
 During live interaction with the robot, the user can modify the input sentences in order to help the robot get unstuck, move something out of the way or break down a multi-step task into multiple simpler tasks. Here is an example:
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%;" data-src="videos/live/playlang_20200326-191101_interaction.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/live/playlang_20200326-191101_interaction.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO] Tidying up the desk.
 </figcaption>
@@ -1310,35 +1328,35 @@ Figure n. [TODO] Tidying up the desk.
 <h3 id="failures">Failure Cases</h3>
 
 <figure id="failure1">
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/failures/failures_knock-grasp_flat_iter182001_chain_demo0_lang-en_trial3_success0.5.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_knock-grasp_flat_iter182001_chain_demo0_lang-en_trial3_success0.5.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure id="failure2">
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/failures/failures_put_in_shelf-sliding_iter182001_chain_demo1_lang-en_trial2_success0.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_put_in_shelf-sliding_iter182001_chain_demo1_lang-en_trial2_success0.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/failures/failures_sweep-grasp_lift_iter182001_chain_demo1_lang-en_trial5_success0.5.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_sweep-grasp_lift_iter182001_chain_demo1_lang-en_trial5_success0.5.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/failures/failures_sweep_right-grasp_flat_iter182001_chain_demo1_lang-en_trial1_success0.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_sweep_right-grasp_flat_iter182001_chain_demo1_lang-en_trial1_success0.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%;" data-src="videos/failures/iter52001_chain_demo0_lang-en_trial5_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/failures/iter52001_chain_demo0_lang-en_trial5_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO] Tidying up the desk.
 </figcaption>
@@ -1347,49 +1365,57 @@ Figure n. [TODO] Tidying up the desk.
 <h3 id="more_examples">More examples of short sequences</h3>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames.webm" type="video/webm"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%;" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames.webm" type="video/webm"></video>
+  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames.webm" type="video/webm"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
-
-
-
 
 
 </d-article>
 
-
-
 <d-appendix>
+
   <h3 id="acknowledgments">Acknowledgments</h3>
-  <p>
-We thank Karol Hausman, Eric Jang, Mohi Khansari, Kanishka Rao, Jonathan Thompson, Luke Metz, Anelia Angelova, Sergey Levine, and Vincent Vanhoucke for providing helpful feedback on this manuscript. We additionally thank the overseers for providing paired language instructions.
-</p>
-  <p>
-We thank <a href="https://distill.pub/">distill.pub</a> for providing this <a href="https://github.com/distillpub/template">template</a>.
-  </p>
+  <p>We thank Karol Hausman, Eric Jang, Mohi Khansari, Kanishka Rao, Jonathan Thompson, Luke Metz, Anelia Angelova, Sergey Levine, and Vincent Vanhoucke for providing helpful feedback on this manuscript. We additionally thank the overseers for providing paired language instructions.</p>
+
+  <p>We thank <a href="https://distill.pub/">distill.pub</a> for providing this <a href="https://github.com/distillpub/template">template</a>.</p>
+
+  <h3 id="citation">Citation</h3>
+<p>For attribution in academic contexts, please cite this work as:</p>
+<pre class="citation short">Lynch and Sermanet, "Grounding Language in PLay", 2020.</pre>
+<p>BibTeX citation:</p>
+<pre class="citation long">@article{lynch2020language,
+  title   = {Grounding Language in PLay},
+  author  = {Lynch, Corey and Sermanet, Pierre},
+  journal = {arXiv preprint arXiv:2005.TODO},
+  year    = {2020},
+  url     = {https://arxiv.org/abs/2005.TODO},
+  pdf     = {https://arxiv.org/pdf/2005.TODO.pdf},
+}</pre>
+
+
 
   <d-footnote-list></d-footnote-list>
   <d-citation-list id="references"></d-citation-list>
