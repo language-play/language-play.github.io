@@ -281,12 +281,12 @@
     <div><a href="#appendix">Appendix</a></div>
     <ul>
     <li><a href="#relabeling">A. Relabeling play</a></li>
-    <li><a href="#implementation">B. LangLfP Implementation Details</a></li>
-    <li><a href="#environment">C. Environment</a></li>
-    <li><a href="#dataset">D. Datasets</a></li>
-    <li><a href="#models">E. Models</a></li>
-    <li><a href="#evaluation">F. Long Horizon Evaluation</a></li>
-    <li><a href="#examples">G. Qualitative Examples</a></li>
+    <li><a href="#sec:appendix_architecture">B. LangLfP Implementation Details</a></li>
+    <li><a href="#sec:appendix_env">C. Environment</a></li>
+    <li><a href="#sec:appendix_dataset">D. Datasets</a></li>
+    <li><a href="#sec:appendix_models">E. Models</a></li>
+    <li><a href="#sec:appendix_eval">F. Long Horizon Evaluation</a></li>
+    <li><a href="#sec:qualitative_examples">G. Qualitative Examples</a></li>
     <li><a href="#ablation">H. Ablation: How much language is necessary?</a></li>
     </ul>
     <div><a href="#acknowledgments">Acknowledgments</a></div>
@@ -776,15 +776,13 @@ Crucially, this made it so that less than  1% collected robot experience require
 
 <b>TODO: move algo 2 and 3 back here?</b>
 
-<h3 id="implementation">B. LangLfP Implementation Details</h3>
-\label{sec:appendix_architecture}
+<h3 id="sec:appendix_architecture">B. LangLfP Implementation Details</h3>
 <p>
 Below we describe the networks we use for perception, natural language understanding, and control---all trained end-to-end as a single neural network to maximize our multicontext imitation objective. We stress that this is only one implementation of possibly many for LangLfP, which is a general high-level framework 1) combining relabeled play, 2) play paired with language, and 3) multicontext imitation.
 </p>
 
 
-<h4>B.1 Perception Module</h4>
-\label{sec:appendix_perception}
+<h4 id="sec:appendix_perception">B.1 Perception Module</h4>
 <p>
 We map raw observations (image and proprioception) to low dimensional perceptual embeddings that are fed to the rest of the network. To do this we use the perception module described in Figure~\ref{fig:perception_sentence_emb}. We pass the image through the network described in <a href="#tab:vision_net_hparams">Table 3</a>, obtaining a 64-dimensional visual embedding. We then concatenate this with the proprioception observation (normalized to zero mean, unit variance using training statistics). This results in a combined perceptual embedding of size 72.
 This perception module is trained end to end to maximize the final imitation loss. We do no photometric augmentation on the image inputs, but anticipate this may lead to better performance.
@@ -799,14 +797,14 @@ This perception module is trained end to end to maximize the final imitation los
 </figure>
 </div>
 
-<h4>B.2 Image goal encoder</h4>
-\label{sec:appendix_genc}
+<h4 id="sec:appendix_genc">B.2 Image goal encoder</h4>
+
 <p>
 $\genc$ takes as input image goal observation $O_g$ and outputs latent goal $z$. To implement this, we reuse the perception module $P_{\theta}$, described in Appendix~\ref{sec:appendix_perception}, which maps $O_g$ to $s_g$. We then pass $s_g$ through a 2 layer 2048 unit ReLU MLP to obtain $z$.
 </p>
 
-<h4>B.3 Language understanding module</h4>
-\label{sec:appendix_nlu}
+<h4 id="sec:appendix_nlu">B.3 Language understanding module</h4>
+
 <p><b>From scratch</b>. For LangLfP, our latent language goal encoder, $\senc$, is described in Figure~\ref{fig:perception_sentence_emb}. It maps raw text to a 32 dimensional embedding in goal space as follows: 1) apply subword tokenization, 2) retrieve learned 8-dim subword embeddings from a lookup table, 3) summarize the sequence of subword embeddings (we considered average pooling and RNN mechanisms for this, choosing average pooling based on validation), and 4) pass the summary through a 2 layer 2048 unit ReLU MLP. Out-of-distribution subwords are initialized as random embeddings at test time.
 </p>
 <p><b>Transfer learning.</b>
@@ -815,8 +813,8 @@ For our experiments, we chose Multilingual Universal Sentence Encoder described 
 We note there are many choices available for encoding raw text in a semantic pretrained vector space. MUSE showed results immediately and we moved onto different decisions. We look forward to experimenting with different choices of pretrained embedder in the future.
 </p>
 
-<h4>B.4 Control Module</h4>
-\label{sec:appendix_control}
+<h4 id="sec:appendix_control">B.4 Control Module</h4>
+
 <p><b>Multicontext LMP</b>. Here we describe "multicontext LMP": LMP adapted to be able to take either image or language goals. This imitation architecture learns both an abstract visuo-lingual goal space $z^g$, as well as a plan space $z^p$ capturing the many ways to reach a particular goal. We describe this implementation now in detail.
 </p>
 <p>
@@ -826,8 +824,7 @@ As a conditional seq2seq VAE, original LMP trains 3 networks. 1) A posterior $q(
 To train multicontext LMP, we simply replace the goal conditioning on $s_g$ everywhere with conditioning on $z^g$, the latent goal output by multicontext encoders $\mathcal{F}= \{\genc,\senc\}$. In our experiments, $\genc$ is a 2 layer 2048 unit ReLU MLP, mapping from encoded goal image $s_g$ to a 32 dimensional latent goal embedding. $\senc$ is a subword embedding summarizer described in Section~\ref{sec:appendix_nlu}. Unless specified otherwise, the LMP implementation in this paper uses the same hyperparameters and network architecture as in <d-cite key="lynch2019play"></d-cite>. See appendix there for details on the posterior, conditional prior, and decoder architecture, consisting of a RNN, MLP, and RNN respectively.
 </p>
 
-<h4>B.5 Training Details</h4>
-\label{sec:appendix_training}
+<h4 id="sec:appendix_training">B.5 Training Details</h4>
 <p>
 At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in Figure~\ref{fig:im_goal_lmp}. The language goal forward pass is described in Figure~\ref{fig:lang_goal_lmp}. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything---perception networks, $\genc$, $\senc$, posterior, prior, and policy---end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in Table~\ref{tab:training_hparams}.
 </p>
@@ -841,8 +838,7 @@ At each training step, we compute two contextual imitation losses: image goal an
 </figure>
 </div>
 
-<h3 id="environment">C. Environment</h3>
-\label{sec:appendix_env}
+<h3 id="sec:appendix_env">C. Environment</h3>
 <p>
 We use the same simulated 3D playground environment as in <d-cite key="lynch2019play"></d-cite>, keeping the same observation and action spaces. We define these below for completeness.
 </p>
@@ -860,8 +856,7 @@ button pushed amount, blue button pushed amount, green button pushed amount. In 
 We use the same action space as <d-cite key="lynch2019play"></d-cite>: 8-DOF cartesian position, euler, and gripper angle of the end effector. Similarly, during training we quantize each action element into 256 bins. All stochastic policy outputs are represented as discretized logistic distributions over quantization bins <d-cite key="1701.05517"></d-cite>.
 </p>
 
-<h3 id="dataset">D. Datasets</h3>
-\label{sec:appendix_dataset}
+<h3 id="sec:appendix_dataset">D. Datasets</h3>
 
 <h4>D.1 Play dataset</h4>
 <p>
@@ -922,8 +917,8 @@ To define $D_{\mathrm{(demo,lang)}}$, we pair each of the 100 demonstrations of 
 For a controlled comparison between LangLfP and LangBC, we train on a play dataset restricted to the same size as the aggregate multitask demonstration dataset ($\thicksim$1.5h). This was obtained by randomly subsampling the original play logs $\thicksim$7h to $\thicksim$1.5h before relabeling.
 </p>
 
-<h3 id="models">E. Models</h3>
-\label{sec:appendix_models}
+<h3 id="sec:appendix_models">E. Models</h3>
+
 <p>
 Below we describe our various baselines and their training sources. Note that for a controlled comparison, all methods are trained using the exact same architecture described in Section~\ref{sec:appendix_architecture}, differing only on the source of data.
 </p>
@@ -937,8 +932,8 @@ Below we describe our various baselines and their training sources. Note that fo
 </figure>
 </div>
 
-<h3 id="evaluation">F. Long Horizon Evaluation</h3>
-\label{sec:appendix_eval}
+<h3 id="sec:appendix_eval">F. Long Horizon Evaluation</h3>
+
 <p><b>Task construction.</b>
 We construct long-horizon evaluations by considering transitions between the 18 subtasks defined in <d-cite key="lynch2019play"></d-cite>. These span multiple diverse families, e.g. opening and closing doors and drawers, pressing buttons, picking and placing a movable block, etc. For example, one of the 925 Chain-4 tasks may be "open\_sliding, push\_blue, open\_drawer, sweep". We exclude as invalid any transitions that would result in instructions that would have necessarily already been satisfied, e.g. "open\_drawer, press\_red, open\_drawer". To allow natural language conditioning we pair 20 test demonstrations of each subtask with human instructions using the same process as in Section~\ref{sec:hip} (example sentences in <a href="#tab:ex_test_lang">Table 7</a>).
 </p>
@@ -965,8 +960,7 @@ For completeness, we present evaluation curves for both LangLfP and LangBC under
 </figure>
 </div>
 
-<h3 id="examples">G. Qualitative Examples</h3>
-\label{sec:qualitative_examples}
+<h3 id="sec:qualitative_examples">G. Qualitative Examples</h3>
 
 <h4>G.1 Composing new tasks with language</h4>
 <p>
@@ -987,8 +981,7 @@ In this section, we show some difficult tasks that LangLfP can achieve by having
   \label{fig:top_of_shelf}
 \end{figure}
 
-<h4>G.2 The Operator Can Help the Robot</h4>
-\label{sec:appendix:assistance}
+<h4 id="sec:appendix:assistance">G.2 The Operator Can Help the Robot</h4>
 
 <p>
 In this section, we show an example of the human operator adapting its instructions if the robot gets stuck, and adding extra sub-steps to get out of trouble and fix the situation in order to achieve the initial instruction. In \fig{interaction}, the robot gets its end-effector stuck against the door on the way to pressing the red button. The operator then changing the command to move back, then opening the door more to the right so that it has better access to the red button, then pressing the red button.
