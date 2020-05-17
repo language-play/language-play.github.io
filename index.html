@@ -248,13 +248,13 @@
   <div class="l-body" id="demo">
   <figure>
 
-    <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%;"
+    <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%; margin:0 auto"
            data-src="videos/live/playlang_20200326-193259_13tasks.webm" type="video/webm">
       Your browser does not support the video tag.
     </video>
-  <!-- <figcaption> -->
-  <!-- Live demo. -->
-  <!-- </figcaption> -->
+  <figcaption>
+  <b>Video 1.</b> Following real-time human language instructions.</b>
+  </figcaption>
   </figure>
   </div>
 
@@ -269,26 +269,28 @@
   <nav class="l-text toc figcaption">
     <h3>Contents</h3>
     <div><a href="#introduction">1. Introduction</a></div>
+      <ul><li><a href="#multilingual"><u>Video 1:</u> Following human language instructions</a></li></ul>
+      <ul><li><a href="#multilingual"><u>Video 2:</u> 16 input languages</a></li></ul>
     <div><a href="#related">2. Related Work</a></div>
     <div><a href="#preliminaries">3. Preliminaries</a></div>
-    <ul>
-      <li><a href="#prelim1">3.1 Relabeled imitation learning</a></li>
-      <li><a href="#prelim2">3.2 Teleoperated play</a></li>
-      <li><a href="#prelim3">3.3 Learning from play</a></li>
-    </ul>
+    <!-- <ul> -->
+    <!--   <li><a href="#prelim1">3.1 Relabeled imitation learning</a></li> -->
+    <!--   <li><a href="#prelim2">3.2 Teleoperated play</a></li> -->
+    <!--   <li><a href="#prelim3">3.3 Learning from play</a></li> -->
+    <!-- </ul> -->
     <div><a href="#sec:4">4. Learning Human Language Conditioned Control from Play</a></div>
     <ul>
       <li><a href="#sec:hip">4.1 Pairing play with human language</a></li>
       <ul><li><a href="#video:data"><u>Video N:</u> Data</a></li></ul>
       <li><a href="#sec::mcil">4.2 Multicontext Imitation Learning</a></li>
       <li><a href="#sec:lang_lfp">4.3 LangLfP: learning to follow image and human language goals.</a></li>
-      <li><a href="#sec:transfer_lang_lfp">4.4 Transferring knowledge from generic text corpora.</a></li>
+      <li><a href="#sec:transfer_lang_lfp">4.4 Transferring knowledge from text corpora.</a></li>
     </ul>
     <div><a href="#experimental_setup">5. Experimental Setup</a></div>
-    <ul>
-      <li><a href="#sec:sim_env">5.1 3D simulated environment</a></li>
-      <li><a href="#sec:methods">5.2 Methods</a></li>
-    </ul>
+    <!-- <ul> -->
+    <!--   <li><a href="#sec:sim_env">5.1 3D simulated environment</a></li> -->
+    <!--   <li><a href="#sec:methods">5.2 Methods</a></li> -->
+    <!-- </ul> -->
     <div><a href="#ama">6. "Ask Me Anything" Experiments</a></div>
     <ul>
       <li><a href="#sec:long_horizon_eval">6.1 Long-Horizon Evaluation</a></li>
@@ -416,6 +418,11 @@ In this work, we present a simple approach that extends LfP to the natural langu
 <p>
 Finally, we study <b>transfer learning from unlabeled text corpora to robotic manipulation</b>. We introduce a simple transfer learning augmentation, applicable to any language conditioned policy. We find that this significantly improves downstream robotic manipulation. This is the first instance, to our knowledge, of this kind of transfer. Importantly, this same technique allows our agent to follow thousands of novel instructions in zero shot, across 16 different languages. This is the third contribution of this work.
 </p>
+
+
+      <figure>
+        <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/languages/multilingual.webm" type="video/webm"></video>
+      </figure>
 
 <h3 id="related">2. Related Work</h3>
 <p>
@@ -717,6 +724,28 @@ We define a long horizon evaluation by significantly expanding upon the previous
 </figure>
 </div>
 
+
+<figure>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-grasp_lift-close_drawer_iter96001_chain_demo0_lang-en_trial16_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
+<figure>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_put_in_shelf-pull_out_shelf-put_in_shelf-pull_out_shelf-grasp_flat_iter64001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
+<figure>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-close_drawer-sliding-push_green-push_blue-push_red-close_sliding-drawer-close_drawer-sliding-drawer_iter128001_chain_demo0_lang-en_trial29_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
 <h4 id="sec:long_horizon_results">6.2 Long Horizon Results</h4>
 <p>
 <b>Goal image conditioned comparison.</b>
@@ -727,6 +756,102 @@ In <a href="#tab:main_results">Table 1</a>, we find that LangLfP matches the per
 We see in <a href="#tab:main_results">Table 1</a> and <a href="#fig:long_horizon">Figure 6</a> that LangLfP outperforms LangBC on every benchmark. Notably, this result holds even when the play dataset is artificially restricted to the same size as the conventional demonstration dataset (Restricted LangLfP vs LangBC). This is important because it shows that models trained on top of relabeled play generalize much better than those trained on narrow predefined task demonstrations, especially in the most difficult long horizon setting.
 Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the training sources is striking. We find that play-trained policies can of transition well between tasks and recover from initial failures, while narrow demo-trained policies quickly encounter compounding imitation error and never recover. We believe this highlights the importance of training data that covers state space, including large numbers of tasks as well as non task-specific behavior like transitions.
 </p>
+
+<h3 id="lfp-vs-bc">Learning from play versus from demonstrations</h3>
+
+Here we qualitatively compare LangLfP (left) with the langBC (right) baseline by providing the exact same set of 4 instructions on both sides.
+We initialize the start position to the first state of a demonstration of the first task for the LangBC model, otherwise it is unable to perform tasks from the neutral start position.
+
+
+<div class="l-page-outset" id="lfpvsbc_table">
+<table border="0" cellpadding="5" style="text-align: center">
+  <tr>
+    <td><big><b>LangLfP</b></big><br>start position: neutral (same position for all videos)</td>
+    <td><big><b>LangBC</b></big><br>start position: from demonstration's first state (easier)</td>
+  </tr>
+  <tr>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
+      </figure>
+    </td>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
+      </figure>
+    </td>
+  </tr>
+  <tr>
+     <td colspan=2><small>
+     Input sentences:
+      1. pull the drawer handle all the way,
+      2. put the block in to the drawer,
+      3. push the drawer in,
+      4. move the door all the way right
+      <br><br></small>
+    </td>
+  </tr>
+ 
+  
+
+  <tr>
+    <td><big><b>LangLfP</b></big><br>start position: neutral (same position for all videos)</td>
+    <td><big><b>LangBC</b></big><br>start position: from demonstration's first state (easier)</td>
+  </tr>
+  <tr>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
+      </figure>
+    </td>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
+      </figure>
+    </td>
+  </tr>
+  <tr>
+     <td colspan=2><small>
+     Input sentences:
+      1. drag the block out
+      2. push the door to the right
+      3. press blue
+      4. move the door all the way left
+      <br><br></small>
+    </td>
+  </tr>
+
+  <tr>
+    <td><big><b>LangLfP</b></big><br>start position: neutral (same position for all videos)</td>
+    <td><big><b>LangBC</b></big><br>start position: from demonstration's first state (easier)</td>
+  </tr>
+  <tr>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
+      </figure>
+    </td>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
+      </figure>
+    </td>
+  </tr>
+  <tr>
+     <td colspan=2><small>
+     Input sentences:
+      1. knock the object,
+      2. pull the drawer handle all the way,
+      3. drag the object into the drawer,
+      4. close the drawer
+      <br><br></small>
+    </td>
+  </tr>
+  
+</table>
+</div>
+
+
 <p id="15tasks"><b>Following 15 instructions in a row.</b> We present qualitative results in <a href="#long-horizon">Video N (TODO)</a> showing that our agent can follow 15 natural language instructions in a row provided by a human. We believe this offers strong encouragement that simple high capacity imitation learning can be competitive with more complicated long horizon reinforcement learning methods.
 </p>
 
@@ -764,6 +889,30 @@ Natural language conditioned control allows for new modes of interactive test ti
 </figure>
 
 
+<p><b>Composing new tasks with language</b>
+In this section, we show some difficult tasks that LangLfP can achieve by having the operator breaking them down into multiple instructions. These tasks are achieved in zero shot and are not included in the standard 18-task benchmark. Here we demonstrate tasks that do not belong in the 18-task benchmark: putting the object in the bin (<a href="#fig:trash">Video N (TODO)</a>) and putting the object on top of the cabinet (<a href="#fig:top_of_shelf">Video N (TODO)</a>).
+Note that the operator helps the robot by breaking down the task into subtasks.
+</p>
+
+<div class="l-page-outset" id="ood_tasks_table">
+<table border="0" cellpadding="5" style="text-align: center">
+  <tr>
+    <td>
+      <figure>
+      <video id="ood_tasks" id="fig:trash" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash.webm" type="video/webm"></video>
+      <figcaption><b>Video N (TODO). Putting the object in the trash:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object in the trash".</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+      <video id="fig:top_of_shelf" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf.webm" type="video/webm"></video>
+      <figcaption><b>Video N (TODO). Putting the object on top of the shelf:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object on top of the shelf".</figcaption>
+      </figure>
+    </td>
+  </tr>
+</table>
+</div>
+
 
 <div class="l-body" id="env">
 <figure>
@@ -798,7 +947,6 @@ In <a href="#tab:main_results">Table 1</a> and <a href="#fig:systematic_transfer
 <p><b>Following out of distribution instructions in 16 different languages.</b> Here we study a rather extreme case of out-of-distribution generalization: following instructions in languages not seen during training (e.g. French, Mandarin, German, etc.).
 To study this, we combine the original set of test instructions from Multi-18 with the expanded synonym instruction set OOD-syn, then translate both into 16 languages using the Google translate API. This results in $\thicksim$240k out-of-distribution instructions covering all 18 tasks. We evaluate the previous methods on this cross-lingual manipulation benchmark, OOD-16-lang, reporting success in <a href="#tab:ood">Table 2</a>. We see that when LangLfP receives instructions with no training overlap, it resorts to producing maximum likelihood play actions. This results in some spurious task success, but performance degrades materially. Remarkably, TransferLangLfP solves a substantial portion of these in zero shot, degrading only slightly from the english-only benchmark. See \href{\website/\#multilingual}{videos} of TransferLangLfP following instructions in 16 novel languages. These results show that simply training high capacity imitation policies on top of pretrained embedding spaces affords agents powerful zero shot generalization capabilities. While practically, one could imagine simply translating these instructions first into English before feeding them to our system, this demonstrates that a large portion of the necessary analogical reasoning can happen internal to the agent in a manner that is end-to-end differentiable. While in this paper we do not finetune the embeddings in this manner, an exciting direction for future work would be to see if grounding language embeddings in embodied imitation improves representation learning over text-only inputs.
 </p>
-<h3 id="multilingual">Multi-lingual inputs (16 languages)</h3>
 
 <div class="l-page-outset" id="lfpvsbc_table">
 <table border="0" cellpadding="5" style="text-align: center">
@@ -809,7 +957,7 @@ To study this, we combine the original set of test instructions from Multi-18 wi
   <tr>
     <td valign="top">
       <figure>
-        <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/languages/multilingual.webm" type="video/webm"></video>
+        <video id="multilingual" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/languages/multilingual.webm" type="video/webm"></video>
       </figure>
     </td>
     <td>
@@ -1071,36 +1219,69 @@ For completeness, we present evaluation curves for both LangLfP and LangBC under
 
 <h3 id="sec:qualitative_examples">G. Qualitative Examples</h3>
 
-<h4>G.1 Composing new tasks with language</h4>
-<p>
-In this section, we show some difficult tasks that LangLfP can achieve by having the operator breaking them down into multiple instructions. These tasks are achieved in zero shot and are not included in the standard 18-task benchmark.
-</p>
+<h4 id="repeated">Repeated Instructions</h4>
 
-<h3 id="ood_tasks">Tasks not present in the 18-task benchmark</h3>
+Here we demonstrate repetitions of the same pair of actions multiple times: on the left the input sentences ("pick up the object and drop it vertically", "knock the object") is are performed twice in a row, on the right the ("open the drawer", "close the drawer") instructions are repeated 3 times in a row:
 
-<p>
-Here we demonstrate tasks that do not belong in the 18-task benchmark: putting the object in the bin (<a href="#fig:trash">Video N (TODO)</a>) and putting the object on top of the cabinet (<a href="#fig:top_of_shelf">Video N (TODO)</a>).
-Note that the operator helps the robot by breaking down the task into subtasks.
-</p>
-
-<div class="l-page-outset" id="ood_tasks_table">
+<div class="l-page-outset" id="transfer_table">
 <table border="0" cellpadding="5" style="text-align: center">
   <tr>
     <td>
       <figure>
-      <video id="fig:trash" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash.webm" type="video/webm"></video>
-      <figcaption><b>Video N (TODO). Putting the object in the trash:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object in the trash".</figcaption>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-114030_knock2.webm" type="video/webm"></video>
+      <figcaption>(upright object, knock object) x 2</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-      <video id="fig:top_of_shelf" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf.webm" type="video/webm"></video>
-      <figcaption><b>Video N (TODO). Putting the object on top of the shelf:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object on top of the shelf".</figcaption>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-184425_open-close-drawer-3x.webm" type="video/webm"></video>
+      <figcaption>(open drawer, close drawer) x 3</figcaption>
       </figure>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <figure>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/repeat/reapeat_iter52001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
+      <figcaption>object (in, out) of shelf x 2</figcaption>
+      </figure>
+    </td>
+    <td>
     </td>
   </tr>
 </table>
 </div>
+
+<h4 id="more_examples">More examples of short sequences</h4>
+
+<figure>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
+<figure>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
+<figure>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
+<figure>
+  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames.webm" type="video/webm"></video>
+<figcaption>
+Figure n. [TODO]
+</figcaption>
+</figure>
+
 
 <h3 id="ablation">H. Ablation: How much language is necessary?</h3>
 <p>
@@ -1137,119 +1318,7 @@ We study how the performance of LangLfP scales with the number of collected lang
 </div>
 
 
-<h2 id="videos">Results in videos</h2>
-
-## Pixel videos (TODO: temp name / section)
-
-<figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-grasp_lift-close_drawer_iter96001_chain_demo0_lang-en_trial16_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
-
-<figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_put_in_shelf-pull_out_shelf-put_in_shelf-pull_out_shelf-grasp_flat_iter64001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
-
-<figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-close_drawer-sliding-push_green-push_blue-push_red-close_sliding-drawer-close_drawer-sliding-drawer_iter128001_chain_demo0_lang-en_trial29_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
-
-
-<h3 id="lfp-vs-bc">Learning from play versus from demonstrations</h3>
-
-Here we qualitatively compare LangLfP (left) with the langBC (right) baseline by providing the exact same set of 4 instructions on both sides.
-We initialize the start position to the first state of a demonstration of the first task for the LangBC model, otherwise it is unable to perform tasks from the neutral start position.
-
-
-<div class="l-page-outset" id="lfpvsbc_table">
-<table border="0" cellpadding="5" style="text-align: center">
-  <tr>
-    <td><big><b>LangLfP</b></big><br>start position: neutral (same position for all videos)</td>
-    <td><big><b>LangBC</b></big><br>start position: from demonstration's first state (easier)</td>
-  </tr>
-  <tr>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
-      </figure>
-    </td>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_drawer-sweep-close_drawer-sliding.webm" type="video/webm"></video>
-      </figure>
-    </td>
-  </tr>
-  <tr>
-     <td colspan=2><small>
-     Input sentences:
-      1. pull the drawer handle all the way,
-      2. put the block in to the drawer,
-      3. push the drawer in,
-      4. move the door all the way right
-      <br><br></small>
-    </td>
-  </tr>
- 
-  
-
-  <tr>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
-      </figure>
-    </td>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_pull_out_shelf-sliding-push_blue-close_sliding.webm" type="video/webm"></video>
-      </figure>
-    </td>
-  </tr>
-  <tr>
-     <td colspan=2><small>
-     Input sentences:
-      1. drag the block out
-      2. push the door to the right
-      3. press blue
-      4. move the door all the way left
-      <br><br></small>
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
-      </figure>
-    </td>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_knock-drawer-sweep-close_drawer.webm" type="video/webm"></video>
-      </figure>
-    </td>
-  </tr>
-  <tr>
-     <td colspan=2><small>
-     Input sentences:
-      1. knock the object,
-      2. pull the drawer handle all the way,
-      3. drag the object into the drawer,
-      4. close the drawer
-      <br><br></small>
-    </td>
-  </tr>
-  
-</table>
-</div>
-
-<h3 id="transfer">Knowledge transfer with language pretraining</h3>
+<h3 id="transfer">I. Knowledge transfer with language pretraining TODO:refer to this section</h3>
 
 LangLfP-T is able to take in multiple languages as input thanks to knowledge transfer from multi-lingual text pretraining, while LangLfP is not as it was only trained on english sentences and does not use a pretrained language initialization. One could then expect LangLfP to not perform well on non-english input sentences. Table 3 (TODO) shows however that LangLfP reaches ~28% accuracy on non-english inputs. This performance can be attributed to the non-random behavior of goal-conditioned policies trained on play data, even when a goal input is not interpretable. To illustrate this phenomenon qualitatively, here we compare LangLfP-T (left) and LangLfP (right) policies on the same French and Japanese inputs and observe that LangLfP is still able to perform some of the tasks or do non-random behaviors even though it does not understand the input commands:
 
@@ -1308,72 +1377,9 @@ LangLfP-T is able to take in multiple languages as input thanks to knowledge tra
 </table>
 </div>
 
-<h3 id="repeated">Repeated Instructions</h3>
-
-Here we demonstrate repetitions of the same pair of actions multiple times: on the left the input sentences ("pick up the object and drop it vertically", "knock the object") is are performed twice in a row, on the right the ("open the drawer", "close the drawer") instructions are repeated 3 times in a row:
-
-<div class="l-page-outset" id="transfer_table">
-<table border="0" cellpadding="5" style="text-align: center">
-  <tr>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-114030_knock2.webm" type="video/webm"></video>
-      <figcaption>(upright object, knock object) x 2</figcaption>
-      </figure>
-    </td>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-184425_open-close-drawer-3x.webm" type="video/webm"></video>
-      <figcaption>(open drawer, close drawer) x 3</figcaption>
-      </figure>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/repeat/reapeat_iter52001_chain_demo0_lang-en_trial22_success1.0.mp4_frames.webm" type="video/webm"></video>
-      <figcaption>object (in, out) of shelf x 2</figcaption>
-      </figure>
-    </td>
-    <td>
-    </td>
-  </tr>
-</table>
-</div>
-
-<h3 id="more_examples">More examples of short sequences</h3>
-
-<figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
-
-<figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
-
-<figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
-
-<figure>
-  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames.webm" type="video/webm"></video>
-<figcaption>
-Figure n. [TODO]
-</figcaption>
-</figure>
 
 
-
-<h3 id="failures">More Failure Cases</h3>
+<h3 id="failures">J. More Failure Cases</h3>
 
 
 <figure>
