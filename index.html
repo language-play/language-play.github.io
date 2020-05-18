@@ -249,7 +249,7 @@
   <figure>
 
     <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%; margin:0 auto"
-           data-src="videos/live/playlang_20200326-193259_13tasks_bt200k.mp4" type="video/mp4">
+           data-src="videos/live/playlang_20200326-193259_13tasks_bt300k.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   <figcaption>
@@ -426,7 +426,7 @@ Prior work on <a href="https://learning-from-play.github.io/">Learning from Play
 In this work, we present a simple approach that extends LfP to the natural language conditioned setting. <a href="#fig:teaser">Figure 1</a> provides an overview, which has four main steps:
 <ol>
   <li>
-    <b>Cover the space with teleoperated play</b> (Figure 1, step 1): Collect a teleoperated <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt200k.mp4">"play"</a> dataset. These long temporal state-action logs are automatically relabeled into many short-horizon demonstrations, solving for image goals.
+    <b>Cover the space with teleoperated play</b> (Figure 1, step 1): Collect a teleoperated <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt300k.mp4">"play"</a> dataset. These long temporal state-action logs are automatically relabeled into many short-horizon demonstrations, solving for image goals.
   </li>
   <li>
     <b>Pair play with human language</b> (Figure 1, step 1): Typical setups pair instructions with optimal behavior. Instead, we pair any behavior from play after-the-fact with optimal <i>instructions</i>, a process we call Hindsight Instruction Pairing. This collection method is the first contribution of this paper. It yields a dataset of demonstrations, solving for human language goals.
@@ -446,7 +446,7 @@ Finally, we study <b>transfer learning from unlabeled text corpora to robotic ma
 
 
       <figure id="multilingual_teaser">
-        <video id="video:2" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%; margin:0 auto" data-src="videos/languages/multilingual_bt200k.mp4" type="video/mp4"></video>
+        <video id="video:2" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%; margin:0 auto" data-src="videos/languages/multilingual_bt300k.mp4" type="video/mp4"></video>
         <figcaption><b>Video 2: Following out-of-distribution instructions in zero shot, in 16 languages.</b></figcaption>
       </figure>
 
@@ -501,7 +501,7 @@ While relabeling automatically generates a large number of goal-directed demonst
 
 <h4 id="prelim2">3.2 Teleoperated play</h4>
 <p>
-Human teleoperated "play" collection <d-cite key="lynch2019play"></d-cite>  directly addresses the state space coverage problem. In this setting, an operator is no longer constrained to a set of predefined tasks, but rather engages in every available object manipulation in a scene <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt200k.mp4">(example of play data)</a>. The motivation is to fully cover state space using prior human knowledge of object affordances. During collection, the stream of onboard robot observations and actions are recorded, $\{(s_t, a_t)\}^{\infty}_{t=0}$, yielding an unsegmented dataset of unstructured but semantically meaningful behaviors, useful in a relabeled imitation learning context.
+Human teleoperated "play" collection <d-cite key="lynch2019play"></d-cite>  directly addresses the state space coverage problem. In this setting, an operator is no longer constrained to a set of predefined tasks, but rather engages in every available object manipulation in a scene <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt300k.mp4">(example of play data)</a>. The motivation is to fully cover state space using prior human knowledge of object affordances. During collection, the stream of onboard robot observations and actions are recorded, $\{(s_t, a_t)\}^{\infty}_{t=0}$, yielding an unsegmented dataset of unstructured but semantically meaningful behaviors, useful in a relabeled imitation learning context.
 </p>
 
 <h4 id="prelim3">3.3 Learning from play</h4>
@@ -527,7 +527,7 @@ From a statistical machine learning perspective, an obvious candidate for ground
 
 
 <figure>
-<video id="video:data" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/data/playground_all_32_sequences_6_bt200k.mp4" type="video/mp4"></video>
+<video id="video:data" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/data/playground_all_32_sequences_6_bt300k.mp4" type="video/mp4"></video>
   <figcaption>
   <b>Video 3. Examples of our training data:</b> We sample random experiences from teleoperated play, then ask humans: "what instruction would you give the agent to get from first frame to last frame?" 
   </figcaption>
@@ -671,7 +671,7 @@ Our experiments aim to answer the following questions:
 
 <h4 id="sec:sim_env">5.1 3D simulated environment</h4>
 <p>
-We conduct our experiments in the simulated 3D Playroom environment introduced in <d-cite key="lynch2019play"></d-cite>, shown in <a href="#fig:env">Figure 5</a>. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine <d-cite key="TodorovET12"></d-cite>. Videos <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt200k.mp4">here</a> of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See Appendix~\ref{sec:appendix_env} for details.
+We conduct our experiments in the simulated 3D Playroom environment introduced in <d-cite key="lynch2019play"></d-cite>, shown in <a href="#fig:env">Figure 5</a>. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine <d-cite key="TodorovET12"></d-cite>. Videos <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt300k.mp4">here</a> of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See Appendix~\ref{sec:appendix_env} for details.
 </p>
 
 <h4 id="sec:methods">5.2 Methods</h4>
@@ -736,21 +736,21 @@ We define a long horizon evaluation by significantly expanding upon the previous
 
 <p id="qualitative-langlfp"><b>Video 4: Test time human language conditioned visual control</b>. Here are examples of LangLfP following human instructions at test time from onboard observations. See more qualitative examples in <a href="#sec:qualitative_examples">Appendix G</a>.</p>
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-grasp_lift-close_drawer_iter96001_chain_demo0_lang-en_trial16_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-grasp_lift-close_drawer_iter96001_chain_demo0_lang-en_trial16_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <!-- <figcaption>
   LangLfP solves natural language specified tasks from onboard observations.
 </figcaption> -->
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_put_in_shelf-pull_out_shelf-put_in_shelf-pull_out_shelf-grasp_flat_iter64001_chain_demo0_lang-en_trial22_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_put_in_shelf-pull_out_shelf-put_in_shelf-pull_out_shelf-grasp_flat_iter64001_chain_demo0_lang-en_trial22_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <!-- <figcaption>
   LangLfP solves natural language specified tasks from onboard observations.
 </figcaption> -->
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-close_drawer-sliding-push_green-push_blue-push_red-close_sliding-drawer-close_drawer-sliding-drawer_iter128001_chain_demo0_lang-en_trial29_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/long_chains/long_chains_drawer-sweep-close_drawer-sliding-push_green-push_blue-push_red-close_sliding-drawer-close_drawer-sliding-drawer_iter128001_chain_demo0_lang-en_trial29_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <!-- <figcaption>
   LangLfP solves natural language specified tasks from onboard observations.
 </figcaption> -->
@@ -778,12 +778,12 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_drawer-sweep-close_drawer-sliding_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_drawer-sweep-close_drawer-sliding_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_drawer-sweep-close_drawer-sliding_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_drawer-sweep-close_drawer-sliding_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
   </tr>
@@ -807,12 +807,12 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_pull_out_shelf-sliding-push_blue-close_sliding_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_pull_out_shelf-sliding-push_blue-close_sliding_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_pull_out_shelf-sliding-push_blue-close_sliding_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_pull_out_shelf-sliding-push_blue-close_sliding_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
   </tr>
@@ -834,12 +834,12 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_knock-drawer-sweep-close_drawer_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_lfp_knock-drawer-sweep-close_drawer_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_knock-drawer-sweep-close_drawer_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/chain4/chain4_bc_knock-drawer-sweep-close_drawer_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
   </tr>
@@ -862,7 +862,7 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
 </p>
 
 <figure>
-  <video id="long-horizon" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/long/chain15_iter52001_chain_demo0_lang-en_trial4_success1.0.mp4_frames_bt200k.mp4" type="video/mp4">
+  <video id="long-horizon" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/long/chain15_iter52001_chain_demo0_lang-en_trial4_success1.0.mp4_frames_bt300k.mp4" type="video/mp4">
       Your browser does not support the video tag.
   </video>
   <figcaption>
@@ -889,7 +889,7 @@ Natural language conditioned control allows for new modes of interactive test ti
 </p>
 
 <figure>
-<video id="interactive" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/live/playlang_20200326-191101_interaction_bt200k.mp4" type="video/mp4"></video>
+<video id="interactive" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/live/playlang_20200326-191101_interaction_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 <b>Video 7: Interactive human language assistance: </b>The operator offers real time language guidance to the robot whose end-effector gets stuck, allowing it to solve for "press the red button".
 </figcaption>
@@ -905,13 +905,13 @@ In this section, we show that the operator can compose difficult new tasks on th
   <tr>
     <td>
       <figure>
-      <video id="fig:trash" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash_bt200k.mp4" type="video/mp4"></video>
+      <video id="fig:trash" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-154140_trash_bt300k.mp4" type="video/mp4"></video>
       <figcaption><b>Putting the object in the trash:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object in the trash".</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-      <video id="fig:top_of_shelf" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf_bt200k.mp4" type="video/mp4"></video>
+      <video id="fig:top_of_shelf" class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200325-162306_top_shelf_bt300k.mp4" type="video/mp4"></video>
       <figcaption><b>Putting the object on top of the shelf:</b> An operator is able to put the object in the trash by breaking down the task into 2 smaller subtasks with the following sentences; 1) "pick up the object" 2) "put the object on top of the shelf".</figcaption>
       </figure>
     </td>
@@ -955,24 +955,24 @@ To study this, we combine the original set of test instructions from Multi-18 wi
 
 <p id="multilingual"><b>Video 9: Transfer unlocks zero shot instruction following</b></p>
 
-<div class="l-body" id="demo">
+<!-- <div class="l-body" id="demo"> -->
 <figure>
 
   <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%; margin:0 auto"
-         data-src="videos/languages/multilingual_bt200k.mp4" type="video/mp4">
+         data-src="videos/languages/multilingual_bt300k.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 <figcaption>
 <b>Following instructions in 16 different languages</b>
 </figcaption>
 </figure>
-</div>
+<!-- </div> -->
 
-<div class="l-body" id="demo">
+<!-- <div class="l-body" id="demo"> -->
 <figure>
 
   <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 80%; margin:0 auto"
-         data-src="videos/languages/playlang_20200327-141234_fr_bin_bt200k.mp4" type="video/mp4">
+         data-src="videos/languages/playlang_20200327-141234_fr_bin_bt300k.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 <figcaption>
@@ -988,14 +988,14 @@ In this <a href="#failure1">video</a>, we see the policy make multiple attempts 
 </p>
 
 <figure id="failure1">
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_knock-grasp_flat_iter182001_chain_demo0_lang-en_trial3_success0.5.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_knock-grasp_flat_iter182001_chain_demo0_lang-en_trial3_success0.5.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 Failure: The agent times out attempting to lift the block.
 </figcaption>
 </figure>
 
 <figure id="failure2">
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_put_in_shelf-sliding_iter182001_chain_demo1_lang-en_trial2_success0.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_put_in_shelf-sliding_iter182001_chain_demo1_lang-en_trial2_success0.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 Failure: The agent encounters an arm configuration likely avoided by human operators during teleoperated play, leading to compounding error.
 </figcaption>
@@ -1252,13 +1252,13 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-114030_knock2_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-114030_knock2_bt300k.mp4" type="video/mp4"></video>
       <figcaption>(upright object, knock object) x 2</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-184425_open-close-drawer-3x_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/live/playlang_20200326-184425_open-close-drawer-3x_bt300k.mp4" type="video/mp4"></video>
       <figcaption>(open drawer, close drawer) x 3</figcaption>
       </figure>
     </td>
@@ -1266,7 +1266,7 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/repeat/reapeat_iter52001_chain_demo0_lang-en_trial22_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/repeat/reapeat_iter52001_chain_demo0_lang-en_trial22_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
       <figcaption>object (in, out) of shelf x 2</figcaption>
       </figure>
     </td>
@@ -1279,28 +1279,28 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
 <h4 id="more_examples">More examples of compound instructions</h4>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
-  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+  <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 Figure n. [TODO]
 </figcaption>
@@ -1354,12 +1354,12 @@ TransferLangLfP, trained on top of multilingual language embeddings, is able to 
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-drawer-sweep-close_drawer_iter182001_chain_demo0_lang-fr_trial1_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-drawer-sweep-close_drawer_iter182001_chain_demo0_lang-fr_trial1_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-drawer-sweep-close_drawer_iter330001_chain_demo0_lang-fr_trial1_success0.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-drawer-sweep-close_drawer_iter330001_chain_demo0_lang-fr_trial1_success0.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
   </tr>
@@ -1377,12 +1377,12 @@ TransferLangLfP, trained on top of multilingual language embeddings, is able to 
   <tr>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-sliding-push_green-close_sliding_iter182001_chain_demo0_lang-ja_trial2_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfpt/ood_lfpt_close_drawer-sliding-push_green-close_sliding_iter182001_chain_demo0_lang-ja_trial2_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
     <td>
       <figure>
-      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-sliding-push_green-close_sliding_iter330001_chain_demo0_lang-ja_trial3_success0.2.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+      <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 100%; margin:0 auto" data-src="videos/pixels/ood_lfp/ood_lfp_close_drawer-sliding-push_green-close_sliding_iter330001_chain_demo0_lang-ja_trial3_success0.2.mp4_frames_bt300k.mp4" type="video/mp4"></video>
       </figure>
     </td>
   </tr>
@@ -1406,21 +1406,21 @@ TransferLangLfP, trained on top of multilingual language embeddings, is able to 
 
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_sweep-grasp_lift_iter182001_chain_demo1_lang-en_trial5_success0.5.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_sweep-grasp_lift_iter182001_chain_demo1_lang-en_trial5_success0.5.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 The agent times out attempting to lift the block from the drawer.
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_sweep_right-grasp_flat_iter182001_chain_demo1_lang-en_trial1_success0.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/failures/failures_sweep_right-grasp_flat_iter182001_chain_demo1_lang-en_trial1_success0.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 The agent encounters an arm configuration likely avoided during teleoperated play, leading to compounding error.
 </figcaption>
 </figure>
 
 <figure>
-<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/failures/iter52001_chain_demo0_lang-en_trial5_success1.0.mp4_frames_bt200k.mp4" type="video/mp4"></video>
+<video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 70%; margin:0 auto" data-src="videos/failures/iter52001_chain_demo0_lang-en_trial5_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
 The agent makes several incorrect choices on the way to solving a task.
 </figcaption>
