@@ -305,7 +305,7 @@
       <ul><li><a href="#video:data"><u>Video 3:</u> Training Data</a></li></ul>
       <li><a href="#sec:mcil">4.2 Multicontext Imitation Learning</a></li>
       <li><a href="#sec:lang_lfp">4.3 LangLfP: following image and language goals.</a></li>
-      <li><a href="#sec:transfer_lang_lfp">4.4 Transferring knowledge from text corpora.</a></li>
+      <li><a href="#sec:transfer_lang_lfp">4.4 Transferring knowledge from text corpora</a></li>
     </ul>
     <div><a href="#experimental_setup">5. Experimental Setup</a></div>
     <!-- <ul> -->
@@ -374,7 +374,7 @@ We extend LfP by pairing short robot experiences from play with relevant human l
 To make this efficient, we introduce <i>multicontext imitation</i>, which allows us to train a single agent to follow image or language goals, then use just language conditioning at test time.
 This reduces the cost of language pairing to less than 1% of collected robot experience, with the majority of control still learned via self-supervised imitation.
 At test time, a single agent trained in this manner can perform many different robotic manipulation skills in a row in a 3D environment, directly from images, and specified only with natural language (e.g. "open the drawer...now pick up the block...now press the green button...") (<a href="#long-horizon">video</a>). Finally, we introduce a simple technique that transfers knowledge from large unlabeled text corpora to robotic learning.
-We find that transfer significantly improves downstream robotic manipulation. It also allows our agent to follow thousands of novel instructions at test time in zero shot, in 16 different languages. See videos of our experiments below.
+We find that transfer significantly improves downstream robotic manipulation. It also allows our agent to follow thousands of novel instructions at test time in zero shot, in 16 different languages. See <a href="#qualitative-langlfp">videos</a> of our experiments below.
 </p>
 
 <div class="l-page-outset" id="teaser">
@@ -628,7 +628,7 @@ While we could in principle use any architecture to implement the multicontext p
 At the beginning of a test episode the agent receives as input its onboard observation $O_t$ and a human-specified natural language goal $l$. The agent encodes $l$ in latent goal space $z$ using the trained sentence encoder $s_{\textrm{enc}}$. The agent then solves for the goal in closed loop, repeatedly feeding the current observation and goal to the learned policy $\pi_{\theta}(a|s_t, z)$, sampling actions, and executing them in the environment. The human operator can type a new language goal $l$ at any time. See picture in part 3 of <a href="#teaser">Figure 1</a>.
 </p>
 
-<h4 id="sec:transfer_lang_lfp">4.4 Transferring knowledge from generic text corpora.</h4>
+<h4 id="sec:transfer_lang_lfp">4.4 Transferring knowledge from generic text corpora</h4>
 <p>
 Large "in the wild" natural language corpora reflect substantial human knowledge about the world <d-cite key="zellers2018swag"></d-cite>. Many recent works have successfully transferred this knowledge to downstream tasks in NLP via pretrained embeddings <d-cite key="devlin2018bert,radford2019language,raffel2019exploring,1901.05287"></d-cite>. Can we achieve similar knowledge transfer to <i>robotic manipulation</i>?
 </p>
