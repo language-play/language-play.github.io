@@ -253,7 +253,7 @@
       Your browser does not support the video tag.
     </video>
   <figcaption>
-  <b>Video 1.</b> Following real-time human language instructions.</b>
+  <b>Video 1.</b> Our agent following real-time human language instructions.</b>
   </figcaption>
   </figure>
   </div>
@@ -759,7 +759,7 @@ We define a long horizon evaluation by significantly expanding upon the previous
 <h4 id="sec:long_horizon_results">6.2 Long Horizon Results</h4>
 <p>
 <b>Goal image conditioned comparison.</b>
-In <a href="#tab:main_results">Table 1</a>, we find that LangLfP matches the performance of LfP on all benchmarks within margin of error, but does so with entirely from natural language task specification. Notably, this is achieved with only $\thicksim$0.1% of play requiring language pairing, with the majority of control still learned from self-supervised imitation. This is important because it shows our simple framework allows open-ended robotic manipulation to be combined with open-ended text conditioning with minimal additional human supervision. This was the main question of this work. We attribute these results to our multicontext learning setup, which allows statistical strength to be shared over multiple datasets, some plentiful and some scarce.
+In <a href="#tab:main_results">Table 1</a>, we find that LangLfP matches the performance of LfP on all benchmarks within margin of error, but does so with entirely from natural language task specification. Notably, this is achieved with only $\thicksim$0.1% of play requiring language pairing, with the majority of control still learned from self-supervised imitation. This is important because it shows our simple framework allows open-ended robotic manipulation to be combined with open-ended text conditioning with minimal additional human supervision. This was the main question of this work. We attribute these results to our multicontext learning setup, which allows statistical strength to be shared over multiple datasets, some plentiful and some scarce. See <a href="#qualitative-langlfp">Video 4</a> for examples of a single LangLfP agent following many natural language instructions from onboard observations.
 </p>
 
 <p><b>Conventional multitask imitation comparison.</b>
@@ -1103,7 +1103,7 @@ To train multicontext LMP, we simply replace the goal conditioning on $s_g$ ever
 
 <h4 id="sec:appendix_training">B.5 Training Details</h4>
 <p>
-At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in <a href="#fig:im_goal_lmp">Figure 16</a>. The language goal forward pass is described in <a href="#fig:lang_goal_lmp">Figure 17</a>. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything&mdash;perception networks, TODO $g_{\textrm{enc}}$, $s_{\textrm{enc}}$, posterior, prior, and policy&mdash;end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in <a href="#tab:training_hparams">Table 4</a>.
+At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in <a href="#fig:im_goal_lmp">Figure 16</a>. The language goal forward pass is described in <a href="#fig:lang_goal_lmp">Figure 17</a>. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything&mdash;perception networks, $g_{\textrm{enc}}$, $s_{\textrm{enc}}$, posterior, prior, and policy&mdash;end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in <a href="#tab:training_hparams">Table 4</a>.
 </p>
 
 <div class="l-body-outset" id="env">
@@ -1300,28 +1300,24 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
 <figure>
 <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_grasp_lift-close_drawer_iter182001_chain_demo0_lang-en_trial0_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
-Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
 <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_put_in_shelf-sliding_iter182001_chain_demo2_lang-en_trial0_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
-Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
 <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep-grasp_lift_iter182001_chain_demo0_lang-en_trial2_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
-Figure n. [TODO]
 </figcaption>
 </figure>
 
 <figure>
   <video class="b-lazy" loop autoplay playsinline muted style="display: block; width: 88%; margin:0 auto" data-src="videos/pixels/chain2/chain2_sweep_right-grasp_flat_iter182001_chain_demo0_lang-en_trial4_success1.0.mp4_frames_bt300k.mp4" type="video/mp4"></video>
 <figcaption>
-Figure n. [TODO]
 </figcaption>
 </figure>
 
