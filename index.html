@@ -582,7 +582,7 @@ The full MCIL objective averages this per-dataset objective over all datasets at
 </figure>
 </div>
 <p>
-and the policy and all goal encoders are trained end to end to maximize $\mathcal{L}_{\operatorname{MCIL}}$.  See <a href="#alg1">Algorithm 1</a> for full minibatch training pseudocode.
+and the policy and all goal encoders are trained end to end to maximize $\mathcal{L}_{\textrm{MCIL}}$.  See <a href="#alg1">Algorithm 1</a> for full minibatch training pseudocode.
 <p/>
 <p>
 Multicontext learning has properties that make it broadly useful beyond this paper. While we set $\mathcal{D}  = \{D_{\mathrm{play}}, D_{\mathrm{(play,lang)}}\}$ in this paper, this approach allows more generally for training over any set of imitation datasets with different descriptions&mdash;e.g. task id, language, human video demonstration, speech, etc.
@@ -605,22 +605,22 @@ At a high level, LangLfP trains a single multicontext policy $\pi_\theta(a_t | s
 </p>
 
 <p>
-<b>Perception module</b>. In our experiments, $\tau$ in each example consists of $\{(O_t, a_t)\}_t^{|\tau|}$, a sequence of onboard observations $O_t$ and actions. Each observation contains a high-dimensional image and internal proprioceptive sensor reading. A learned perception module $P_{\theta}$ maps each observation tuple to a low-dimensional embedding, e.g. $s_t = P_{\theta}(O_t)$, fed to the rest of the network. See <a href="#sec:appendix_perception">Appendix B.1</a> for details on our perception architecture. This perception module is shared with $g_{\textrm{enc}}$, which defines an additional network on top to map encoded goal observation $s_g$ to a point in $z$ space. See Appendix~\ref{sec:appendix_genc} for details.
+<b>Perception module</b>. In our experiments, $\tau$ in each example consists of $\{(O_t, a_t)\}_t^{|\tau|}$, a sequence of onboard observations $O_t$ and actions. Each observation contains a high-dimensional image and internal proprioceptive sensor reading. A learned perception module $P_{\theta}$ maps each observation tuple to a low-dimensional embedding, e.g. $s_t = P_{\theta}(O_t)$, fed to the rest of the network. See <a href="#sec:appendix_perception">Appendix B.1</a> for details on our perception architecture. This perception module is shared with $g_{\textrm{enc}}$, which defines an additional network on top to map encoded goal observation $s_g$ to a point in $z$ space. See <a href="#sec:appendix_genc">Appendix B.2</a> for details.
 </p>
 
 <p>
 <b>Language module</b>.
-Our language goal encoder $s_{\textrm{enc}}$ tokenizes raw text $l$ into subwords <d-cite key="sennrich2015neural"></d-cite>, retrieves subword embeddings from a lookup table, then summarizes embeddings into a point in $z$ space. Subword embeddings are randomly initialized at the beginning of training and learned end-to-end by the final imitation loss. See Appendix~\ref{sec:appendix_nlu} for $s_{\textrm{enc}}$ implementation details.
+Our language goal encoder $s_{\textrm{enc}}$ tokenizes raw text $l$ into subwords <d-cite key="sennrich2015neural"></d-cite>, retrieves subword embeddings from a lookup table, then summarizes embeddings into a point in $z$ space. Subword embeddings are randomly initialized at the beginning of training and learned end-to-end by the final imitation loss. See <a href="#sec:appendix_nlu">Appendix B.3</a> for $s_{\textrm{enc}}$ implementation details.
 </p>
 
 <p>
 <b>Control module</b>.
-While we could in principle use any architecture to implement the multicontext policy $\pi_\theta(a_t | s_t, z)$, we use Latent Motor Plans (LMP) <d-cite key="lynch2019play"></d-cite>. LMP is a goal-directed imitation architecture that uses latent variables to model the large amount of multimodality inherent to freeform imitation datasets. Concretely, it is a sequence-to-sequence conditional variational autoencoder (seq2seq CVAE) autoencoding contextual demonstrations through a latent "plan" space. The decoder is a goal conditioned policy. As a CVAE, LMP lower bounds maximum likelihood contextual imitation (<a href="#eq:gcbc">Equation 1</a>), and is easily adapted to our multicontext setting. See Appendix~\ref{sec:appendix_control} for details on this module.
+While we could in principle use any architecture to implement the multicontext policy $\pi_\theta(a_t | s_t, z)$, we use Latent Motor Plans (LMP) <d-cite key="lynch2019play"></d-cite>. LMP is a goal-directed imitation architecture that uses latent variables to model the large amount of multimodality inherent to freeform imitation datasets. Concretely, it is a sequence-to-sequence conditional variational autoencoder (seq2seq CVAE) autoencoding contextual demonstrations through a latent "plan" space. The decoder is a goal conditioned policy. As a CVAE, LMP lower bounds maximum likelihood contextual imitation (<a href="#eq:gcbc">Equation 1</a>), and is easily adapted to our multicontext setting. See <a href="#sec:appendix_control">Appendix B.4</a> for details on this module.
 </p>
 
 <p>
 <b>LangLfP training</b>.
-<a href="#fig:lfp_vs_langlfp">Figure 3</a> compares LangLfP training to original LfP training. At each training step we sample a batch of image goal tasks from $D_{\mathrm{play}}$ and a batch of language goal tasks from $D_{\mathrm{(play,lang)}}$. Observations are encoded into state space using the perception module $P_{\theta}$. Image and language goals are encoded into latent goal space $z$ using encoders $g_{\textrm{enc}}$ and $s_{\textrm{enc}}$. We then use $\pi_\theta(a_t | s_t, z)$ to compute the multicontext imitation objective, averaged over both task descriptions. We take a combined gradient step with respect to all modules&mdash;perception, language, and control&mdash;optimizing the whole architecture end-to-end as a single neural network. See a details in Appendix~\ref{sec:appendix_training}.
+<a href="#fig:lfp_vs_langlfp">Figure 3</a> compares LangLfP training to original LfP training. At each training step we sample a batch of image goal tasks from $D_{\mathrm{play}}$ and a batch of language goal tasks from $D_{\mathrm{(play,lang)}}$. Observations are encoded into state space using the perception module $P_{\theta}$. Image and language goals are encoded into latent goal space $z$ using encoders $g_{\textrm{enc}}$ and $s_{\textrm{enc}}$. We then use $\pi_\theta(a_t | s_t, z)$ to compute the multicontext imitation objective, averaged over both task descriptions. We take a combined gradient step with respect to all modules&mdash;perception, language, and control&mdash;optimizing the whole architecture end-to-end as a single neural network. See a details in <a href="#sec:appendix_training">Appendix B.5</a>.
 </p>
 
 <p>
@@ -648,7 +648,7 @@ Note, given the complexity of natural language, it is likely that robots in open
 </p>
 
 <p>
-To test these hypotheses, we introduce a simple transfer learning technique, generally applicable to any natural language conditioned agent. We assume access to a neural language model, pretrained on large unlabeled text corpora, capable of mapping full sentences $l$ to points in a semantic vector space $v \in \mathbb{R}^d$. Transfer is enabled simply by encoding language inputs $l$ to the policy at training and test time in $v$ before feeding to the rest of the network. We augment LangLfP in this way, which we refer to as <i>TransferLangLfP</i>. See Appendix~\ref{sec:appendix_nlu} for details.
+To test these hypotheses, we introduce a simple transfer learning technique, generally applicable to any natural language conditioned agent. We assume access to a neural language model, pretrained on large unlabeled text corpora, capable of mapping full sentences $l$ to points in a semantic vector space $v \in \mathbb{R}^d$. Transfer is enabled simply by encoding language inputs $l$ to the policy at training and test time in $v$ before feeding to the rest of the network. We augment LangLfP in this way, which we refer to as <i>TransferLangLfP</i>. See Appendix<a href="#sec:appendix_nlu">Appendix B.3</a> for details.
 </p>
 
 <h3 id="experimental_setup">5. Experimental Setup</h3>
@@ -671,12 +671,12 @@ Our experiments aim to answer the following questions:
 
 <h4 id="sec:sim_env">5.1 3D simulated environment</h4>
 <p>
-We conduct our experiments in the simulated 3D Playroom environment introduced in <d-cite key="lynch2019play"></d-cite>, shown in <a href="#fig:env">Figure 5</a>. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine <d-cite key="TodorovET12"></d-cite>. Videos <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360_bt300k.mp4">here</a> of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See Appendix~\ref{sec:appendix_env} for details.
+We conduct our experiments in the simulated 3D Playroom environment introduced in <d-cite key="lynch2019play"></d-cite>, shown in <a href="#fig:env">Figure 5</a>. The environment contains a desk with a sliding door and drawer that can be opened and closed. On the desk is a movable rectangular block and 3 buttons that can be pushed to control different colored lights. Next to the desk is a trash bin. Physics are simulated using the MuJoCo physics engine <d-cite key="TodorovET12"></d-cite>. Videos <a href="https://learning-from-play.github.io/assets/mp4/play_data516x360.mp4">here</a> of play data collected in this environment give a good idea of the available complexity. In front of the desk is a realistic simulated 8-DOF robot (arm and parallel gripper). The agent perceives its surroundings from egocentric high-dimensional RGB video sensors. It additionally has access to continuous internal proprioceptive sensors, relaying the cartesian position and rotation of its end effector and gripper angles. We modify the environment to include a text channel which the agent observes at each timestep, allowing humans to type unconstrained language commands. The agent must perform high-frequency, closed-loop continuous control to solve for user-described manipulation tasks, sending continuous position, rotation, and gripper commands to its arm at 30hz. See <a href="#sec:appendix_env">Appendix C</a> for details.
 </p>
 
 <h4 id="sec:methods">5.2 Methods</h4>
 <p>
-In our experiments, we compare the following methods (more details in Appendix~\ref{sec:appendix_models}):
+In our experiments, we compare the following methods (more details in <a href="#sec:appendix_models">Appendix E</a>):
 <ul>
   <li>
     <b>LangBC</b> ("language, but no play"): a baseline natural language conditioned multitask imitation policy <d-cite key="rahmatizadeh2018vision"></d-cite>, trained on $D_{\mathrm{(play,lang)}}$, 100 expert demonstrations for each of the 18 evaluation tasks paired with hindsight instructions.
@@ -701,7 +701,7 @@ We define two sets of experiments for each baseline: pixel experiments, where mo
 </p>
 
 <p>
-Note that all baselines can be seen as maximizing the same multicontext imitation objective, differing only on the particular composition of data sources. Therefore, to perform a controlled comparison, we use the same imitation architecture (details in \sect{appendix_architecture}) across all baselines. See Appendix~\ref{sec:appendix_dataset} for a detailed description of all data sources.
+Note that all baselines can be seen as maximizing the same multicontext imitation objective, differing only on the particular composition of data sources. Therefore, to perform a controlled comparison, we use the same imitation architecture (details in <a href="#appendix_architecture">Appendix B</a>) across all baselines. See <a href="#sec:appendix_dataset">Appendix D</a> for a detailed description of all data sources.
 </p>
 
 <!-- COREY ABOVE THIS LINE -->
@@ -1019,7 +1019,7 @@ Simple maximum likelihood makes it easy to learn large capacity perception and c
 Robots that can learn to relate human language to their perception and actions would be especially useful in open-world environments.
 This work asks: provided real humans play a direct role in this learning process, what is the most efficient way to go about it?
 With this motivation, we introduced LangLfP, an extension of LfP trained both on relabeled goal image play and play paired with human language instructions. To reduce the cost of language pairing, we introduced Multicontext Imitation Learning, which allows a single policy to be trained over both goal image and language tasks, then use just language conditioning at test time.
-Crucially, this made it so that less than  1% collected robot experience required language pairing to enable the new mode of conditioning. In experiments, we found that a single policy trained with LangLfP can solve many 3D robotic manipulation tasks over a long horizon, from onboard sensors, and specified only via human language. This represents a considerably more complex scenario than prior work in instruction following. Finally, we introduced a simple technique allowing for knowledge transfer from large unlabeled text corpora to robotic manipulation. We found that this significantly improved downstream visual control---the first instance to our knowledge of this kind of transfer. It also equipped our agent with the ability to follow thousands of instructions outside its training set in zero shot, in 16 different languages.
+Crucially, this made it so that less than  1% collected robot experience required language pairing to enable the new mode of conditioning. In experiments, we found that a single policy trained with LangLfP can solve many 3D robotic manipulation tasks over a long horizon, from onboard sensors, and specified only via human language. This represents a considerably more complex scenario than prior work in instruction following. Finally, we introduced a simple technique allowing for knowledge transfer from large unlabeled text corpora to robotic manipulation. We found that this significantly improved downstream visual control&mdash;the first instance to our knowledge of this kind of transfer. It also equipped our agent with the ability to follow thousands of instructions outside its training set in zero shot, in 16 different languages.
 </p>
 
 <!-- appendix -------------------------------------------------------------------------------------------------------------------- -->
@@ -1047,7 +1047,13 @@ Crucially, this made it so that less than  1% collected robot experience require
 
 <h3 id="sec:appendix_architecture">B. LangLfP Implementation Details</h3>
 <p>
-Below we describe the networks we use for perception, natural language understanding, and control---all trained end-to-end as a single neural network to maximize our multicontext imitation objective. We stress that this is only one implementation of possibly many for LangLfP, which is a general high-level framework 1) combining relabeled play, 2) play paired with language, and 3) multicontext imitation.
+Below we describe the networks we use for perception, natural language understanding, and control&mdash;all trained end-to-end as a single neural network to maximize our multicontext imitation objective. We stress that this is only one implementation of possibly many for LangLfP, which is a general high-level framework 1) combining relabeled play, 2) play paired with language, and 3) multicontext imitation.
+</p>
+
+<h4 id="sec:appendix_perception">B.1 Perception Module</h4>
+<p>
+We map raw observations (image and proprioception) to low dimensional perceptual embeddings that are fed to the rest of the network. To do this we use the perception module described in <a href="#fig:perception_sentence_emb">Figure 9</a>. We pass the image through the network described in <a href="#tab:vision_net_hparams">Table 3</a>, obtaining a 64-dimensional visual embedding. We then concatenate this with the proprioception observation (normalized to zero mean, unit variance using training statistics). This results in a combined perceptual embedding of size 72.
+This perception module is trained end to end to maximize the final imitation loss. We do no photometric augmentation on the image inputs, but anticipate this may lead to better performance.
 </p>
 
 <div class="l-body" id="env">
@@ -1058,12 +1064,6 @@ Below we describe the networks we use for perception, natural language understan
   </figcaption>
 </figure>
 </div>
-
-<h4 id="sec:appendix_perception">B.1 Perception Module</h4>
-<p>
-We map raw observations (image and proprioception) to low dimensional perceptual embeddings that are fed to the rest of the network. To do this we use the perception module described in <a href="#fig:perception_sentence_emb">Figure 9</a>. We pass the image through the network described in <a href="#tab:vision_net_hparams">Table 3</a>, obtaining a 64-dimensional visual embedding. We then concatenate this with the proprioception observation (normalized to zero mean, unit variance using training statistics). This results in a combined perceptual embedding of size 72.
-This perception module is trained end to end to maximize the final imitation loss. We do no photometric augmentation on the image inputs, but anticipate this may lead to better performance.
-</p>
 
 <div class="l-body" id="env">
 <figure>
@@ -1103,8 +1103,27 @@ To train multicontext LMP, we simply replace the goal conditioning on $s_g$ ever
 
 <h4 id="sec:appendix_training">B.5 Training Details</h4>
 <p>
-At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in <a href="#fig:im_goal_lmp">Figure 16</a>. The language goal forward pass is described in <a href="#fig:lang_goal_lmp">Figure 17</a>. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything---perception networks, TODO $g_{\textrm{enc}}$, $s_{\textrm{enc}}$, posterior, prior, and policy---end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in <a href="#tab:training_hparams">Table 4</a>.
+At each training step, we compute two contextual imitation losses: image goal and language goal. The image goal forward pass is described in <a href="#fig:im_goal_lmp">Figure 16</a>. The language goal forward pass is described in <a href="#fig:lang_goal_lmp">Figure 17</a>. We share the perception network and LMP networks (posterior, prior, and policy) across both steps. We average minibatch gradients from image goal and language goal passes and we train everything&mdash;perception networks, TODO $g_{\textrm{enc}}$, $s_{\textrm{enc}}$, posterior, prior, and policy&mdash;end-to-end as a single neural network to maximize the combined training objective. We describe all training hyperparameters in <a href="#tab:training_hparams">Table 4</a>.
 </p>
+
+<div class="l-body-outset" id="env">
+<figure>
+<img id="fig:im_goal_lmp" src="figs/appendix/fig16_imlfp.png" style="margin: 0; width: 100%;"/>
+  <figcaption>
+  <b>Figure 16. Latent image goal LMP:</b> This image goal conditioned forward pass of multicontext LMP.
+  1) Map sequence of raw observations $O_t$ to perceptual embeddings (see <a href="#fig:perception_sentence_emb">Figure 9</a>). 2) Map image goal to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent image goal, and latent plan. Note perception net, posterior, prior, and policy are shared with language goal forward pass.
+  </figcaption>
+</figure>
+</div>
+
+<div class="l-body-outset" id="env">
+<figure>
+<img id="fig:lang_goal_lmp" src="figs/appendix/fig17_langlfp.png" style="margin: 0; width: 100%;"/>
+  <figcaption>
+  <b>Figure 17. Latent language goal LMP:</b> This describes the language goal conditioned forward pass of multicontext LMP. 1) Map sequence of raw observations $O_t$ to perceptual embeddings (see <a href="#fig:perception_sentence_emb">Figure 9</a>). 2) Map language observation to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent language goal, and latent plan. Note perception net, posterior, prior, and policy are shared with image goal LMP.
+  </figcaption>
+</figure>
+</div>
 
 <div class="l-body-outset" id="env">
 <figure>
@@ -1317,26 +1336,6 @@ We study how the performance of LangLfP scales with the number of collected lang
 <img id="fig:lang_ablation" src="figs/appendix/fig15_success_vs_amount.png" style="margin: 0; width: 80%;"/>
   <figcaption>
   <b>Figure 15. 18-task success vs amount of human language pairs.</b>
-  </figcaption>
-</figure>
-</div>
-
-
-<div class="l-body-outset" id="env">
-<figure>
-<img id="fig:im_goal_lmp" src="figs/appendix/fig16_imlfp.png" style="margin: 0; width: 100%;"/>
-  <figcaption>
-  <b>Figure 16. Latent image goal LMP:</b> This image goal conditioned forward pass of multicontext LMP.
-  1) Map sequence of raw observations $O_t$ to perceptual embeddings (see <a href="#fig:perception_sentence_emb">Figure 9</a>). 2) Map image goal to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent image goal, and latent plan. Note perception net, posterior, prior, and policy are shared with language goal forward pass.
-  </figcaption>
-</figure>
-</div>
-
-<div class="l-body-outset" id="env">
-<figure>
-<img id="fig:lang_goal_lmp" src="figs/appendix/fig17_langlfp.png" style="margin: 0; width: 100%;"/>
-  <figcaption>
-  <b>Figure 17. Latent language goal LMP:</b> This describes the language goal conditioned forward pass of multicontext LMP. 1) Map sequence of raw observations $O_t$ to perceptual embeddings (see <a href="#fig:perception_sentence_emb">Figure 9</a>). 2) Map language observation to latent goal space. 3) Map full state-action sequence to recognized plan through posterior. 4) Map initial state and latent goal through prior network to distribution over plans for achieving goal. 5) Minimize KL divergence between posterior and prior. 6) Compute maximum likelihood action reconstruction loss by decoding plan into actions with teacher forcing. Each action prediction is conditioned on current perceptual embedding, latent language goal, and latent plan. Note perception net, posterior, prior, and policy are shared with image goal LMP.
   </figcaption>
 </figure>
 </div>
