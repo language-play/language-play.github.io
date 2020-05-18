@@ -318,8 +318,8 @@
       <li><a href="#sec:long_horizon_results">6.2 Long Horizon Results</a></li>
       <ul>
         <li><a href="#qualitative-langlfp"><u>Video 4:</u> Test time human language conditioned visual control</a></li>
-        <li><a href="#15tasks"><u>Video 5:</u> 15 tasks in a row</a></li>
-        <li><a href="#lfp-vs-bc"><u>Video 6:</u> Play vs. conventional demonstrations</a></li>
+        <li><a href="#lfp-vs-bc"><u>Video 5:</u> Play vs. conventional demonstrations</a></li>
+        <li><a href="#15tasks"><u>Video 6:</u> 15 tasks in a row</a></li>
         <li><a href="#human_assistance"><u>Video 7:</u> Language unlocks human assistance</a></li>
         <li><a href="#ood_tasks"><u>Video 8:</u> Composing new tasks with language</a></li>
       </ul>
@@ -764,10 +764,10 @@ In <a href="#tab:main_results">Table 1</a>, we find that LangLfP matches the per
 
 <p><b>Conventional multitask imitation comparison.</b>
 We see in <a href="#tab:main_results">Table 1</a> and <a href="#fig:long_horizon">Figure 6</a> that LangLfP outperforms LangBC on every benchmark. Notably, this result holds even when the play dataset is artificially restricted to the same size as the conventional demonstration dataset (Restricted LangLfP vs LangBC). This is important because it shows that models trained on top of relabeled play generalize much better than those trained on narrow predefined task demonstrations, especially in the most difficult long horizon setting.
-Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the training sources is striking. We find that play-trained policies can of transition well between tasks and recover from initial failures, while narrow demo-trained policies quickly encounter compounding imitation error and never recover. We believe this highlights the importance of training data that covers state space, including large numbers of tasks as well as non task-specific behavior like transitions.
+Qualitatively (<a href="#lfp-vs-bc">Video 5</a>), the difference between the training sources is striking. We find that play-trained policies can of transition well between tasks and recover from initial failures, while narrow demo-trained policies quickly encounter compounding imitation error and never recover. We believe this highlights the importance of training data that covers state space, including large numbers of tasks as well as non task-specific behavior like transitions.
 </p>
 
-<p id="lfp-vs-bc"><b>Video 6: Play vs. conventional demonstrations</b>. Here we qualitatively compare LangLfP to LangBC by providing each with the exact same set of 4 instructions.</p>
+<p id="lfp-vs-bc"><b>Video 5: Play vs. conventional demonstrations</b>. Here we qualitatively compare LangLfP to LangBC by providing each with the exact same set of 4 instructions.</p>
 
 <div class="l-page-outset" id="lfpvsbc_table">
 <table border="0" cellpadding="5" style="text-align: center">
@@ -858,7 +858,7 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
 </div>
 
 
-<p id="15tasks"><b>Following 15 instructions in a row.</b> We present qualitative results in <a href="#long-horizon">Video 5</a> showing that our agent can follow 15 natural language instructions in a row provided by a human. We believe success in this difficult scenario offers encouragement that simple high capacity imitation learning can be competitive with more complicated long horizon reinforcement learning methods.
+<p id="15tasks"><b>Following 15 instructions in a row.</b> We present qualitative results in <a href="#long-horizon">Video 6</a> showing that our agent can follow 15 natural language instructions in a row provided by a human. We believe success in this difficult scenario offers encouragement that simple high capacity imitation learning can be competitive with more complicated long horizon reinforcement learning methods.
 </p>
 
 <figure>
@@ -866,7 +866,7 @@ Qualitatively (\href{\website/\#lfp-vs-bc}{videos}), the difference between the 
       Your browser does not support the video tag.
   </video>
   <figcaption>
-  <b>Video 5. LangLfP follows 15 instructions in a row.</b>
+  <b>Video 6. LangLfP follows 15 instructions in a row.</b>
   </figcaption>
 </figure>
 
@@ -950,7 +950,7 @@ In <a href="#tab:main_results">Table 1</a> and <a href="#fig:systematic_transfer
 <p><b>Following out of distribution "synonym instructions"</b>. To study whether our proposed transfer augmentation allows an agent to follow out-of-distribution instructions, we replace one or more words in each Multi-18 instruction with a synonym outside training, e.g. "drag the block from the shelf" $\xrightarrow{}$ "<i>retrieve</i> the <i>brick</i> from the <i>cupboard</i>". Enumerating all substitutions results in a set of 14,609 out-of-distribution instructions covering all 18 tasks. We evaluate a random policy, LangLfP, and TransferLangLfP on this benchmark, OOD-syn, reporting the results in <a href="#tab:ood">Table 2</a>. Success is reported with confidence intervals over 3 seeded training runs. We see while LangLfP is able to solve some novel tasks by inferring meaning from context (e.g. "pick up the block" and "pick up the brick" might reasonably map to the same task), its performance degrades significantly. TransferLangLfP on the other hand, generalizes substantially better. This shows that the simple transfer learning technique we propose greatly magnifies the test time scope of an instruction following agent, allowing it to follow thousands more user instructions than it was trained with. Given the inherent complexity of language, this is an important real world consideration.
 </p>
 <p><b>Following out of distribution instructions in 16 different languages.</b> Here we study a rather extreme case of out-of-distribution generalization: following instructions in languages not seen during training (e.g. French, Mandarin, German, etc.).
-To study this, we combine the original set of test instructions from Multi-18 with the expanded synonym instruction set OOD-syn, then translate both into 16 languages using the Google translate API. This results in $\thicksim$240k out-of-distribution instructions covering all 18 tasks. We evaluate the previous methods on this cross-lingual manipulation benchmark, OOD-16-lang, reporting success in <a href="#tab:ood">Table 2</a>. We see that when LangLfP receives instructions with no training overlap, it resorts to producing <a href="#transferlanglfp_vs_langlfp">maximum likelihood play actions</a>. This results in some spurious task success, but performance degrades materially. Remarkably, TransferLangLfP solves a substantial portion of these in zero shot, degrading only slightly from the english-only benchmark. See \href{\website/\#multilingual}{videos} of TransferLangLfP following instructions in 16 novel languages. These results show that simply training high capacity imitation policies on top of pretrained embedding spaces affords agents powerful zero shot generalization capabilities. While practically, one could imagine simply translating these instructions first into English before feeding them to our system, this demonstrates that a large portion of the necessary analogical reasoning can happen internal to the agent in a manner that is end-to-end differentiable. While in this paper we do not finetune the embeddings in this manner, an exciting direction for future work would be to see if grounding language embeddings in embodied imitation improves representation learning over text-only inputs.
+To study this, we combine the original set of test instructions from Multi-18 with the expanded synonym instruction set OOD-syn, then translate both into 16 languages using the Google translate API. This results in $\thicksim$240k out-of-distribution instructions covering all 18 tasks. We evaluate the previous methods on this cross-lingual manipulation benchmark, OOD-16-lang, reporting success in <a href="#tab:ood">Table 2</a>. We see that when LangLfP receives instructions with no training overlap, it resorts to producing <a href="#transferlanglfp_vs_langlfp">maximum likelihood play actions</a>. This results in some spurious task success, but performance degrades materially. Remarkably, TransferLangLfP solves a substantial portion of these in zero shot, degrading only slightly from the english-only benchmark. See <a href="#multilingual">Video 9</a>, showing TransferLangLfP following instructions in 16 novel languages. These results show that simply training high capacity imitation policies on top of pretrained embedding spaces affords agents powerful zero shot generalization capabilities. While practically, one could imagine simply translating these instructions first into English before feeding them to our system, this demonstrates that a large portion of the necessary analogical reasoning can happen internal to the agent in a manner that is end-to-end differentiable. While in this paper we do not finetune the embeddings in this manner, an exciting direction for future work would be to see if grounding language embeddings in embodied imitation improves representation learning over text-only inputs.
 </p>
 
 <p id="multilingual"><b>Video 9: Transfer unlocks zero shot instruction following</b></p>
