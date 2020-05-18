@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <script src="https://distill.pub/template.v2.js"></script> -->
   <script src="lib/template.v2.js"></script>
-  <!-- <script src="lib/blazy.js"></script> -->
-  <!-- <script> -->
-  <!--   var bLazy = new Blazy({ -->
-  <!--       success: function(){ -->
-  <!--           updateCounter(); -->
-  <!--       } -->
-  <!--   }); -->
-  <!--   var imageLoaded = 0; -->
-  <!--   function updateCounter() { -->
-  <!--       imageLoaded++; -->
-  <!--       console.log("blazy image loaded: "+imageLoaded); -->
-  <!--   } -->
-  <!-- </script> -->
+  <script src="lib/blazy.js"></script>
+  <script>
+    var bLazy = new Blazy({
+        success: function(){
+            updateCounter();
+        }
+    });
+    var imageLoaded = 0;
+    function updateCounter() {
+        imageLoaded++;
+        console.log("blazy image loaded: "+imageLoaded);
+    }
+  </script>
 
 
   <style>
