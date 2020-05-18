@@ -26,46 +26,32 @@
 
 <body>
 
-  <d-front-matter>
-    <script type="text/json">{
-      "title": "Grounding Language in Play",
-      "description": "Learning natural language conditioned control from play.",
-      "authors": [
-        {
-          "author": "Corey Lynch*",
-          "authorURL": "https://coreylynch.github.io",
-          "affiliation": "Robotics at Google",
-          "affiliationURL": "https://g.co/robotics"
-        },
-        {
-          "author": "Pierre Sermanet*",
-          "authorURL": "https://sermanet.github.io/home",
-          "affiliation": "Robotics at Google",
-          "affiliationURL": "https://g.co/robotics"
-        },
-        {
-          "author": "* equal contribution",
-            "authorURL": "",
-            "affiliation": "",
-          "affiliationURL": ""
-        }
-      ],
-      "katex": {
-        "delimiters": [
-          {
-            "left": "$",
-            "right": "$",
-            "display": false
-          },
-          {
-            "left": "$$",
-            "right": "$$",
-            "display": true
-          }
-        ]
-      }
-    }</script>
-  </d-front-matter>
+  <!-- <d-front-matter> -->
+  <!--   <script type="text/json">{ -->
+  <!--     "title": "Grounding Language in Play", -->
+  <!--     "description": "Learning natural language conditioned control from play.", -->
+  <!--     "authors": [ -->
+  <!--       { -->
+  <!--         "author": "Corey Lynch*", -->
+  <!--         "authorURL": "https://coreylynch.github.io", -->
+  <!--         "affiliation": "Robotics at Google", -->
+  <!--         "affiliationURL": "https://g.co/robotics" -->
+  <!--       }, -->
+  <!--       { -->
+  <!--         "author": "Pierre Sermanet*", -->
+  <!--         "authorURL": "https://sermanet.github.io/home", -->
+  <!--         "affiliation": "Robotics at Google", -->
+  <!--         "affiliationURL": "https://g.co/robotics" -->
+  <!--       }, -->
+  <!--       { -->
+  <!--         "author": "* equal contribution", -->
+  <!--           "authorURL": "", -->
+  <!--           "affiliation": "", -->
+  <!--         "affiliationURL": "" -->
+  <!--       } -->
+  <!--     ] -->
+  <!--   }</script> -->
+  <!-- </d-front-matter> -->
 
   <style>
     figure {
@@ -216,10 +202,10 @@
         grid-column-end: 14; 
       }
     }
-    /* so title is on one line */
-    d-title h1, d-title p {
-      grid-column: middle;
-    }
+    /* /\* so title is on one line *\/ */
+    /* d-title h1, d-title p { */
+    /*   grid-column: middle; */
+    /* } */
 
   </style>
   <script>
@@ -236,13 +222,13 @@
   <!-- <p>Combining open-ended robotic manipulation with open-ended human language conditioning</p> -->
   <p>Scalable human language conditioned visual control</p>
 
-    <!-- menu on the left -->
-  <d-contents>
-  <nav class="l-text toc figcaption">
-    <div><a href="https://arxiv.org/pdf/2005.TODO.pdf">pdf</a></div>
-    <div><a href="#citation">bibtex</a></div>
-  </nav>
-  </d-contents>
+  <!--   <\!-- menu on the left -\-> -->
+  <!-- <d-contents> -->
+  <!-- <nav class="l-text toc figcaption"> -->
+  <!--   <div><a href="https://arxiv.org/pdf/2005.TODO.pdf">pdf</a></div> -->
+  <!--   <div><a href="#citation">bibtex</a></div> -->
+  <!-- </nav> -->
+  <!-- </d-contents> -->
 
   <!-- video -->
   <div class="l-body" id="demo">
@@ -260,7 +246,28 @@
 
 </d-title>
 
-<d-byline></d-byline>
+<d-byline>
+  <div class="byline grid">
+    <div class="authors-affiliations grid">
+      <h3>Authors</h3>
+      <h3>Affiliations</h3>
+        <p class="author"><a class="name" href="https://coreylynch.github.io">Corey Lynch*</a></p>
+        <p class="affiliation"><a class="affiliation" href="https://g.co/robotics">Robotics at Google</a></p>
+        <p class="author"><a class="name" href="https://sermanet.github.io/home">Pierre Sermanet*</a></p>
+        <p class="affiliation"><a class="affiliation" href="https://g.co/robotics">Robotics at Google</a></p>
+        <p>* equal contribution</p>
+    </div>
+    <div>
+      <h3>Published</h3>
+        <p>May 18, 2020</p> 
+    </div>
+    <div>
+      <h3>Links</h3>
+        <p><a href="https://arxiv.org/pdf/2005.TODO.pdf">pdf</a></p>
+        <p><a href="#citation">bibtex</a></p>
+    </div>
+  </div>
+</d-byline>
 
 <d-article>
 
@@ -310,6 +317,7 @@
     <div><a href="#future">8. Limitations and Future Work</a></div>
     <div><a href="#conclusion">9. Conclusion</a></div>
     <div><a href="#appendix">Appendix</a></div>
+    <div><a href="#acknowledgments">Acknowledgments & References</a></p>
 <!--     <ul>
       <li><a href="#relabeling">A. Relabeling play</a></li>
       <li><a href="#sec:appendix_architecture">B. LangLfP Implementation Details</a></li>
