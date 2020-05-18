@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <script src="https://distill.pub/template.v2.js"></script> -->
-  <script src="lib/template.v2.js"></script>
+  <script src="https://distill.pub/template.v2.js"></script>
+  <!-- <script src="lib/template.v2.js"></script> -->
   <script src="lib/blazy.js"></script>
   <script>
     var bLazy = new Blazy({
@@ -25,33 +25,8 @@
 </head>
 
 <body>
-
-  <!-- <d-front-matter> -->
-  <!--   <script type="text/json">{ -->
-  <!--     "title": "Grounding Language in Play", -->
-  <!--     "description": "Learning natural language conditioned control from play.", -->
-  <!--     "authors": [ -->
-  <!--       { -->
-  <!--         "author": "Corey Lynch*", -->
-  <!--         "authorURL": "https://coreylynch.github.io", -->
-  <!--         "affiliation": "Robotics at Google", -->
-  <!--         "affiliationURL": "https://g.co/robotics" -->
-  <!--       }, -->
-  <!--       { -->
-  <!--         "author": "Pierre Sermanet*", -->
-  <!--         "authorURL": "https://sermanet.github.io/home", -->
-  <!--         "affiliation": "Robotics at Google", -->
-  <!--         "affiliationURL": "https://g.co/robotics" -->
-  <!--       }, -->
-  <!--       { -->
-  <!--         "author": "* equal contribution", -->
-  <!--           "authorURL": "", -->
-  <!--           "affiliation": "", -->
-  <!--         "affiliationURL": "" -->
-  <!--       } -->
-  <!--     ] -->
-  <!--   }</script> -->
-  <!-- </d-front-matter> -->
+  <d-front-matter>
+  </d-front-matter>
 
   <style>
     figure {
@@ -222,14 +197,6 @@
   <!-- <p>Combining open-ended robotic manipulation with open-ended human language conditioning</p> -->
   <p>Scalable human language conditioned visual control</p>
 
-  <!--   <\!-- menu on the left -\-> -->
-  <!-- <d-contents> -->
-  <!-- <nav class="l-text toc figcaption"> -->
-  <!--   <div><a href="https://arxiv.org/pdf/2005.TODO.pdf">pdf</a></div> -->
-  <!--   <div><a href="#citation">bibtex</a></div> -->
-  <!-- </nav> -->
-  <!-- </d-contents> -->
-
   <!-- video -->
   <div class="l-body" id="demo">
   <figure>
@@ -245,6 +212,47 @@
   </div>
 
 </d-title>
+
+<d-byline>
+
+    <script type="text/json">{
+      "title": "Grounding Language in Play",
+      "description": "Learning natural language conditioned control from play.",
+      "authors": [
+        {
+          "author": "Corey Lynch*",
+          "authorURL": "https://coreylynch.github.io",
+          "affiliation": "Robotics at Google",
+          "affiliationURL": "https://g.co/robotics"
+        },
+        {
+          "author": "Pierre Sermanet*",
+          "authorURL": "https://sermanet.github.io/home",
+          "affiliation": "Robotics at Google",
+          "affiliationURL": "https://g.co/robotics"
+        },
+        {
+          "author": "* equal contribution",
+            "authorURL": "",
+            "affiliation": "",
+          "affiliationURL": ""
+        }
+      ],
+      "katex": {
+        "delimiters": [
+          {
+            "left": "$",
+            "right": "$",
+            "display": false
+          },
+          {
+            "left": "$$",
+            "right": "$$",
+            "display": true
+          }
+        ]
+      }
+    }</script>
 
 <d-byline>
   <div class="byline grid">
@@ -263,7 +271,7 @@
     </div>
     <div>
       <h3>Links</h3>
-        <p><a href="https://arxiv.org/pdf/2005.07648.pdf">pdf</a></p>
+        <p><a href="https://arxiv.org/pdf/2005.TODO.pdf">pdf</a></p>
         <p><a href="#citation">bibtex</a></p>
     </div>
   </div>
@@ -317,7 +325,6 @@
     <div><a href="#future">8. Limitations and Future Work</a></div>
     <div><a href="#conclusion">9. Conclusion</a></div>
     <div><a href="#appendix">Appendix</a></div>
-    <div><a href="#acknowledgments">Acknowledgments & References</a></p>
 <!--     <ul>
       <li><a href="#relabeling">A. Relabeling play</a></li>
       <li><a href="#sec:appendix_architecture">B. LangLfP Implementation Details</a></li>
@@ -1426,10 +1433,10 @@ The agent makes several incorrect choices on the way to solving a task.
 <pre class="citation long">@article{lynch2020language,
   title   = {Grounding Language in Play},
   author  = {Lynch, Corey and Sermanet, Pierre},
-  journal = {arXiv preprint arXiv:2005.07648},
+  journal = {arXiv preprint arXiv:2005.TODO},
   year    = {2020},
-  url     = {https://arxiv.org/abs/2005.07648},
-  pdf     = {https://arxiv.org/pdf/2005.07648.pdf},
+  url     = {https://arxiv.org/abs/2005.TODO},
+  pdf     = {https://arxiv.org/pdf/2005.TODO.pdf},
 }</pre>
 
 
