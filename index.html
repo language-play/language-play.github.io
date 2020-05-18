@@ -1324,7 +1324,7 @@ Here we demonstrate repetitions of the same pair of actions multiple times: on t
 
 <h3 id="ablation">H. Ablation: How much language is necessary?</h3>
 <p>
-We study how the performance of LangLfP scales with the number of collected language pairs. <a href="#fig:lang_ablation">Figure 15</a> compares models trained from pixel inputs to models trained from state inputs as we sweep the amount of collected language pairs by factors of 2. Interestingly, for models trained from states, doubling the size of the language dataset from 5k to 10k has marginal benefit on performance. Models trained from pixels, on the other hand, have yet to converge and may benefit from even larger datasets. This suggests that the role of larger language pair datasets is primarily to address the complicated perceptual grounding problem.
+We study how the performance of LangLfP scales with the number of collected language pairs. <a href="#fig:lang_ablation">Figure 15</a> compares models trained from pixel inputs to models trained from state inputs as we sweep the amount of collected language pairs by factors of 2. Success is reported with confidence intervals over 3 seeded training runs. Interestingly, for models trained from states, doubling the size of the language dataset from 5k to 10k has marginal benefit on performance. Models trained from pixels, on the other hand, have yet to converge and may benefit from even larger datasets. This suggests that the role of larger language pair datasets is primarily to address the complicated perceptual grounding problem.
 </p>
 
 <div class="l-body" id="env">
